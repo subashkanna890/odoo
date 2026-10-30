@@ -1,9 +1,0 @@
-<svg width="128" height="24" viewBox="0 0 128 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Minimalist Muted Geometric Support Symbol inspired by reference -->
-  <g transform="translate(0, 2)">
-    <rect x="1" y="2" width="16" height="16" rx="5" stroke="#6B7280" stroke-width="1.8" fill="none"/>
-    <path d="M6 10H12M9 7L12 10L9 13" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
-  <!-- Restrained Wordmark "aixodesk" in muted grey -->
-  <text x="26" y="16.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16.5" font-weight="600" letter-spacing="-0.35px" fill="#4B5563">aixodesk</text>
-</svg>

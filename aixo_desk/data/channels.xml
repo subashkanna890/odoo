@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
-    <record id="channel_email" model="aixo.channel"><field name="name">Email</field><field name="code">email</field><field name="sequence">1</field></record>
-    <record id="channel_phone" model="aixo.channel"><field name="name">Phone</field><field name="code">phone</field><field name="sequence">2</field></record>
-    <record id="channel_web" model="aixo.channel"><field name="name">Web</field><field name="code">web</field><field name="sequence">3</field></record>
-    <record id="channel_chat" model="aixo.channel"><field name="name">Chat</field><field name="code">chat</field><field name="sequence">4</field></record>
-    <record id="channel_whatsapp" model="aixo.channel"><field name="name">WhatsApp</field><field name="code">whatsapp</field><field name="sequence">5</field></record>
-</odoo>
