@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="aixo_desk.ProjectList">
+    <div class="ax-layout">
+        <aside class="ax-sidebar" aria-label="Project views">
+            <div class="ax-side-views-head"><Icon name="'folder'" size="20"/><span>Projects</span></div>
+            <div class="ax-side-section">
+                <p class="ax-side-label">VIEWS</p>
+                <button type="button" t-foreach="state.data ? state.data.views : []" t-as="v" t-key="v.key" class="ax-view-item" t-att-class="{'is-on': state.section === 'projects' and state.view === v.key}" t-on-click="() => this.setView(v.key)">
+                    <span t-out="v.label"/><span class="ax-view-count" t-out="v.count"/>
+                </button>
+            </div>
+            <div class="ax-side-links">
+                <button type="button" t-foreach="sections.slice(1)" t-as="s" t-key="s[0]" class="ax-side-link" t-att-class="{'is-on': state.section === s[0]}" t-on-click="() => this.setSection(s[0])"><Icon name="s[2]" size="20"/><span t-out="s[1]"/></button>
+            </div>
+        </aside>
+
+        <main class="ax-main">
+            <div t-if="state.data and state.section === 'projects'" class="ax-kpis" aria-label="Project summary">
+                <div><span>Active projects</span><strong t-out="state.data.kpis.active"/></div>
+                <div><span>Open project tickets</span><strong t-out="state.data.kpis.open_tickets"/></div>
+                <div><span>Due this week</span><strong t-out="state.data.kpis.due_week"/></div>
+                <div><span>Hours logged this week</span><strong t-out="state.data.kpis.hours_week"/></div>
+            </div>
+            <div class="ax-listbar">
+                <h1 class="ax-listtitle"><t t-out="title"/> <small class="ax-hint" t-if="state.data and state.section === 'projects'">(<t t-out="state.data.projects.length"/>)</small></h1>
+                <span class="ax-spacer"/>
+                <div t-if="state.section === 'projects'" class="ax-seg-sm" role="group" aria-label="Layout">
+                    <button type="button" t-att-class="{'is-on': state.layout === 'list'}" t-on-click="() => state.layout = 'list'">List</button>
+                    <button type="button" t-att-class="{'is-on': state.layout === 'board'}" t-on-click="() => state.layout = 'board'">Board</button>
+                </div>
+                <button t-if="props.is_admin or (state.data and state.data.can_create)" type="button" class="ax-btn ax-btn-dark" t-on-click="openModal"><Icon name="'plus'" size="14"/> New project</button>
+            </div>
+
+            <!-- list -->
+            <div t-if="state.data and state.section === 'projects' and state.layout === 'list'" class="ax-listwrap">
+                <div t-if="!state.data.projects.length" class="ax-empty ax-empty-lg"><strong>No projects</strong><span>Nothing in this view.</span></div>
+                <div t-foreach="state.data.projects" t-as="p" t-key="p.id" class="ax-ticket-row ax-proj-row">
+                    <span class="ax-proj-code" t-att-style="tint(p)" t-out="code(p)"/>
+                    <div class="ax-ticket-main">
+                        <div class="ax-ticket-title"><a t-att-href="'/desk/project/' + p.id" t-out="p.name"/>
+                            <button type="button" class="ax-iconbtn ax-rowaction is-shown" t-att-aria-label="p.starred ? 'Unstar project' : 'Star project'" t-att-aria-pressed="p.starred" t-on-click="() => this.toggleStar(p)"><Icon name="'star'" size="14" fill="p.starred ? '#F5B301' : 'none'"/></button></div>
+                        <div class="ax-ticket-meta"><span t-out="p.code"/><span>·</span><span t-out="p.customer or 'No customer'"/><span>·</span><span><t t-out="p.start or '—'"/> → <span t-att-class="{'ax-overdue': p.overdue}" t-out="p.due or '—'"/></span></div>
+                    </div>
+                    <div class="ax-progress" t-att-title="p.tasks_done + ' of ' + p.tasks_total + ' tasks done'"><span t-att-style="'width:' + p.pct + '%;background:' + stateDot[p.state]"/><small><t t-out="p.tasks_done"/>/<t t-out="p.tasks_total"/> · <t t-out="p.pct"/>%</small></div>
+                    <span t-attf-class="ax-chip {{ stateClass[p.state] }}" t-out="p.state_label"/>
+                    <span class="ax-replies" title="Open tickets"><Icon name="'chat'" size="14"/><sup t-out="p.tickets"/></span>
+                    <span class="ax-avatars"><span t-foreach="p.members" t-as="m" t-key="m.id" class="ax-avatar ax-avatar-sm" t-att-style="'background:' + m.bg + ';color:' + m.fg" t-att-title="m.name" t-out="m.initials"/></span>
+                </div>
+            </div>
+
+            <!-- board -->
+            <div t-if="state.data and state.section === 'projects' and state.layout === 'board'" class="ax-board">
+                <section t-foreach="columns" t-as="col" t-key="col.value" class="ax-column" t-att-class="{'is-over': state.dragOver === col.value}"
+                         t-on-dragover="(ev) => this.onDragOver(ev, col.value)" t-on-dragleave="() => state.dragOver = ''" t-on-drop="(ev) => this.onDrop(ev, col.value)" t-att-aria-label="col.label">
+                    <h2><span class="ax-dotc" t-att-style="'background:' + stateDot[col.value]"/><t t-out="col.label"/> <small t-out="col.items.length"/></h2>
+                    <article t-foreach="col.items" t-as="p" t-key="p.id" class="ax-card-proj" draggable="true" t-on-dragstart="(ev) => this.onDragStart(ev, p)">
+                        <a t-att-href="'/desk/project/' + p.id"><strong t-out="p.name"/></a>
+                        <small><t t-out="p.code"/> · <t t-out="p.customer"/></small>
+                        <div class="ax-progress"><span t-att-style="'width:' + p.pct + '%;background:' + stateDot[p.state]"/><small><t t-out="p.pct"/>%</small></div>
+                        <select class="ax-input ax-input-sm" aria-label="Move to status" t-on-change="(ev) => this.move(p, ev.target.value)">
+                            <option t-foreach="state.data.states" t-as="s" t-key="s.value" t-att-value="s.value" t-att-selected="p.state === s.value" t-out="s.label"/>
+                        </select>
+                    </article>
+                </section>
+            </div>
+
+            <!-- other sections -->
+            <div t-if="state.data and state.section === 'milestones'" class="ax-listwrap ax-panel-body">
+                <div t-if="!state.data.milestones.length" class="ax-empty">No milestones.</div>
+                <ul class="ax-filelist"><li t-foreach="state.data.milestones" t-as="m" t-key="m.id">
+                    <input type="checkbox" t-att-checked="m.reached" t-att-aria-label="'Reached: ' + m.name" t-on-change="() => this.toggleMilestone(m)"/>
+                    <a t-att-href="'/desk/project/' + m.project_id" class="ax-grow"><strong t-att-class="{'ax-done-text': m.reached}" t-out="m.name"/><small><t t-out="m.code"/> · <t t-out="m.project"/></small></a>
+                    <span t-out="m.date or 'No date'"/></li></ul>
+            </div>
+            <div t-if="state.data and state.section === 'tasks'" class="ax-listwrap ax-panel-body">
+                <div t-if="!state.data.tasks.length" class="ax-empty">No tasks.</div>
+                <ul class="ax-filelist"><li t-foreach="state.data.tasks" t-as="t" t-key="t.id">
+                    <input type="checkbox" t-att-checked="t.done" t-att-aria-label="'Done: ' + t.name" t-on-change="() => this.toggleTask(t)"/>
+                    <a t-att-href="'/desk/project/' + t.project_id" class="ax-grow"><strong t-att-class="{'ax-done-text': t.done}" t-out="t.name"/><small><t t-out="t.code"/> · <t t-out="t.project"/></small></a>
+                    <span t-out="t.assignee"/></li></ul>
+            </div>
+            <div t-if="state.data and state.section === 'timesheets'" class="ax-listwrap ax-panel-body">
+                <div t-if="!state.data.timesheets.length" class="ax-empty">No time logged on project tickets yet.</div>
+                <table t-else="" class="ax-table"><thead><tr><th>Date</th><th>Agent</th><th>Project</th><th>Ticket</th><th>Work</th><th>Hours</th></tr></thead>
+                    <tbody><tr t-foreach="state.data.timesheets" t-as="e" t-key="e.id"><td t-out="e.date"/><td t-out="e.agent"/><td t-out="e.project"/><td><a t-att-href="'/desk/ticket/' + e.ticket_id" t-out="e.ticket"/></td><td t-out="e.work"/><td t-out="e.hours"/></tr></tbody></table>
+            </div>
+        </main>
+
+        <div t-if="state.modal" class="ax-modal-overlay" t-on-click.self="() => state.modal = false">
+            <form class="ax-dialog" role="dialog" aria-modal="true" aria-labelledby="ax-np-title" t-on-submit.prevent="createProject">
+                <h2 id="ax-np-title">New project</h2>
+                <label>Project name<input class="ax-input" t-model="state.form.name" required="required"/></label>
+                <label>Customer<select class="ax-input" t-on-change="(ev) => state.form.partner_id = Number(ev.target.value)"><option value="0">None</option><option t-foreach="state.data.customers" t-as="c" t-key="c.id" t-att-value="c.id" t-out="c.name"/></select></label>
+                <div class="ax-grid2"><label>Start<input type="date" class="ax-input" t-model="state.form.date_start"/></label><label>Due<input type="date" class="ax-input" t-model="state.form.date_due"/></label></div>
+                <label>Status<select class="ax-input" t-model="state.form.state"><option t-foreach="state.data.states" t-as="s" t-key="s.value" t-att-value="s.value" t-out="s.label"/></select></label>
+                <fieldset class="ax-members"><legend>Members</legend>
+                    <label t-foreach="state.data.agents" t-as="a" t-key="a.id" class="ax-check"><input type="checkbox" t-att-checked="state.form.member_ids.includes(a.id)" t-on-change="() => this.toggleMember(a.id)"/><t t-out="a.name"/></label></fieldset>
+                <div class="ax-composer-foot"><span class="ax-spacer"/><button type="button" class="ax-btn ax-btn-ghost" t-on-click="() => state.modal = false">Cancel</button><button type="submit" class="ax-btn ax-btn-dark">Create project</button></div>
+            </form>
+        </div>
+    </div>
+</t>
+
+<t t-name="aixo_desk.ProjectDetail">
+    <div t-if="!state.data" class="ax-empty ax-empty-lg">Loading…</div>
+    <div t-else="" class="ax-projdetail">
+        <div class="ax-detail-head">
+            <div class="ax-detail-title">
+                <a href="/desk/projects" class="ax-linkbtn">← All projects</a>
+                <h1><span class="ax-hint" t-out="state.data.code"/> <t t-out="state.data.name"/></h1>
+                <p><t t-out="state.data.customer or 'No customer'"/> · <t t-out="state.data.start or '—'"/> → <span t-att-class="{'ax-overdue': state.data.overdue}" t-out="state.data.due or '—'"/> · <t t-out="state.data.hours"/> h logged</p>
+            </div>
+            <div class="ax-detail-actions">
+                <button type="button" class="ax-iconbtn" t-att-aria-label="state.data.starred ? 'Unstar' : 'Star'" t-on-click="toggleStar"><Icon name="'star'" size="20" fill="state.data.starred ? '#F5B301' : 'none'"/></button>
+                <label class="ax-inline-label">Status
+                    <select class="ax-input ax-input-sm" t-on-change="changeStatus"><option t-foreach="state.data.states" t-as="s" t-key="s.value" t-att-value="s.value" t-att-selected="state.data.state === s.value" t-out="s.label"/></select></label>
+                <button t-if="state.data.can_manage" type="button" class="ax-btn ax-btn-ghost" t-on-click="startEdit">Edit</button>
+            </div>
+        </div>
+        <div class="ax-progress ax-progress-lg"><span t-att-style="'width:' + state.data.pct + '%'"/><small><t t-out="state.data.tasks_done"/> of <t t-out="state.data.tasks_total"/> tasks · <t t-out="state.data.pct"/>%</small></div>
+        <div class="ax-proj-grid">
+            <section class="ax-panel-body" aria-label="Tasks">
+                <h2>Tasks</h2>
+                <form class="ax-tagadd" t-on-submit.prevent="addTask"><input class="ax-input" placeholder="New task" aria-label="New task" t-model="state.newTask"/><button type="submit" class="ax-btn ax-btn-dark">Add</button></form>
+                <div t-if="!state.data.tasks.length" class="ax-empty">No tasks yet.</div>
+                <ul class="ax-filelist"><li t-foreach="state.data.tasks" t-as="t" t-key="t.id">
+                    <input type="checkbox" t-att-checked="t.done" t-att-aria-label="'Done: ' + t.name" t-on-change="() => this.taskAction(t, 'toggle')"/>
+                    <span class="ax-grow" t-att-class="{'ax-done-text': t.done}" t-out="t.name"/><small t-out="t.assignee"/>
+                    <button type="button" class="ax-iconbtn" t-att-aria-label="'Delete ' + t.name" t-on-click="() => this.taskAction(t, 'delete')"><Icon name="'trash'" size="14"/></button></li></ul>
+            </section>
+            <section class="ax-panel-body" aria-label="Milestones">
+                <h2>Milestones</h2>
+                <form class="ax-tagadd" t-on-submit.prevent="addMilestone"><input class="ax-input" placeholder="New milestone" aria-label="New milestone" t-model="state.newMilestone"/><input type="date" class="ax-input" aria-label="Milestone date" t-model="state.milestoneDate"/><button type="submit" class="ax-btn ax-btn-dark">Add</button></form>
+                <div t-if="!state.data.milestones.length" class="ax-empty">No milestones yet.</div>
+                <ul class="ax-filelist"><li t-foreach="state.data.milestones" t-as="m" t-key="m.id">
+                    <input type="checkbox" t-att-checked="m.reached" t-att-aria-label="'Reached: ' + m.name" t-on-change="() => this.toggleMilestone(m)"/>
+                    <span class="ax-grow" t-att-class="{'ax-done-text': m.reached}" t-out="m.name"/><small t-out="m.date or 'No date'"/></li></ul>
+            </section>
+            <section class="ax-panel-body" aria-label="Linked tickets">
+                <h2>Linked tickets</h2>
+                <div t-if="!state.data.ticket_list.length" class="ax-empty">No tickets linked to this project.</div>
+                <ul class="ax-filelist"><li t-foreach="state.data.ticket_list" t-as="t" t-key="t.id"><a t-att-href="'/desk/ticket/' + t.id" class="ax-grow"><strong t-out="t.subject"/><small>#<t t-out="t.number"/> · <t t-out="t.contact"/></small></a><span t-attf-class="ax-chip {{ stateClass[t.state] or '' }}" t-out="t.state_label"/></li></ul>
+            </section>
+            <section class="ax-panel-body" aria-label="Members">
+                <h2>Members</h2>
+                <div class="ax-avatars"><span t-foreach="state.data.members" t-as="m" t-key="m.id" class="ax-avatar" t-att-style="'background:' + m.bg + ';color:' + m.fg" t-att-title="m.name" t-out="m.initials"/></div>
+            </section>
+        </div>
+
+        <div t-if="state.edit" class="ax-modal-overlay" t-on-click.self="() => state.edit = null">
+            <form class="ax-dialog" role="dialog" aria-modal="true" t-on-submit.prevent="saveEdit">
+                <h2>Edit project</h2>
+                <label>Name<input class="ax-input" t-model="state.edit.name"/></label>
+                <div class="ax-grid2"><label>Start<input type="date" class="ax-input" t-model="state.edit.date_start"/></label><label>Due<input type="date" class="ax-input" t-model="state.edit.date_due"/></label></div>
+                <fieldset class="ax-members"><legend>Members</legend><label t-foreach="state.data.agents" t-as="a" t-key="a.id" class="ax-check"><input type="checkbox" t-att-checked="state.edit.member_ids.includes(a.id)" t-on-change="() => this.toggleMember(a.id)"/><t t-out="a.name"/></label></fieldset>
+                <div class="ax-composer-foot"><span class="ax-spacer"/><button type="button" class="ax-btn ax-btn-ghost" t-on-click="() => state.edit = null">Cancel</button><button type="submit" class="ax-btn ax-btn-dark">Save</button></div>
+            </form>
+        </div>
+    </div>
+</t>
+
+</templates>

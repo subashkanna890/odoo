@@ -1,0 +1,16 @@
+<svg width="150" height="34" viewBox="0 0 150 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="aixoGradDark" x1="1" y1="2" x2="29" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1E40AF"/>
+    </linearGradient>
+  </defs>
+  <!-- Icon -->
+  <g transform="translate(1, 2)">
+    <rect width="28" height="28" rx="8" fill="url(#aixoGradDark)"/>
+    <path d="M8.5 10C8.5 8.343 9.843 7 11.5 7H16.5C18.157 7 19.5 8.343 19.5 10V14C19.5 15.657 18.157 17 16.5 17H13.8L10.5 19.8C10 20.2 9.4 19.8 9.4 19.3V16.7C8.9 16.5 8.5 15.8 8.5 15.2V10Z" fill="#FFFFFF"/>
+    <circle cx="14" cy="12" r="1.5" fill="#1E40AF"/>
+  </g>
+  <!-- Wordmark "aixodesk" -->
+  <text x="39" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="-0.6px" fill="#18181B">aixodesk</text>
+</svg>

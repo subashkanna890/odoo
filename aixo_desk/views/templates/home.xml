@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo request form, shared by the modal and the stand-alone page -->
+    <template id="demo_form" name="Aixo Desk demo request form">
+        <form action="/aixo-desk/demo" method="post" class="ax-form" data-ax-demo-form="" novalidate="novalidate">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <input type="text" name="website_url" class="ax-hp" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+            <div class="ax-alert ax-alert-err" role="alert" t-att-hidden="None if error else 'hidden'" data-ax-error="" t-out="error"/>
+            <div class="ax-row2">
+                <div class="ax-field">
+                    <label for="dm-name">Your name</label>
+                    <input id="dm-name" name="name" class="ax-input" autocomplete="name" required="required" t-att-value="form.get('name')"/>
+                </div>
+                <div class="ax-field">
+                    <label for="dm-email">Work email</label>
+                    <input id="dm-email" name="email" type="email" class="ax-input" placeholder="you@company.com" autocomplete="email" required="required" t-att-value="form.get('email')"/>
+                </div>
+            </div>
+            <div class="ax-row2">
+                <div class="ax-field">
+                    <label for="dm-company">Company</label>
+                    <input id="dm-company" name="company" class="ax-input" autocomplete="organization" t-att-value="form.get('company')"/>
+                </div>
+                <div class="ax-field">
+                    <label for="dm-size">Team size</label>
+                    <select id="dm-size" name="team_size" class="ax-input">
+                        <t t-foreach="['1-5', '6-20', '21-50', '51-200', '200+']" t-as="size">
+                            <option t-att-value="size" t-att-selected="'selected' if form.get('team_size') == size else None" t-out="size"/>
+                        </t>
+                    </select>
+                </div>
+            </div>
+            <div class="ax-field">
+                <label for="dm-message">What should we show you?</label>
+                <textarea id="dm-message" name="message" class="ax-input ax-textarea" rows="3"><t t-out="form.get('message')"/></textarea>
+            </div>
+            <button type="submit" class="ax-btn ax-btn-dark ax-btn-lg ax-pill">Request a demo<span class="ax-dot"/></button>
+        </form>
+    </template>
+
+    <template id="demo_thanks" name="Aixo Desk demo thank-you">
+        <div class="ax-done" role="status">
+            <div class="ax-done-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div>
+            <h2>Thank you<t t-if="name">, <t t-out="name"/></t>!</h2>
+            <p>We've received your request and will email you within one business day to set up your demo.</p>
+        </div>
+    </template>
+
+    <!-- Stand-alone page: works without JavaScript and is the target of every "Get a demo" link -->
+    <template id="demo_page" name="Aixo Desk demo page">
+        <t t-call="aixo_desk.auth_layout">
+            <section class="ax-hero">
+                <h1 class="ax-h1" data-ax-typed="See Aixo Desk in action." data-ax-accent="in action." data-ax-accent-len="10">See Aixo Desk <span class="ax-accent">in action.</span></h1>
+                <p class="ax-lead">Tell us a little about your team and we'll walk you through tickets, projects, customers and reports.</p>
+            </section>
+            <section class="ax-card ax-rise" aria-label="Request a demo">
+                <t t-if="done"><t t-call="aixo_desk.demo_thanks"/></t>
+                <t t-else="">
+                    <div class="ax-card-head"><h2>Get a demo</h2><p>We reply within one business day.</p></div>
+                    <t t-call="aixo_desk.demo_form"/>
+                </t>
+            </section>
+        </t>
+    </template>
+
+    <!-- ===================================================================== HOME -->
+    <template id="home" name="Aixo Desk home">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="additional_title">Aixo Desk — AI-powered helpdesk</t>
+            <div id="wrap" class="ax-home oe_structure oe_empty">
+
+                <header class="ax-home-header">
+                    <nav class="ax-pillnav ax-pillnav-home" aria-label="Main">
+                        <a href="/aixo-desk" class="ax-brand" aria-label="Aixo Desk home"><t t-call="aixo_desk.logo"/></a>
+                        <span class="ax-spacer"/>
+                        <div class="ax-navlinks">
+                            <a href="#product" class="ax-navlink">Product</a>
+                            <a href="#portals" class="ax-navlink">Solutions</a>
+                            <a href="#security" class="ax-navlink">Security</a>
+                            <a href="#pricing" class="ax-navlink">Pricing</a>
+                            <a href="#resources" class="ax-navlink">Resources</a>
+                        </div>
+                        <span class="ax-spacer"/>
+                        <a href="/desk/login" class="ax-navlink">Log in</a>
+                        <a href="/aixo-desk/demo" class="ax-btn ax-btn-dark ax-pill" data-ax-demo-open="">Get a demo<span class="ax-dot"/></a>
+                    </nav>
+                </header>
+
+                <!-- Hero -->
+                <section class="ax-hero-section" aria-label="Introduction" data-ax-glow="">
+                    <div class="ax-hero-glow" aria-hidden="true">
+                        <div class="ax-hero-glow-follow"><div class="ax-glow-blob"/></div>
+                        <div class="ax-glow-b2"/>
+                    </div>
+                    <div class="ax-hero-inner">
+                        <h1 class="ax-h1 ax-h1-xl" data-ax-typed="Meet Aixo, your AI teammate for support teams" data-ax-accent="AI" data-ax-accent-len="2">Meet Aixo, your <span class="ax-accent">AI</span> teammate for support teams</h1>
+                        <div class="ax-hero-after">
+                            <div class="ax-hero-copy">
+                                <p class="ax-lead"><span class="ax-ink">Support teams trust Aixo Desk.</span> Tickets, projects and customers in one place — answered faster, tracked to the minute.</p>
+                                <div class="ax-cta-row">
+                                    <a href="/aixo-desk/demo" class="ax-btn ax-btn-dark ax-btn-lg ax-pill" data-ax-demo-open="">Get a demo<span class="ax-dot"/></a>
+                                    <a href="/desk/login" class="ax-btn ax-btn-ghost ax-btn-lg">Log in</a>
+                                </div>
+                            </div>
+                            <div class="ax-logos">
+                                <t t-foreach="range(1, 9)" t-as="n"><div class="ax-logo-cell">CLIENT <t t-out="n"/></div></t>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Story: words reveal, then the dark panel rises -->
+                <section id="product" class="ax-story" aria-label="What Aixo does" data-ax-story="">
+                    <div class="ax-story-glow" aria-hidden="true"/>
+                    <div class="ax-story-text">
+                        <p class="ax-statement" data-ax-statement="">Aixo Desk turns every email, chat and call into a ticket, routes it to the right agent, tracks every SLA and keeps customers updated — until the issue is resolved.</p>
+                    </div>
+                    <div class="ax-panel">
+                        <div class="ax-panel-copy">
+                            <h2 class="ax-h2">A helpdesk that works like your best agent</h2>
+                            <div class="ax-rows">
+                                <div class="ax-row"><span class="ax-row-title">Support teams</span><p><span>Answer faster. Miss fewer SLAs.</span> Aixo triages new tickets, suggests replies and escalates before deadlines slip.</p></div>
+                                <div class="ax-row"><span class="ax-row-title">Project teams</span><p><span>Every client request, tracked.</span> Link tickets to projects and watch progress, hours and blockers in one view.</p></div>
+                                <div class="ax-row"><span class="ax-row-title">Managers</span><p><span>See the whole desk at a glance.</span> Live workload, CSAT and agent reports — only admins can open them.</p></div>
+                            </div>
+                            <button type="button" class="ax-replay" data-ax-replay="">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9BE650" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>Replay
+                            </button>
+                        </div>
+                        <div class="ax-panel-visual">
+                            <div class="ax-visual-glow" aria-hidden="true"/><div class="ax-visual-grid" aria-hidden="true"/>
+                            <div class="ax-mock" role="img" aria-label="Aixo Desk ticket inbox preview">
+                                <div class="ax-mock-head"><span class="ax-mock-dot"/><strong>All Tickets</strong><span class="ax-spacer"/><span class="ax-mock-live">Live</span></div>
+                                <t t-foreach="[('AR','#FFE3CC','#8A3B00','Invoice shows the wrong billing address','#108 · Acme Retail · 2m','Urgent','#FDE2E2','#A11A1A'),('MK','#D7F2E3','#0F5F34','Unable to reset account password','#107 · Kumar Traders · 14m','Open','#E7F6D5','#2F6B0E'),('SJ','#E1F2CF','#2F6B0E','Request to upgrade to annual plan','#104 · Brightline Co. · 1h','Pending','#FFF1D6','#8A5300'),('LA','#F1E4FF','#5B1E99','I want to create helpdesk module','#101 · Zoho · 3h','Open','#E7F6D5','#2F6B0E')]" t-as="m">
+                                    <div class="ax-mock-row" t-attf-style="--i: #{m_index}">
+                                        <span class="ax-mock-av" t-attf-style="background: #{m[1]}; color: #{m[2]}" t-out="m[0]"/>
+                                        <span class="ax-mock-main"><span t-out="m[3]"/><small t-out="m[4]"/></span>
+                                        <span class="ax-mock-chip" t-attf-style="background: #{m[6]}; color: #{m[7]}" t-out="m[5]"/>
+                                    </div>
+                                </t>
+                                <div class="ax-mock-foot">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3E8A16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg>
+                                    <span><strong>Aixo:</strong> routed #108 to Priya S — billing expert, SLA 38 min left</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Portals -->
+                <section id="portals" class="ax-portals" aria-label="Portals">
+                    <div class="ax-container">
+                        <div class="ax-section-head">
+                            <h2 class="ax-h2">One helpdesk. Three portals built for each role.</h2>
+                            <p>Everyone signs in to the same Aixo Desk and sees exactly what they need — nothing more.</p>
+                        </div>
+                        <div class="ax-portal-grid">
+                            <t t-foreach="[('admin','Admin','Admin portal','Create employees, customers and teams, set their logins, assign every ticket and open the employee and customer reports.','M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z','ax-portal-dark'),('employee','Employee','Employee portal','Work the tickets assigned to you, reply to customers, log time and keep projects moving.','M4 7h16v13H4zM9 7V4h6v3','ax-portal-leaf'),('customer','Customer','Customer portal','Raise tickets, follow their progress and reply to your support team — all from one simple page.','M12 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM4 21a8 8 0 0 1 16 0','ax-portal-white')]" t-as="p">
+                                <article t-attf-class="ax-portal-card ax-reveal #{p[5]}" t-attf-style="--i: #{p_index}">
+                                    <span class="ax-portal-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path t-att-d="p[4]"/></svg></span>
+                                    <h3 t-out="p[2]"/>
+                                    <p t-out="p[3]"/>
+                                    <span class="ax-spacer"/>
+                                    <a t-attf-href="/desk/login?portal=#{p[0]}" class="ax-portal-link">Sign in as <t t-out="p[1]"/> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                                </article>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Features -->
+                <section class="ax-features" aria-label="Features">
+                    <div class="ax-container ax-feature-grid">
+                        <div class="ax-feature"><span>01</span><h3>Tickets</h3><p>Email, chat, phone and web in one queue with SLA timers and smart routing.</p></div>
+                        <div class="ax-feature"><span>02</span><h3>Projects</h3><p>Group client work, track tasks and hours, and link every related ticket.</p></div>
+                        <div class="ax-feature"><span>03</span><h3>Customers</h3><p>Full history, plan and happiness score beside every conversation.</p></div>
+                        <div class="ax-feature"><span>04</span><h3>Analytics</h3><p>Live dashboards plus admin-only employee and customer reports.</p></div>
+                    </div>
+                </section>
+
+                <!-- Security / pricing / resources: the nav anchors -->
+                <section id="security" class="ax-info" aria-label="Security">
+                    <div class="ax-container ax-info-grid">
+                        <h2 class="ax-h2">Security built into every role</h2>
+                        <ul>
+                            <li>Employees only see tickets assigned to them.</li>
+                            <li>Customers only ever see their own requests.</li>
+                            <li>Reports and setup are open to admins only.</li>
+                            <li>Sign-in is rate limited and password resets use expiring one-time codes.</li>
+                        </ul>
+                    </div>
+                </section>
+                <section id="pricing" class="ax-info ax-info-alt" aria-label="Pricing">
+                    <div class="ax-container ax-info-grid">
+                        <h2 class="ax-h2">Pricing that fits your team</h2>
+                        <p>Plans depend on the number of agents and the channels you use. Request a demo and we'll send you a quote.</p>
+                        <a href="/aixo-desk/demo" class="ax-btn ax-btn-dark ax-btn-lg ax-pill" data-ax-demo-open="">Get a quote<span class="ax-dot"/></a>
+                    </div>
+                </section>
+                <section id="resources" class="ax-info" aria-label="Resources">
+                    <div class="ax-container ax-info-grid">
+                        <h2 class="ax-h2">Resources</h2>
+                        <ul>
+                            <li><a href="/desk/login?portal=customer">Customer portal — raise and follow tickets</a></li>
+                            <li><a href="/desk/signup">Create a customer account</a></li>
+                            <li><a href="/desk/reset">Reset your password</a></li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="ax-final" aria-label="Get started">
+                    <div class="ax-final-glow" aria-hidden="true"/>
+                    <div class="ax-final-inner">
+                        <h2 class="ax-h2 ax-h2-xl">Give every customer an answer, not a wait.</h2>
+                        <a href="/aixo-desk/demo" class="ax-btn ax-btn-dark ax-btn-lg ax-pill" data-ax-demo-open="">Get a demo<span class="ax-dot"/></a>
+                    </div>
+                </section>
+
+                <footer class="ax-footer">
+                    <div class="ax-container">
+                        <div class="ax-footer-top">
+                            <a href="/aixo-desk" class="ax-brand ax-brand-light" aria-label="Aixo Desk home"><t t-call="aixo_desk.logo"/></a>
+                            <div class="ax-footer-cols">
+                                <div><span>Product</span><a href="#product">Tickets</a><a href="#product">Projects</a><a href="#product">Customers</a><a href="#product">Analytics</a></div>
+                                <div><span>Portals</span><a href="/desk/login?portal=admin">Admin</a><a href="/desk/login?portal=employee">Employee</a><a href="/desk/login?portal=customer">Customer</a></div>
+                                <div><span>Company</span><a href="#security">Security</a><a href="#pricing">Pricing</a><a href="#resources">Resources</a></div>
+                            </div>
+                        </div>
+                        <small>© 2026 Aixo Desk. All rights reserved.</small>
+                    </div>
+                </footer>
+            </div>
+
+            <dialog id="ax-demo" class="ax-modal" aria-labelledby="ax-demo-title" data-ax-demo-dialog="">
+                <div class="ax-modal-body">
+                    <button type="button" class="ax-modal-close" aria-label="Close" data-ax-demo-close="">×</button>
+                    <div data-ax-demo-content="">
+                        <div class="ax-card-head"><h2 id="ax-demo-title">Get a demo</h2><p>We reply within one business day.</p></div>
+                        <t t-set="form" t-value="{}"/>
+                        <t t-set="error" t-value="False"/>
+                        <t t-call="aixo_desk.demo_form"/>
+                    </div>
+                </div>
+            </dialog>
+        </t>
+    </template>
+
+    <record id="home_page" model="website.page">
+        <field name="url">/aixo-desk</field>
+        <field name="view_id" ref="home"/>
+        <field name="is_published" eval="True"/>
+        <field name="website_indexed" eval="True"/>
+        <field name="website_meta_description">Aixo Desk: tickets, projects and customers in one helpdesk with admin, employee and customer portals.</field>
+    </record>
+
+    <template id="mail_demo_notify" name="Aixo Desk demo request notification">
+        <div style="font-family:Arial,sans-serif;max-width:520px;color:#0F2A20">
+            <p>New demo request for <t t-out="company_name"/>:</p>
+            <table style="border-collapse:collapse">
+                <tr><td style="padding:4px 12px 4px 0;color:#62756B">Name</td><td t-out="name"/></tr>
+                <tr><td style="padding:4px 12px 4px 0;color:#62756B">Email</td><td t-out="email"/></tr>
+                <tr><td style="padding:4px 12px 4px 0;color:#62756B">Company</td><td t-out="company or '-'"/></tr>
+                <tr><td style="padding:4px 12px 4px 0;color:#62756B">Team size</td><td t-out="team_size or '-'"/></tr>
+            </table>
+            <p t-if="message" style="white-space:pre-wrap" t-out="message"/>
+        </div>
+    </template>
+</odoo>

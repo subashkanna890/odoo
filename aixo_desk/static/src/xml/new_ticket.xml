@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="aixo_desk.NewTicket">
+    <div t-if="!state.opts" class="ax-empty ax-empty-lg">Loading…</div>
+    <div t-else="" class="ax-form-layout">
+        <form class="ax-form-main" novalidate="novalidate" t-on-submit.prevent="submit">
+            <div class="ax-form-head">
+                <h1>New ticket</h1>
+                <label t-if="!isCustomer or state.opts.templates.length" class="ax-tplpick">Choose Ticket Template
+                    <select class="ax-input" t-on-change="pickTemplate">
+                        <option value="0">None</option>
+                        <option t-foreach="state.opts.templates" t-as="t" t-key="t.id" t-att-value="t.id" t-att-selected="state.v.template_id === t.id" t-out="t.name"/>
+                    </select>
+                </label>
+            </div>
+
+            <div t-if="state.created" class="ax-banner" role="status">
+                <Icon name="'check'" size="18"/>
+                <span>Ticket #<t t-out="state.created.ticket.number"/> “<t t-out="state.created.ticket.subject"/>” was created for <t t-out="state.created.contact"/>.</span>
+                <a t-att-href="viewHref" class="ax-btn ax-btn-dark ax-btn-sm">View ticket</a>
+                <button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-on-click="reset">Add another</button>
+            </div>
+
+            <fieldset class="ax-fieldset">
+                <legend>Ticket Information</legend>
+                <div class="ax-grid2">
+                    <div t-if="!isCustomer" class="ax-field ax-ac" t-att-class="{'has-error': errors.contact}">
+                        <label for="nt-contact" class="ax-req">Contact Name</label>
+                        <input id="nt-contact" class="ax-input" autocomplete="off" placeholder="Search or type a new contact" t-att-value="state.v.contact" t-on-input="onContactInput" aria-autocomplete="list" t-att-aria-expanded="state.suggestions.length > 0"/>
+                        <ul t-if="state.suggestions.length" class="ax-suggestions" role="listbox">
+                            <li t-foreach="state.suggestions" t-as="c" t-key="c.id" role="option">
+                                <button type="button" t-on-click="() => this.pickContact(c)"><strong t-out="c.name"/><small><t t-out="c.account"/> <t t-out="c.email"/></small></button>
+                            </li>
+                        </ul>
+                        <p t-if="errors.contact" class="ax-error">This field is required.</p>
+                        <p t-if="state.v.contact.trim() and !state.v.contact_id and !state.suggestions.length" class="ax-hint">A new contact will be created.</p>
+                    </div>
+                    <div t-else="" class="ax-field"><label>Contact</label><input class="ax-input" readonly="readonly" t-att-value="state.v.contact"/></div>
+                    <div class="ax-field"><label for="nt-account">Account</label><input id="nt-account" class="ax-input" t-att-readonly="isCustomer or !!state.v.contact_id" t-model="state.v.account"/></div>
+                    <div class="ax-field"><label for="nt-email">Email</label><input id="nt-email" type="email" class="ax-input" t-att-readonly="isCustomer or !!state.v.contact_id" t-model="state.v.email"/></div>
+                    <div class="ax-field"><label for="nt-phone">Phone</label><input id="nt-phone" class="ax-input" t-att-readonly="isCustomer or !!state.v.contact_id" t-model="state.v.phone"/></div>
+                </div>
+                <div class="ax-field" t-att-class="{'has-error': errors.subject}">
+                    <label for="nt-subject" class="ax-req">Subject</label>
+                    <input id="nt-subject" class="ax-input" t-model="state.v.subject"/>
+                    <p t-if="errors.subject" class="ax-error">This field is required.</p>
+                </div>
+                <div class="ax-field"><label for="nt-desc">Description</label><textarea id="nt-desc" class="ax-input ax-textarea" rows="6" t-model="state.v.description"/></div>
+                <div t-if="!isCustomer" class="ax-grid2">
+                    <div class="ax-field"><label for="nt-status" class="ax-req">Status</label>
+                        <select id="nt-status" class="ax-input" t-model="state.v.status"><option t-foreach="state.opts.states" t-as="s" t-key="s.value" t-att-value="s.value" t-out="s.label"/></select></div>
+                    <div class="ax-field"><label for="nt-owner">Ticket Owner</label>
+                        <select id="nt-owner" class="ax-input" t-on-change="(ev) => state.v.owner_id = Number(ev.target.value)">
+                            <option value="0" t-att-selected="!state.v.owner_id">Unassigned</option>
+                            <option t-foreach="state.opts.agents" t-as="a" t-key="a.id" t-att-value="a.id" t-att-selected="state.v.owner_id === a.id" t-out="a.name"/></select></div>
+                    <div class="ax-field"><label for="nt-product">Product</label>
+                        <select id="nt-product" class="ax-input" t-on-change="(ev) => state.v.product_id = Number(ev.target.value)"><option value="0">None</option><option t-foreach="state.opts.products" t-as="p" t-key="p.id" t-att-value="p.id" t-out="p.name"/></select></div>
+                    <div class="ax-field"><label for="nt-project">Project</label>
+                        <select id="nt-project" class="ax-input" t-on-change="(ev) => state.v.project_id = Number(ev.target.value)"><option value="0">None</option><option t-foreach="state.opts.projects" t-as="p" t-key="p.id" t-att-value="p.id" t-out="p.name"/></select></div>
+                </div>
+            </fieldset>
+
+            <fieldset class="ax-fieldset">
+                <legend>Additional Information</legend>
+                <div class="ax-grid2">
+                    <div t-if="!isCustomer" class="ax-field"><label for="nt-due">Due Date</label><input id="nt-due" type="datetime-local" class="ax-input" t-model="state.v.due_date"/></div>
+                    <div class="ax-field"><label for="nt-lang">Language</label>
+                        <select id="nt-lang" class="ax-input" t-on-change="(ev) => state.v.lang_id = Number(ev.target.value)"><option value="0">-None-</option><option t-foreach="state.opts.languages" t-as="l" t-key="l.id" t-att-value="l.id" t-out="l.name"/></select></div>
+                    <div class="ax-field"><label for="nt-priority">Priority</label>
+                        <select id="nt-priority" class="ax-input" t-model="state.v.priority"><option value="">-None-</option><option t-foreach="state.opts.priorities" t-as="p" t-key="p.value" t-att-value="p.value" t-out="p.label"/></select></div>
+                    <div t-if="!isCustomer" class="ax-field"><label for="nt-channel">Channel</label>
+                        <select id="nt-channel" class="ax-input" t-model="state.v.channel"><option t-foreach="state.opts.channels" t-as="c" t-key="c.value" t-att-value="c.value" t-out="c.label"/></select></div>
+                    <div class="ax-field"><label for="nt-class">Classifications</label>
+                        <select id="nt-class" class="ax-input" t-model="state.v.classification"><option value="">-None-</option><option t-foreach="state.opts.classifications" t-as="c" t-key="c.value" t-att-value="c.value" t-out="c.label"/></select></div>
+                </div>
+            </fieldset>
+
+            <fieldset class="ax-fieldset">
+                <legend>Attachments</legend>
+                <label class="ax-drop" t-att-class="{'is-drag': state.dragging}" t-on-dragover.prevent="() => state.dragging = true" t-on-dragleave="() => state.dragging = false" t-on-drop="onDrop">
+                    <Icon name="'attach'" size="20"/>
+                    <span t-if="!state.uploading">Drag and drop files here, or <strong>browse</strong> (max <t t-out="state.opts.max_mb"/> MB each)</span>
+                    <span t-else="">Uploading…</span>
+                    <input type="file" multiple="multiple" hidden="hidden" t-on-change="onFiles"/>
+                </label>
+                <ul t-if="state.files.length" class="ax-filelist">
+                    <li t-foreach="state.files" t-as="f" t-key="f.id"><Icon name="'attach'" size="14"/><span><strong t-out="f.name"/><small t-out="size(f.size)"/></span>
+                        <button type="button" class="ax-iconbtn" t-att-aria-label="'Remove ' + f.name" t-on-click="() => this.removeFile(f)"><Icon name="'close'" size="14"/></button></li>
+                </ul>
+            </fieldset>
+
+            <div class="ax-form-foot">
+                <p t-if="errors.contact or errors.subject" class="ax-error" role="alert">Please fill in the required fields.</p>
+                <span class="ax-spacer"/>
+                <a href="/desk" class="ax-btn ax-btn-ghost">Cancel</a>
+                <button type="submit" class="ax-btn ax-btn-dark" t-att-disabled="state.saving or state.uploading">Submit</button>
+            </div>
+        </form>
+
+        <aside class="ax-related-panel" aria-label="Related details">
+            <button type="button" class="ax-acc-toggle" t-att-aria-expanded="state.relatedOpen" t-on-click="() => state.relatedOpen = !state.relatedOpen">
+                <strong>Related details</strong><Icon name="state.relatedOpen ? 'chevronUp' : 'chevronDown'" size="14"/>
+            </button>
+            <div t-if="state.relatedOpen">
+                <div t-if="!state.contact" class="ax-empty">Choose a contact to see their history.</div>
+                <div t-else="" class="ax-contactcard">
+                    <span class="ax-avatar ax-avatar-lg" t-att-style="'background:' + state.contact.bg + ';color:' + state.contact.fg" t-out="state.contact.initials"/>
+                    <strong t-out="state.contact.name"/><small t-out="state.contact.account"/><small t-out="state.contact.email"/><small t-out="state.contact.phone"/>
+                    <div class="ax-stats">
+                        <span><strong t-out="state.contact.open"/>Open</span>
+                        <span><strong t-out="state.contact.closed"/>Closed</span>
+                        <span><strong t-out="state.contact.happy === null ? '—' : state.contact.happy + '%'"/>Happy</span>
+                    </div>
+                    <p t-if="state.contact.last" class="ax-hint">Last ticket: <t t-out="state.contact.last"/></p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</t>
+
+</templates>

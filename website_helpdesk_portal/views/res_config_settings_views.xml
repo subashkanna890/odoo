@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========================================================
+         RES CONFIG SETTINGS - HELPDESK APP TAB
+         ======================================================== -->
+    <record id="res_config_settings_view_form_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.helpdesk</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Helpdesk" string="Helpdesk" name="website_helpdesk_portal" logo="/helpdesk/static/description/icon.png">
+                    <field name="helpdesk_profile_id" invisible="1"/>
+
+                    <!-- ========================================================
+                         1. CUSTOM PROFILE (searchabletext: "custom profile")
+                         ======================================================== -->
+                    <block title="Custom Profile" name="helpdesk_custom_profile_block">
+                        <setting id="helpdesk_custom_logo_setting">
+                            <span class="d-none">custom profile brand logo</span>
+                            <field name="helpdesk_profile_id" invisible="1"/>
+                            <div class="content-group">
+                                <div class="mt-2 d-flex align-items-start justify-content-between" style="max-width: 440px;">
+                                    <div class="pe-3">
+                                        <div class="o_form_label fw-bold">Logo</div>
+                                        <div class="text-muted small mt-1 text-nowrap">Upload image button for brand logo</div>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <field name="helpdesk_custom_logo" widget="image" options="{'preview_image': 'helpdesk_custom_logo', 'size': [80, 80]}" style="float: none !important; margin: 0 !important;"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+
+                        <setting id="helpdesk_brand_name_setting">
+                            <span class="d-none">custom profile brand name</span>
+                            <div class="content-group">
+                                <div class="mt-2" style="max-width: 440px;">
+                                    <div class="o_form_label fw-bold">Name</div>
+                                    <div class="text-muted small mt-1 mb-2">Helpdesk brand text name (create and edit)</div>
+                                    <field name="helpdesk_brand_name" placeholder="Helpdesk Portal"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <!-- ========================================================
+                         2. API BOT CHAT (searchabletext: "api bot chat")
+                         ======================================================== -->
+                    <block title="API Bot Chat" name="helpdesk_api_bot_chat_block">
+                        <setting id="helpdesk_api_bot_chat_setting">
+                            <span class="d-none">api bot chat gemini ai assistant maya</span>
+                            <div class="content-group">
+                                <div class="mt-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2">
+                                            <field name="helpdesk_enable_ai_bot" nolabel="1"/>
+                                        </div>
+                                        <div>
+                                            <label for="helpdesk_enable_ai_bot" string="Enable AI Bot Chat" class="fw-bold mb-0"/>
+                                        </div>
+                                    </div>
+                                    <div class="text-muted small mt-1" style="padding-left: 28px;">
+                                        Provides intelligent, natural AI conversations, ticket lookup, and screen actions.
+                                    </div>
+
+                                    <div class="mt-4" invisible="not helpdesk_enable_ai_bot" style="padding-left: 28px;">
+                                        <label for="helpdesk_ai_bot_name" string="AI Bot Name" class="fw-bold"/>
+                                        <div class="text-muted small mt-1 mb-2">4-letter unique AI assistant name (e.g. Maya, Aria, Zara)</div>
+                                        <field name="helpdesk_ai_bot_name" placeholder="Maya"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+
+                        <setting id="helpdesk_gemini_api_setting" invisible="not helpdesk_enable_ai_bot">
+                            <span class="d-none">gemini api key model ai</span>
+                            <div class="content-group">
+                                <div class="mt-2">
+                                    <div class="mb-4">
+                                        <label for="helpdesk_gemini_api_key" string="Gemini API Key" class="fw-bold"/>
+                                        <div class="text-muted small mt-1 mb-2">Google Gemini API authorization key for cloud AI generation</div>
+                                        <field name="helpdesk_gemini_api_key" widget="password" placeholder="Enter Gemini API Key"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="helpdesk_gemini_model" string="Gemini Model" class="fw-bold"/>
+                                        <div class="text-muted small mt-1 mb-2">AI Language Model</div>
+                                        <field name="helpdesk_gemini_model" widget="selection"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <!-- ========================================================
+                         3. ASSIGNED TO (searchabletext: "assigned to")
+                         ======================================================== -->
+                    <block title="Assigned To" name="helpdesk_assigned_to_block">
+                        <setting id="helpdesk_assigned_to_setting">
+                            <span class="d-none">assigned to</span>
+                            <div class="content-group">
+                                <div class="mt-2">
+                                    <div class="mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-2">
+                                                <field name="helpdesk_assign_manual" nolabel="1"/>
+                                            </div>
+                                            <div>
+                                                <label for="helpdesk_assign_manual" string="Default" class="fw-bold mb-0"/>
+                                            </div>
+                                        </div>
+                                        <div class="text-muted small mt-1" style="padding-left: 28px;">
+                                            Tickets are manually assigned to staff by the Project Manager.
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-2">
+                                                <field name="helpdesk_assign_auto" nolabel="1"/>
+                                            </div>
+                                            <div>
+                                                <label for="helpdesk_assign_auto" string="Automatic" class="fw-bold mb-0"/>
+                                            </div>
+                                        </div>
+                                        <div class="text-muted small mt-1" style="padding-left: 28px;">
+                                            Incoming tickets are automatically assigned to staff based on configured criteria.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+
+                        <setting id="helpdesk_auto_rules_setting" string="Automatic Criteria" help="Configure rules for automatic ticket distribution" invisible="not helpdesk_assign_auto">
+                            <span class="d-none">assigned to ticket count assigned date</span>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <div class="mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-2">
+                                                <field name="helpdesk_auto_rule_ticket_count" nolabel="1"/>
+                                            </div>
+                                            <div>
+                                                <label for="helpdesk_auto_rule_ticket_count" string="Ticket Count : (lowest ticket count of employee)" class="fw-bold mb-0"/>
+                                            </div>
+                                        </div>
+                                        <div class="text-muted small mt-1" style="padding-left: 28px;">
+                                            Distribute tickets to employees with lowest active ticket count.
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-2">
+                                                <field name="helpdesk_auto_rule_assigned_date" nolabel="1"/>
+                                            </div>
+                                            <div>
+                                                <label for="helpdesk_auto_rule_assigned_date" string="Assigned Date : (oldest assigned ticket of employee)" class="fw-bold mb-0"/>
+                                            </div>
+                                        </div>
+                                        <div class="text-muted small mt-1" style="padding-left: 28px;">
+                                            Distribute tickets to employees with oldest last assigned date/time.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Configuration Menu Action -->
+    <record id="action_helpdesk_portal_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'website_helpdesk_portal', 'bin_size': False}</field>
+    </record>
+
+    <!-- Menu Items under Helpdesk Portal -->
+    <menuitem id="menu_helpdesk_configuration_root"
+              name="Configuration"
+              parent="menu_helpdesk_root"
+              sequence="100"/>
+
+    <menuitem id="menu_helpdesk_settings"
+              name="Settings"
+              parent="menu_helpdesk_configuration_root"
+              action="action_helpdesk_portal_settings"
+              sequence="1"/>
+
+    <menuitem id="menu_helpdesk_custom_profile"
+              name="Custom Profiles"
+              parent="menu_helpdesk_configuration_root"
+              action="action_helpdesk_custom_profile"
+              sequence="2"/>
+
+</odoo>

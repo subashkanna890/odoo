@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_helpdesk_custom_profile_tree" model="ir.ui.view">
+        <field name="name">helpdesk.custom.profile.tree</field>
+        <field name="model">helpdesk.custom.profile</field>
+        <field name="arch" type="xml">
+            <list string="Custom Profiles">
+                <field name="name"/>
+                <field name="color"/>
+                <field name="font_family"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_helpdesk_custom_profile_form" model="ir.ui.view">
+        <field name="name">helpdesk.custom.profile.form</field>
+        <field name="model">helpdesk.custom.profile</field>
+        <field name="arch" type="xml">
+            <form string="Custom Profile">
+                <sheet>
+                    <field name="logo" widget="image" class="oe_avatar" options="{'preview_image': 'logo', 'size': [90, 90]}"/>
+                    <div class="oe_title">
+                        <label for="name" string="Brand Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Helpdesk Portal"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="color" widget="selection"/>
+                            <field name="font_family" widget="selection"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_helpdesk_custom_profile" model="ir.actions.act_window">
+        <field name="name">Custom Profiles</field>
+        <field name="res_model">helpdesk.custom.profile</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a custom profile for Helpdesk Portal
+            </p>
+        </field>
+    </record>
+
+</odoo>

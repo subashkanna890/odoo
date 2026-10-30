@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Knowledge Article 1: Installation & Environment Troubleshooting -->
+    <record id="kb_installation_troubleshooting" model="helpdesk.ai.knowledge">
+        <field name="name">App Environment &amp; Installation Troubleshooting Guide</field>
+        <field name="document_type">faq</field>
+        <field name="access_scope">employee</field>
+        <field name="source_url">/helpdesk/kb/installation-troubleshooting</field>
+        <field name="is_indexed">True</field>
+        <field name="sequence">10</field>
+        <field name="content"><![CDATA[### Application Setup & Environment Troubleshooting SOP
+
+1. **Virtual Environment & Dependencies:**
+   - Always activate your virtual environment before running the server: `.\venv\Scripts\Activate.ps1`.
+   - Verify installed packages against `requirements.txt`. If module imports fail, execute `pip install -r requirements.txt`.
+
+2. **Database Connection & Port Conflicts:**
+   - Standard Odoo HTTP port is `8069` and PostgreSQL port is `5432`.
+   - If port `8069` is blocked or unavailable, check active processes: `netstat -ano | findstr 8069` and terminate hanging processes.
+   - Test PostgreSQL daemon status with `pg_isready` before launching the server.
+
+3. **Asset Compilation & Cache Refresh:**
+   - If CSS styles or JavaScript files show syntax errors, update the module to force recompilation:
+     `python odoo-bin -u website_helpdesk_portal -d <database_name>`
+   - Hard refresh your browser (`Ctrl + F5`) to invalidate the browser's asset cache.
+]]></field>
+    </record>
+
+    <!-- Knowledge Article 2: Helpdesk SLA & Overdue Ticket Policy -->
+    <record id="kb_sla_overdue_policy" model="helpdesk.ai.knowledge">
+        <field name="name">Helpdesk SLA &amp; Rotting Ticket Policies</field>
+        <field name="document_type">sop</field>
+        <field name="access_scope">public</field>
+        <field name="source_url">/helpdesk/kb/sla-policy</field>
+        <field name="is_indexed">True</field>
+        <field name="sequence">20</field>
+        <field name="content"><![CDATA[### Helpdesk SLA & Overdue Ticket Policy
+
+• **Overdue / Rotting Threshold:**
+  A ticket is classified as Overdue / Rotting if:
+  1. The elapsed time from creation exceeds 48 hours without resolution.
+  2. The ticket is explicitly marked in the `rotting` stage by an automated cron or manager.
+  3. The ticket SLA deadline has failed (`sla_failed = True`).
+
+• **Target Timelines by Priority:**
+  - **Urgent / Critical (Priority 3):** First response within 15 minutes; resolution within 4 hours.
+  - **High (Priority 2):** First response within 1 hour; resolution within 12 hours.
+  - **Medium / Normal (Priority 1):** First response within 4 hours; resolution within 24 hours.
+  - **Low (Priority 0):** First response within 8 hours; resolution within 48 hours.
+
+• **Escalation Protocol:**
+  Overdue tickets immediately trigger red alert indicators on the Employee and PM consoles. Project Managers reassign unattended tickets to backup engineers.
+]]></field>
+    </record>
+
+    <!-- Knowledge Article 3: Employee Ticket Lifecycle SOP -->
+    <record id="kb_ticket_lifecycle_sop" model="helpdesk.ai.knowledge">
+        <field name="name">Employee Ticket Triage &amp; Stage Lifecycle SOP</field>
+        <field name="document_type">sop</field>
+        <field name="access_scope">employee</field>
+        <field name="source_url">/helpdesk/kb/ticket-lifecycle</field>
+        <field name="is_indexed">True</field>
+        <field name="sequence">30</field>
+        <field name="content"><![CDATA[### Standard Operating Procedure for Employee Ticket Triage
+
+1. **Intake & Assignment (New):**
+   - Review incoming tickets from the *Pending Tickets* queue.
+   - Confirm project, category, and priority. Assign to the relevant staff or team lead.
+
+2. **Investigation & Work (In Progress):**
+   - Move ticket stage to `progress`. This automatically activates the live in-progress timer.
+   - Document technical findings using internal notes (`message_post`).
+
+3. **Resolution & Customer Verification (Solved):**
+   - Once the fix is verified in staging, transition stage to `solved`.
+   - Provide a clear, polite summary to the requester explaining the resolution steps.
+
+4. **Closure (Resolved):**
+   - Ticket moves to `resolved` when the customer confirms satisfaction or after 72 hours of inactivity.
+]]></field>
+    </record>
+
+    <!-- Knowledge Article 4: Project Manager Milestone & Deliverables -->
+    <record id="kb_pm_milestone_guide" model="helpdesk.ai.knowledge">
+        <field name="name">Project Manager Milestone &amp; Ticket Tracking Guide</field>
+        <field name="document_type">project_doc</field>
+        <field name="access_scope">project_manager</field>
+        <field name="source_url">/helpdesk/kb/pm-guide</field>
+        <field name="is_indexed">True</field>
+        <field name="sequence">40</field>
+        <field name="content"><![CDATA[### Project Manager Deliverables & Workload SOP
+
+• **Project Health Metrics:**
+  - Project managers should maintain a ratio of overdue tickets to total open tickets below 10%.
+  - Team workload should be balanced across assigned staff so no single member exceeds 8 concurrent open tickets.
+
+• **Weekly Ticket Review:**
+  - Every Monday, review overdue and rotting tickets.
+  - Re-prioritize aging issues and assign critical bug fixes to available sprint capacity.
+]]></field>
+    </record>
+</odoo>

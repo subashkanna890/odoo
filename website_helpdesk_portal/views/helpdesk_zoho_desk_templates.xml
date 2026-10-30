@@ -1,0 +1,2395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="zoho_enterprise_desk" name="Zoho Desk Enterprise Workspace">
+        <t t-call="website.layout">
+            <style><![CDATA[
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+
+            :root {
+                --zd-navy: #1e2538;
+                --zd-header-bg: #1e2538;
+                --zd-header-text: #ffffff;
+                --zd-header-hover: #29324e;
+                --zd-header-active-line: #ffffff;
+                --zd-accent: #0877f9;
+                --zd-accent-hover: #0665d0;
+                --zd-sidebar-bg: #1e2538;
+                --zd-sidebar-border: #161c2c;
+                --zd-sidebar-text: #f4f6fb;
+                --zd-sidebar-text-muted: #8c9bb5;
+                --zd-sidebar-hover: #2d3854;
+                --zd-sidebar-active: #2f3a56;
+                --zd-sidebar-active-text: #ffffff;
+                --zd-body-bg: #ffffff;
+                --zd-card-border: #e8edf4;
+                --zd-text-main: #111827;
+                --zd-text-sub: #5d6981;
+                --zd-top-height: 50px;
+                --zd-sidebar-width: 56px;
+                --zd-bottom-height: 32px;
+            }
+
+            body.dark-theme {
+                --zd-body-bg: #111827;
+                --zd-sidebar-bg: #0f1422;
+                --zd-sidebar-border: #1e2538;
+                --zd-sidebar-text: #D1D5DB;
+                --zd-sidebar-text-muted: #9CA3AF;
+                --zd-sidebar-hover: #1e2538;
+                --zd-sidebar-active: #232d46;
+                --zd-sidebar-active-text: #ffffff;
+                --zd-card-border: #1e293b;
+                --zd-text-main: #F9FAFB;
+                --zd-text-sub: #9CA3AF;
+            }
+
+            #oe_main_menu_navbar, header#top, footer#bottom, .o_footer, 
+            .o_ribbon, .ribbon, .o_neutralized_banner, #oe_neutralized_banner, 
+            .o_skip_to_content, a.o_skip_to_content, a[href="#wrap"], a[href="#wrapwrap"], .visually-hidden-focusable { 
+                display: none !important; 
+                height: 0 !important;
+                width: 0 !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                position: absolute !important;
+                left: -9999px !important;
+                top: -9999px !important;
+                pointer-events: none !important;
+                clip: rect(0,0,0,0) !important;
+            }
+
+            html, body {
+                height: 100vh !important;
+                max-height: 100vh !important;
+                overflow: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+                background: var(--zd-body-bg) !important;
+                color: var(--zd-text-main) !important;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            #wrapwrap {
+                height: 100vh !important;
+                max-height: 100vh !important;
+                width: 100vw !important;
+                overflow: hidden !important;
+                display: flex !important;
+                flex-direction: column !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: var(--zd-body-bg) !important;
+            }
+
+            main {
+                flex: 1 1 0% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100% !important;
+                max-height: 100% !important;
+                overflow: hidden !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .zd-shell {
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                width: 100vw;
+                overflow: hidden;
+                background: var(--zd-body-bg);
+            }
+
+            /* --- Top Navigation Bar (#231F1D) --- */
+            /* --- Top Navigation Bar (#1e2538 Navy) --- */
+            .zd-top-bar {
+                height: var(--zd-top-height);
+                min-height: var(--zd-top-height);
+                background-color: var(--zd-header-bg);
+                color: var(--zd-header-text);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 16px;
+                border-bottom: 1px solid #161c2c;
+                user-select: none;
+                z-index: 100;
+            }
+            .zd-top-left {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                height: 100%;
+            }
+            .zd-brand {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+                color: #FFFFFF;
+                font-weight: 700;
+                font-size: 18px;
+                letter-spacing: -0.4px;
+                padding-right: 12px;
+            }
+            .zd-brand svg {
+                display: block;
+            }
+            .zd-nav-tabs {
+                display: flex;
+                align-items: stretch;
+                height: 100%;
+                gap: 4px;
+            }
+            .zd-nav-tab {
+                display: flex;
+                align-items: center;
+                color: #c9d2e3;
+                font-size: 14px;
+                font-weight: 500;
+                padding: 0 12px;
+                cursor: pointer;
+                border-bottom: 2px solid transparent;
+                transition: color 0.15s, border-color 0.15s;
+                text-decoration: none;
+                white-space: nowrap;
+            }
+            .zd-nav-tab:hover {
+                color: #FFFFFF;
+                background: rgba(255, 255, 255, 0.05);
+            }
+            .zd-nav-tab.active {
+                color: #FFFFFF;
+                font-weight: 600;
+                border-bottom-color: #FFFFFF;
+            }
+            .zd-nav-tab.more-icon {
+                font-size: 16px;
+                padding: 0 8px;
+                color: #8c9bb5;
+            }
+            .zd-top-right {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                white-space: nowrap;
+            }
+            .zd-quick-new-btn {
+                background: #0877f9;
+                color: #FFFFFF;
+                border: none;
+                border-radius: 4px;
+                height: 30px;
+                padding: 0 12px;
+                font-size: 13px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                cursor: pointer;
+                transition: background 0.15s;
+            }
+            .zd-quick-new-btn:hover { background: #0063d8; }
+            .zd-search-box {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                background: #252e46;
+                border: 1px solid #364264;
+                border-radius: 4px;
+                height: 30px;
+                padding: 0 10px;
+                color: #94a3b8;
+                font-size: 13px;
+                cursor: text;
+            }
+            .zd-search-box input {
+                border: none;
+                outline: none;
+                background: transparent;
+                color: #f1f5f9;
+                font-size: 12px;
+                width: 90px;
+            }
+            .zd-search-box input::placeholder { color: #8c9bb5; }
+            .zd-top-icon-btn {
+                background: transparent;
+                border: none;
+                color: #a4b3cd;
+                width: 30px;
+                height: 30px;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                font-size: 15px;
+                transition: color 0.15s, background 0.15s;
+            }
+            .zd-top-icon-btn:hover {
+                color: #FFFFFF;
+                background: rgba(255, 255, 255, 0.08);
+            }
+            .zd-avatar-circle {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: #233446;
+                border: 1px solid #3c4c66;
+                color: #ffffff;
+                font-size: 12px;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                cursor: pointer;
+                user-select: none;
+            }
+            .zd-avatar-online-dot {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                background: #22c55e;
+                border: 1.5px solid #1e2538;
+                border-radius: 50%;
+                right: 0;
+                bottom: 0;
+            }
+
+            /* --- Layout Body (Sidebar + Content) --- */
+            .zd-main-body {
+                flex: 1 1 0%;
+                display: flex;
+                overflow: hidden;
+                position: relative;
+            }
+
+            /* --- Left Sidebar (Compact 56px Navy Icon Navigation) --- */
+            .zd-sidebar {
+                width: var(--zd-sidebar-width);
+                min-width: var(--zd-sidebar-width);
+                background: var(--zd-sidebar-bg);
+                border-right: 1px solid var(--zd-sidebar-border);
+                display: flex;
+                flex-direction: column;
+                user-select: none;
+                overflow-y: auto;
+                overflow-x: hidden;
+                z-index: 15;
+            }
+            .zd-sidebar-item {
+                min-height: 58px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 3px;
+                color: #c9d2e3;
+                text-align: center;
+                font-size: 11px;
+                line-height: 1.1;
+                padding: 6px 2px;
+                cursor: pointer;
+                text-decoration: none;
+                border-left: 3px solid transparent;
+                transition: background 0.15s, color 0.15s;
+            }
+            .zd-sidebar-item:hover {
+                background: #29324e;
+                color: #ffffff;
+            }
+            .zd-sidebar-item.active {
+                background: #2d3854;
+                border-left-color: #0877f9;
+                color: #ffffff;
+                font-weight: 600;
+            }
+            .zd-sidebar-item-icon {
+                font-size: 18px;
+                line-height: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .zd-sidebar-item-label {
+                white-space: nowrap;
+                text-align: center;
+            }
+            .zd-sidebar-bottom-collapse {
+                margin-top: auto;
+                min-height: 38px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                color: #8c9bb5;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            .zd-sidebar-bottom-collapse:hover {
+                color: #ffffff;
+                background: #29324e;
+            }
+
+            /* --- Workspace Container --- */
+            .zd-workspace {
+                flex: 1 1 0%;
+                display: flex;
+                flex-direction: column;
+                background: var(--zd-body-bg);
+                overflow: hidden;
+                position: relative;
+            }
+            .zd-screen {
+                display: none;
+                flex: 1 1 0%;
+                flex-direction: column;
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+            }
+            .zd-screen.active {
+                display: flex;
+            }
+
+            /* --- Screen 1 Sub-Header Bar (Exact match to screenshot!) --- */
+            .zd-sub-header {
+                height: 50px;
+                min-height: 50px;
+                border-bottom: 1px solid #e8edf4;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 28px 0 36px;
+                background: #ffffff;
+                user-select: none;
+            }
+            body.dark-theme .zd-sub-header {
+                background: #1e2538;
+                border-bottom-color: #2e3852;
+            }
+            .zd-sub-header-left {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .zd-star-btn {
+                background: none;
+                border: none;
+                color: #34405a;
+                cursor: pointer;
+                font-size: 19px;
+                width: 25px;
+                height: 29px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: color 0.15s;
+            }
+            .zd-star-btn.active, .zd-star-btn:hover { color: #f59e0b; }
+            .zd-view-title-dropdown {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 15px;
+                font-weight: 700;
+                color: #111827;
+                cursor: pointer;
+                padding: 0 4px;
+            }
+            body.dark-theme .zd-view-title-dropdown { color: #f1f5f9; }
+            .zd-chevron {
+                color: #6b7891;
+                font-size: 11px;
+                margin-left: 2px;
+            }
+            .zd-filter-split {
+                display: inline-flex;
+                align-items: center;
+                margin-left: 6px;
+            }
+            .zd-filter-funnel {
+                height: 29px;
+                width: 29px;
+                border: 1px solid #cbd5e5;
+                background: #ffffff;
+                color: #34415b;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-top-left-radius: 3px;
+                border-bottom-left-radius: 3px;
+                cursor: pointer;
+            }
+            .zd-filter-arrow {
+                height: 29px;
+                width: 26px;
+                border: 1px solid #cbd5e5;
+                border-left: none;
+                background: #ffffff;
+                color: #6b7891;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                font-size: 11px;
+                cursor: pointer;
+            }
+            .zd-refresh-btn {
+                height: 29px;
+                width: 29px;
+                border: none;
+                background: transparent;
+                color: #4f5c74;
+                font-size: 19px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                margin-left: 4px;
+            }
+            .zd-refresh-btn:hover { color: #0877f9; }
+
+            .zd-sub-header-right {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .zd-total-count {
+                font-size: 13px;
+                font-weight: 500;
+                color: #0675ff;
+                text-decoration: none;
+                cursor: pointer;
+                margin-right: 6px;
+            }
+            .zd-total-count:hover { text-decoration: underline; }
+            .zd-view-mode-selector {
+                height: 29px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 0 10px;
+                border-radius: 3px;
+                border: 1px solid #cbd5e5;
+                background: #ffffff;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                color: #24304a;
+                white-space: nowrap;
+            }
+            .zd-square-icon-btn {
+                height: 29px;
+                width: 29px;
+                border: 1px solid #cbd5e5;
+                border-radius: 3px;
+                background: #ffffff;
+                color: #24304a;
+                font-size: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+            .zd-info-btn {
+                font-family: Georgia, serif;
+                font-weight: 700;
+                font-size: 14px;
+            }
+
+            /* --- Screen 1: All Tickets (Classic View - Exact Match to Screenshot!) --- */
+            .zd-ticket-list-wrapper {
+                flex: 1 1 0%;
+                overflow-y: auto;
+                background: #ffffff;
+                display: flex;
+                flex-direction: column;
+            }
+            body.dark-theme .zd-ticket-list-wrapper {
+                background: #161c2d;
+            }
+            .zd-ticket-row-classic {
+                height: 70px;
+                min-height: 70px;
+                display: flex;
+                align-items: center;
+                padding: 0 28px 0 36px;
+                border-bottom: 1px dotted #e2e8f0;
+                border-left: 2px solid #8995a9;
+                background: #ffffff;
+                position: relative;
+                min-width: 0;
+                transition: background 0.15s;
+                cursor: default;
+            }
+            .zd-ticket-row-classic:hover {
+                background: #f7f8fa;
+            }
+            body.dark-theme .zd-ticket-row-classic {
+                background: #1a2235;
+                border-bottom-color: #2e3852;
+                border-left-color: #4f5f80;
+            }
+            body.dark-theme .zd-ticket-row-classic:hover {
+                background: #222b42;
+            }
+            .zd-select-cell {
+                width: 48px;
+                flex: 0 0 48px;
+                display: flex;
+                align-items: center;
+            }
+            .zd-ticket-checkbox {
+                width: 16px;
+                height: 16px;
+                border-radius: 3px;
+                border: 1px solid #cbd5e1;
+                accent-color: #0877f9;
+                cursor: pointer;
+            }
+            .zd-envelope-badge {
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                background: #f1f5f9;
+                border: 1px solid #e2e8f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 14px;
+                flex-shrink: 0;
+                color: #1e293b;
+            }
+            body.dark-theme .zd-envelope-badge {
+                background: #242f48;
+                border-color: #3b4868;
+                color: #e2e8f0;
+            }
+            .zd-ticket-details {
+                min-width: 230px;
+                flex: 1 1 auto;
+                align-self: center;
+                padding-right: 16px;
+            }
+            .zd-ticket-subject {
+                display: inline-block;
+                font-size: 15px;
+                line-height: 20px;
+                font-weight: 500;
+                color: #101828;
+                margin-bottom: 3px;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            body.dark-theme .zd-ticket-subject { color: #f3f4f6; }
+            .zd-ticket-subject:hover {
+                color: #0877f9;
+                text-decoration: underline;
+            }
+            .zd-ticket-meta {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 7px;
+                font-size: 12px;
+                color: #5d6981;
+                line-height: 16px;
+            }
+            body.dark-theme .zd-ticket-meta { color: #8fa0be; }
+            .zd-ticket-meta-id {
+                color: #52627d;
+                font-weight: 500;
+            }
+            .zd-meta-sep {
+                color: #9ca3af;
+                font-size: 10px;
+            }
+            .zd-meta-time {
+                display: inline-flex;
+                align-items: center;
+                white-space: nowrap;
+            }
+            .zd-row-actions {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                margin: 0 28px 0 8px;
+                flex: 0 0 auto;
+            }
+            .zd-row-actions button {
+                border: 0;
+                background: transparent;
+                color: #66748c;
+                font-size: 16px;
+                min-width: 18px;
+                padding: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: color 0.15s;
+            }
+            .zd-row-actions button:hover {
+                color: #0877f9;
+            }
+            .zd-status-cell {
+                position: relative;
+                flex: 0 0 auto;
+            }
+            .zd-status-trigger-btn {
+                height: 24px;
+                min-width: 68px;
+                padding: 0 8px;
+                display: inline-flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 4px;
+                border: 1px solid #d7dfeb;
+                border-radius: 3px;
+                background: #ffffff;
+                color: #111827;
+                font-size: 12px;
+                cursor: pointer;
+            }
+            body.dark-theme .zd-status-trigger-btn {
+                background: #1e2538;
+                border-color: #3b4868;
+                color: #f1f5f9;
+            }
+            .zd-status-dropdown-menu {
+                position: absolute;
+                top: 30px;
+                right: 0;
+                width: 250px;
+                background: #ffffff;
+                border-radius: 4px;
+                box-shadow: 0 10px 28px rgba(25, 37, 60, 0.16);
+                border: 1px solid #edf0f5;
+                z-index: 100;
+                padding: 0 0 7px;
+            }
+            body.dark-theme .zd-status-dropdown-menu {
+                background: #1e2538;
+                border-color: #334155;
+                box-shadow: 0 10px 28px rgba(0,0,0,0.5);
+            }
+            .zd-status-dropdown-menu[hidden] {
+                display: none;
+            }
+            .zd-status-menu-heading {
+                height: 42px;
+                display: flex;
+                align-items: center;
+                padding: 0 20px;
+                font-size: 11px;
+                font-weight: 700;
+                color: #111827;
+                position: relative;
+                letter-spacing: 0.5px;
+            }
+            body.dark-theme .zd-status-menu-heading { color: #f1f5f9; }
+            .zd-status-menu-heading::after {
+                content: "";
+                position: absolute;
+                left: 20px;
+                bottom: 8px;
+                width: 20px;
+                height: 1.5px;
+                background: #111827;
+            }
+            body.dark-theme .zd-status-menu-heading::after {
+                background: #f1f5f9;
+            }
+            .zd-status-menu-opt {
+                width: 100%;
+                min-height: 36px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                border: 0;
+                background: #ffffff;
+                text-align: left;
+                padding: 0 20px;
+                color: #111827;
+                font-size: 13px;
+                cursor: pointer;
+            }
+            body.dark-theme .zd-status-menu-opt {
+                background: #1e2538;
+                color: #e2e8f0;
+            }
+            .zd-status-menu-opt:hover {
+                background: #f5f8fc;
+            }
+            body.dark-theme .zd-status-menu-opt:hover {
+                background: #29354d;
+            }
+            .zd-status-menu-opt.selected {
+                background: #eff6ff;
+            }
+            body.dark-theme .zd-status-menu-opt.selected {
+                background: #1e3a8a;
+            }
+            .zd-opt-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                flex: 0 0 8px;
+            }
+            .dot-open, .dot-escalated { background: #111111; }
+            body.dark-theme .dot-open, body.dark-theme .dot-escalated { background: #ffffff; }
+            .dot-hold { background: #ff7900; }
+            .dot-closed { background: #22a447; }
+            .zd-opt-check {
+                margin-left: auto;
+                color: #0877f9;
+                font-size: 15px;
+                font-weight: 700;
+            }
+            .zd-related-count-btn {
+                margin-left: 20px;
+                font-size: 12px;
+                white-space: nowrap;
+                font-weight: 600;
+                color: #64748b;
+                border: none;
+                background: transparent;
+                cursor: pointer;
+            }
+            .zd-comment-btn {
+                margin-left: 14px;
+                font-size: 16px;
+                color: #64748b;
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .zd-comment-btn:hover { color: #0877f9; }
+            .zd-ticket-assignee-avatar {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 1px solid #cbd5e5;
+                background: #ffffff;
+                color: #111827;
+                margin-left: 22px;
+                flex: 0 0 38px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 600;
+                font-size: 13px;
+                user-select: none;
+            }
+            body.dark-theme .zd-ticket-assignee-avatar {
+                background: #1e2538;
+                border-color: #3b4868;
+                color: #f1f5f9;
+            }
+            .zd-empty-workspace-spacer {
+                flex: 1 1 auto;
+                min-height: 400px;
+                background: #ffffff;
+            }
+            body.dark-theme .zd-empty-workspace-spacer {
+                background: #161c2d;
+            }
+            .zd-bottom-bar {
+                display: none !important;
+            }
+
+            /* --- Screen 2: Dedicated Ticket Detail (3-Column Layout) --- */
+            .zd-ticket-detail-view {
+                flex: 1 1 0%;
+                display: grid;
+                grid-template-columns: 240px 320px 1fr;
+                height: 100%;
+                overflow: hidden;
+            }
+            .zd-detail-left-col {
+                border-right: 1px solid var(--zd-card-border);
+                background: var(--zd-sidebar-bg);
+                overflow-y: auto;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            .zd-detail-mid-col {
+                border-right: 1px solid var(--zd-card-border);
+                background: var(--zd-body-bg);
+                overflow-y: auto;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            .zd-detail-right-col {
+                background: var(--zd-body-bg);
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                overflow: hidden;
+            }
+            .zd-conv-timeline {
+                flex: 1 1 0%;
+                overflow-y: auto;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            .zd-msg-card {
+                background: #FFFFFF;
+                border: 1px solid #E2E8F0;
+                border-radius: 8px;
+                padding: 14px 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            body.dark-theme .zd-msg-card {
+                background: #1F2937;
+                border-color: #374151;
+            }
+            .zd-msg-card.internal-note {
+                background: #FFFBEB;
+                border-color: #FDE68A;
+            }
+            body.dark-theme .zd-msg-card.internal-note {
+                background: #78350F;
+                border-color: #B45309;
+            }
+            .zd-reply-composer {
+                border-top: 1px solid var(--zd-card-border);
+                background: var(--zd-body-bg);
+                padding: 14px 18px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .zd-composer-tabs {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .zd-composer-tab {
+                padding: 5px 12px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                border: 1px solid transparent;
+            }
+            .zd-composer-tab.active {
+                background: #EFF6FF;
+                color: #2563EB;
+                border-color: #BFDBFE;
+            }
+            .zd-composer-tab.internal.active {
+                background: #FEF3C7;
+                color: #B45309;
+                border-color: #FDE68A;
+            }
+            .zd-composer-textarea {
+                width: 100%;
+                min-height: 80px;
+                border: 1px solid var(--zd-card-border);
+                border-radius: 6px;
+                padding: 10px;
+                font-size: 13px;
+                font-family: inherit;
+                resize: vertical;
+                outline: none;
+                box-sizing: border-box;
+                background: var(--zd-body-bg);
+                color: var(--zd-text-main);
+            }
+            .zd-composer-textarea:focus { border-color: var(--zd-accent); }
+
+            /* --- Bottom Persistent Toolbar (Matching Screenshot) --- */
+            .zd-bottom-bar {
+                height: var(--zd-bottom-height);
+                min-height: var(--zd-bottom-height);
+                background: var(--zd-body-bg);
+                border-top: 1px solid var(--zd-card-border);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 14px;
+                font-size: 12px;
+                user-select: none;
+                z-index: 90;
+            }
+            .zd-bottom-left {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                color: var(--zd-text-sub);
+            }
+            .zd-bottom-right {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .zd-btn-livechat {
+                background: #2563EB;
+                color: #FFFFFF;
+                border: none;
+                border-radius: 14px;
+                padding: 4px 12px;
+                font-size: 12px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: pointer;
+            }
+            .zd-btn-needhelp {
+                background: var(--zd-accent);
+                color: #FFFFFF;
+                border: none;
+                border-radius: 14px;
+                padding: 4px 12px;
+                font-size: 12px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: pointer;
+            }
+
+            /* --- Modals and Drawers --- */
+            .zd-modal-backdrop {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+                backdrop-filter: blur(2px);
+            }
+            .zd-modal-backdrop.open { display: flex; }
+            .zd-modal-box {
+                background: var(--zd-body-bg);
+                border-radius: 8px;
+                border: 1px solid var(--zd-card-border);
+                box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+                width: 90%;
+                max-width: 650px;
+                max-height: 85vh;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+            .zd-modal-header {
+                padding: 14px 18px;
+                border-bottom: 1px solid var(--zd-card-border);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-weight: 700;
+                font-size: 15px;
+            }
+            .zd-modal-body {
+                padding: 18px;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+            }
+            .zd-modal-footer {
+                padding: 12px 18px;
+                border-top: 1px solid var(--zd-card-border);
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                background: #F9FAFB;
+            }
+            body.dark-theme .zd-modal-footer { background: #1F2937; }
+
+            /* --- Sliding Preview Drawer --- */
+            .zd-preview-drawer {
+                position: absolute;
+                top: 0;
+                right: -420px;
+                width: 400px;
+                height: 100%;
+                background: var(--zd-body-bg);
+                border-left: 1px solid var(--zd-card-border);
+                box-shadow: -4px 0 12px rgba(0,0,0,0.08);
+                transition: right 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 80;
+                display: flex;
+                flex-direction: column;
+            }
+            .zd-preview-drawer.open { right: 0; }
+            ]]></style>
+
+            <div class="zd-shell" id="zdAppShell">
+                <!-- ========================================== -->
+                <!-- A. TOP NAVIGATION BAR (ZOHO CHARCOAL #231F1D) -->
+                <!-- ========================================== -->
+                <!-- ========================================== -->
+                <!-- A. TOP NAVIGATION BAR (NAVY #182033) -->
+                <!-- ========================================== -->
+                <header class="zd-top-bar">
+                    <div class="zd-top-left">
+                        <a href="/helpdesk/employee" class="zd-brand" title="aixodesk">
+                            <img src="/aixodesk/static/src/img/aixodesk-logo-white.svg" alt="aixodesk" style="height: 26px; width: auto;"/>
+                        </a>
+
+                        <nav class="zd-nav-tabs">
+                            <div class="zd-nav-tab active" data-module="tickets" onclick="switchZdModule('tickets')">Tickets</div>
+                            <div class="zd-nav-tab" data-module="kb" onclick="switchZdModule('kb')">Knowledge Base</div>
+                            <div class="zd-nav-tab" data-module="community" onclick="switchZdModule('community')">Community</div>
+                            <div class="zd-nav-tab" data-module="customers" onclick="switchZdModule('customers')">Customers</div>
+                            <div class="zd-nav-tab" data-module="analytics" onclick="switchZdModule('analytics')">Analytics</div>
+                            <div class="zd-nav-tab" data-module="activities" onclick="switchZdModule('activities')">Activities</div>
+                            <div class="zd-nav-tab" data-module="contracts">Contracts</div>
+                            <div class="zd-nav-tab" data-module="social">Social</div>
+                            <div class="zd-nav-tab" data-module="more" onclick="toggleZdMoreMenu(event)" title="More Modules">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                            </div>
+                        </nav>
+                    </div>
+
+                    <div class="zd-top-right">
+                        <!-- Quick Create Button "+ New ▾" -->
+                        <div style="position: relative;">
+                            <button type="button" class="zd-quick-create-btn" onclick="openCreateTicketModal()" style="background: #0877f9; color: #FFFFFF; border: none; border-radius: 4px; padding: 6px 14px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <span>+ New</span>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                        </div>
+
+                        <!-- Search input box -->
+                        <div class="zd-search-box" style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 5px 10px;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" placeholder="Search..." style="background: transparent; border: none; outline: none; color: #fff; font-size: 12px; width: 100px;" onkeydown="if(event.key==='Enter') openGlobalSearchModal();"/>
+                        </div>
+
+                        <!-- Inbox tray icon -->
+                        <button type="button" class="zd-top-icon-btn" title="Inbox / Notifications" onclick="toggleNotificationPopover(event)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+                        </button>
+
+                        <!-- Calendar icon -->
+                        <button type="button" class="zd-top-icon-btn" title="Calendar &amp; Activities" onclick="switchZdModule('activities')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        </button>
+
+                        <!-- Settings Gear -->
+                        <button type="button" class="zd-top-icon-btn" onclick="switchZdModule('settings')" title="Administration &amp; Settings">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        </button>
+
+                        <!-- User Profile Avatar with VI and Green dot -->
+                        <div style="position: relative;">
+                            <div class="zd-avatar-circle" onclick="toggleUserDropdown(event)" title="User Profile">
+                                <span>VI</span>
+                                <div class="zd-avatar-online-dot"></div>
+                            </div>
+                            <!-- User Dropdown Menu -->
+                            <div id="zdUserDropdown" style="display: none; position: absolute; right: 0; top: 38px; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); width: 200px; z-index: 1000; overflow: hidden;">
+                                <div style="padding: 12px; border-bottom: 1px solid #F3F4F6;">
+                                    <div style="font-weight: 600; font-size: 13px; color: #111827;"><t t-esc="current_emp.name if current_emp else (env.user.name or 'Lawrence')"/></div>
+                                    <div style="font-size: 11px; color: #6B7280; text-overflow: ellipsis; overflow: hidden;"><t t-esc="current_emp.work_email if current_emp else (env.user.login or 'admin')"/></div>
+                                </div>
+                                <div onclick="switchZdModule('settings'); hideAllDropdowns();" style="padding: 8px 12px; font-size: 13px; color: #374151; cursor: pointer;">Preferences &amp; Profile</div>
+                                <div onclick="toggleDarkMode(); hideAllDropdowns();" style="padding: 8px 12px; font-size: 13px; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+                                    <span>Dark Mode</span>
+                                    <span id="zdThemeIndicator" style="font-size: 11px; color: #9CA3AF;">Off</span>
+                                </div>
+                                <a href="/helpdesk/portal" style="display: block; padding: 8px 12px; font-size: 13px; color: #374151; text-decoration: none; border-top: 1px solid #F3F4F6;">Customer Portal</a>
+                                <a href="/helpdesk/logout" style="display: block; padding: 8px 12px; font-size: 13px; color: #DC2626; text-decoration: none; border-top: 1px solid #F3F4F6;">Sign Out</a>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- ========================================== -->
+                <!-- B. MAIN BODY (LEFT 56px NAVY SIDEBAR + WORKSPACE) -->
+                <!-- ========================================== -->
+                <div class="zd-main-body">
+                    <!-- Left Sidebar (Compact 56px Navy Icons) -->
+                    <aside class="zd-sidebar" id="zdSidebar">
+                        <!-- 1. HQ -->
+                        <div class="zd-sidebar-item" data-sidebar-action="hq" onclick="switchZdModule('headquarters')" title="Headquarters">
+                            <span class="zd-sidebar-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            </span>
+                            <span class="zd-sidebar-item-label">HQ</span>
+                        </div>
+
+                        <!-- 2. Tickets (Active by default) -->
+                        <div class="zd-sidebar-item active" data-sidebar-action="tickets" onclick="switchZdModule('tickets')" title="Tickets">
+                            <span class="zd-sidebar-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                            </span>
+                            <span class="zd-sidebar-item-label">Tickets</span>
+                        </div>
+
+                        <!-- 3. Team Feeds -->
+                        <div class="zd-sidebar-item" data-sidebar-action="feeds" onclick="switchZdModule('community')" title="Team Feeds">
+                            <span class="zd-sidebar-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+                            </span>
+                            <span class="zd-sidebar-item-label">Team<br/>Feeds</span>
+                        </div>
+
+                        <!-- 4. Views -->
+                        <div class="zd-sidebar-item" data-sidebar-action="views" onclick="switchZdModule('tickets')" title="Views">
+                            <span class="zd-sidebar-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            </span>
+                            <span class="zd-sidebar-item-label">Views</span>
+                        </div>
+
+                        <!-- 5. Agent Queue -->
+                        <div class="zd-sidebar-item" data-sidebar-action="agent_queue" onclick="switchZdModule('queues')" title="Agent Queue">
+                            <span class="zd-sidebar-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+                            </span>
+                            <span class="zd-sidebar-item-label">Agent<br/>Queue</span>
+                        </div>
+
+                        <!-- 6. Tags -->
+                        <div class="zd-sidebar-item" data-sidebar-action="tags" onclick="switchZdModule('activities')" title="Tags">
+                            <span class="zd-sidebar-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                            </span>
+                            <span class="zd-sidebar-item-label">Tags</span>
+                        </div>
+
+                        <!-- 7. Scheduled -->
+                        <div class="zd-sidebar-item" data-sidebar-action="scheduled" onclick="switchZdModule('activities')" title="Scheduled">
+                            <span class="zd-sidebar-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            </span>
+                            <span class="zd-sidebar-item-label">Scheduled</span>
+                        </div>
+
+                        <!-- 8. Reports -->
+                        <div class="zd-sidebar-item" data-sidebar-action="reports" onclick="switchZdModule('analytics')" title="Reports">
+                            <span class="zd-sidebar-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                            </span>
+                            <span class="zd-sidebar-item-label">Reports</span>
+                        </div>
+
+                        <!-- Bottom Collapse Button ⇒ -->
+                        <div class="zd-sidebar-bottom-collapse" onclick="toggleSidebarCollapse()" title="Toggle Sidebar">
+                            <span style="font-size: 16px;">⇒</span>
+                        </div>
+                    </aside>
+
+                    <!-- ========================================== -->
+                    <!-- C. MAIN CONTENT WORKSPACE -->
+                    <!-- ========================================== -->
+                    <main class="zd-workspace" id="zdWorkspace">
+                        
+                        <!-- ========================================== -->
+                        <!-- SCREEN 1: ALL TICKETS LIST (EXACT TO REFERENCE) -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen active" id="zdScreen_tickets">
+                            <!-- Sub-Header Bar -->
+                            <div class="zd-sub-header">
+                                <div class="zd-sub-header-left">
+                                    <button type="button" class="zd-star-btn" onclick="toggleFavoriteView(this)" title="Star / Favorite View">
+                                        ☆
+                                    </button>
+                                    
+                                    <div class="zd-view-title-dropdown" onclick="toggleViewsDropdown(event)">
+                                        <span id="zdCurrentViewHeading">All Tickets</span>
+                                        <span class="zd-chevron">▾</span>
+                                    </div>
+
+                                    <div class="zd-filter-split">
+                                        <button type="button" class="zd-filter-funnel" onclick="toggleFilterDrawer(event)" title="Filter">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                                        </button>
+                                        <button type="button" class="zd-filter-arrow" onclick="toggleFilterDrawer(event)" title="Filter options">▾</button>
+                                    </div>
+
+                                    <button type="button" class="zd-refresh-btn" onclick="window.location.reload()" title="Refresh">
+                                        ↻
+                                    </button>
+                                </div>
+
+                                <div class="zd-sub-header-right">
+                                    <a href="javascript:void(0)" class="zd-total-count" id="zdTotalCountLabel">Total Count</a>
+
+                                    <!-- View Mode Selector -->
+                                    <div class="zd-view-mode-selector" onclick="toggleViewModeDropdown(event)">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                                        <span>Classic View</span>
+                                        <span class="zd-chevron">▾</span>
+                                    </div>
+
+                                    <!-- View Mode Dropdown -->
+                                    <div id="zdViewModeDropdown" style="display: none; position: absolute; right: 120px; top: 44px; background: #FFF; border: 1px solid #E5E7EB; border-radius: 6px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); width: 140px; z-index: 50;">
+                                        <div onclick="setTicketViewMode('classic')" style="padding: 8px 12px; font-size: 13px; cursor: pointer; color: #111827;">Classic View</div>
+                                        <div onclick="setTicketViewMode('compact')" style="padding: 8px 12px; font-size: 13px; cursor: pointer; color: #111827;">Compact View</div>
+                                        <div onclick="setTicketViewMode('table')" style="padding: 8px 12px; font-size: 13px; cursor: pointer; color: #111827;">Table View</div>
+                                    </div>
+
+                                    <!-- More Actions Menu (···) -->
+                                    <button type="button" class="zd-square-icon-btn" onclick="toggleBulkActionsDropdown(event)" title="More Actions">
+                                        ···
+                                    </button>
+
+                                    <!-- Info Button (i) -->
+                                    <button type="button" class="zd-square-icon-btn zd-info-btn" onclick="openHelpInfoModal()" title="Information">
+                                        i
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Bulk Actions Bar (Appears when tickets selected) -->
+                            <div id="zdBulkBar" style="display: none; background: #EFF6FF; border-bottom: 1px solid #BFDBFE; padding: 8px 16px; align-items: center; justify-content: space-between; font-size: 13px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span id="zdBulkSelectedCount" style="font-weight: 600; color: #1E40AF;">0 tickets selected</span>
+                                    <button type="button" onclick="bulkAssign()" class="zd-btn-action" style="padding: 3px 8px; font-size: 12px;">Assign</button>
+                                    <button type="button" onclick="bulkChangeStatus()" class="zd-btn-action" style="padding: 3px 8px; font-size: 12px;">Change Status</button>
+                                    <button type="button" onclick="bulkExportCsv()" class="zd-btn-action" style="padding: 3px 8px; font-size: 12px;">Export CSV</button>
+                                </div>
+                                <button type="button" onclick="clearTicketSelection()" style="background: none; border: none; color: #6B7280; cursor: pointer; font-size: 12px;">Clear selection</button>
+                            </div>
+
+                            <!-- Ticket Rows Container (Classic View) -->
+                            <div class="zd-ticket-list-wrapper" id="zdTicketListWrapper">
+                                <t t-if="all_tickets">
+                                    <t t-foreach="all_tickets" t-as="t">
+                                        <div class="zd-ticket-row-classic" t-att-data-ticket-id="t.id" t-att-data-status="t.stage or 'open'" t-att-data-priority="t.priority or '0'">
+                                            <!-- Select Cell Checkbox -->
+                                            <div class="zd-select-cell">
+                                                <input type="checkbox" class="zd-ticket-checkbox" t-att-value="t.id" onchange="onTicketCheckboxChange(this)"/>
+                                            </div>
+                                            
+                                            <!-- Round Circular Envelope Badge -->
+                                            <div class="zd-envelope-badge" title="Channel: Email / Web">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                                                </svg>
+                                            </div>
+
+                                            <!-- Ticket Details (Subject & Meta Row) -->
+                                            <div class="zd-ticket-details">
+                                                <a href="javascript:void(0)" class="zd-ticket-subject" t-attf-onclick="openTicketDetail(#{t.id})">
+                                                    <t t-esc="t.name or 'Here\'s your first ticket.'"/>
+                                                </a>
+                                                
+                                                <div class="zd-ticket-meta">
+                                                    <span class="zd-ticket-meta-id">#<t t-esc="t.ticket_number or t.id or '100'"/></span>
+                                                    <span class="zd-meta-sep">·</span>
+                                                    <span style="font-weight: 500;"><t t-esc="t.partner_id.name if t.partner_id else 'Lawrence'"/></span>
+                                                    <span class="zd-meta-sep">·</span>
+                                                    <span>Zoho</span>
+                                                    <span class="zd-meta-sep">·</span>
+                                                    <span class="zd-meta-time">
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" style="margin-right: 3px; vertical-align: -1px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                        <t t-esc="t.create_date.strftime('%I:%M %p') if t.create_date else '09:46 AM'"/>
+                                                    </span>
+                                                    <span class="zd-meta-sep">·</span>
+                                                    <span class="zd-meta-time">
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" style="margin-right: 3px; vertical-align: -1px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                        <t t-esc="t.create_date.strftime('%d %b %I:%M %p') if t.create_date else '25 Oct 09:46 AM'"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row Action Icons: Open, KB, Edit, Delete -->
+                                            <div class="zd-row-actions">
+                                                <button type="button" class="zd-hover-act-btn" t-attf-onclick="openTicketDetail(#{t.id})" title="Open ticket">
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                                </button>
+                                                <button type="button" class="zd-hover-act-btn" t-attf-onclick="searchKbForTicket(#{t.id})" title="Knowledge base">
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                                                </button>
+                                                <button type="button" class="zd-hover-act-btn" t-attf-onclick="editTicketTags(#{t.id})" title="Edit ticket">
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                                                </button>
+                                                <button type="button" class="zd-hover-act-btn" t-attf-onclick="deleteTicketPrompt(#{t.id})" title="Delete ticket">
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                                </button>
+                                            </div>
+
+                                            <!-- Status Dropdown Button & Menu -->
+                                            <div class="zd-status-cell">
+                                                <button type="button" class="zd-status-trigger-btn" t-att-id="'zdStatusTrigger_' + str(t.id)" t-attf-onclick="toggleTicketStatusMenu(event, #{t.id})" aria-haspopup="true">
+                                                    <span class="zd-status-label" t-att-id="'zdCurrentStatus_' + str(t.id)"><t t-esc="(t.stage or 'Open').capitalize()"/></span>
+                                                    <span class="zd-chevron">▾</span>
+                                                </button>
+                                                
+                                                <div class="zd-status-dropdown-menu" t-att-id="'zdStatusMenu_' + str(t.id)" role="menu" t-att-hidden="'hidden' if not (request.params.get('open_status') == '1' or open_status == 1) else None">
+                                                    <div class="zd-status-menu-heading">STATUS</div>
+                                                    <div class="zd-status-menu-options">
+                                                        <button type="button" class="zd-status-menu-opt selected" t-att-data-ticket-id="t.id" data-status="open" t-attf-onclick="selectTicketStatus(#{t.id}, 'open', 'Open')">
+                                                            <span class="zd-opt-dot dot-open"></span>
+                                                            <span class="zd-opt-text">Open</span>
+                                                            <span class="zd-opt-check">✓</span>
+                                                        </button>
+                                                        <button type="button" class="zd-status-menu-opt" t-att-data-ticket-id="t.id" data-status="on_hold" t-attf-onclick="selectTicketStatus(#{t.id}, 'on_hold', 'On Hold')">
+                                                            <span class="zd-opt-dot dot-hold"></span>
+                                                            <span class="zd-opt-text">On Hold</span>
+                                                            <span class="zd-opt-check"></span>
+                                                        </button>
+                                                        <button type="button" class="zd-status-menu-opt" t-att-data-ticket-id="t.id" data-status="escalated" t-attf-onclick="selectTicketStatus(#{t.id}, 'escalated', 'Escalated')">
+                                                            <span class="zd-opt-dot dot-escalated"></span>
+                                                            <span class="zd-opt-text">Escalated</span>
+                                                            <span class="zd-opt-check"></span>
+                                                        </button>
+                                                        <button type="button" class="zd-status-menu-opt" t-att-data-ticket-id="t.id" data-status="closed" t-attf-onclick="selectTicketStatus(#{t.id}, 'closed', 'Closed')">
+                                                            <span class="zd-opt-dot dot-closed"></span>
+                                                            <span class="zd-opt-text">Closed</span>
+                                                            <span class="zd-opt-check"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Right Indicators: ≡1, 💬, Avatar VI -->
+                                            <button type="button" class="zd-related-count-btn" title="Related items">
+                                                <span>≡1</span>
+                                            </button>
+
+                                            <button type="button" class="zd-comment-btn" title="Comments" t-attf-onclick="openTicketDetail(#{t.id})">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                            </button>
+
+                                            <div class="zd-ticket-assignee-avatar" title="Assignee VI">
+                                                <span>VI</span>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <div class="zd-ticket-row-classic" data-ticket-id="100">
+                                        <div class="zd-select-cell">
+                                            <input type="checkbox" class="zd-ticket-checkbox"/>
+                                        </div>
+                                        <div class="zd-envelope-badge">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                                            </svg>
+                                        </div>
+                                        <div class="zd-ticket-details">
+                                            <a href="javascript:void(0)" class="zd-ticket-subject">
+                                                Here's your first ticket.
+                                            </a>
+                                            <div class="zd-ticket-meta">
+                                                <span class="zd-ticket-meta-id">#100</span>
+                                                <span class="zd-meta-sep">·</span>
+                                                <span style="font-weight: 500;">Lawrence</span>
+                                                <span class="zd-meta-sep">·</span>
+                                                <span>Zoho</span>
+                                                <span class="zd-meta-sep">·</span>
+                                                <span class="zd-meta-time">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" style="margin-right: 3px; vertical-align: -1px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                    09:46 AM
+                                                </span>
+                                                <span class="zd-meta-sep">·</span>
+                                                <span class="zd-meta-time">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" style="margin-right: 3px; vertical-align: -1px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                    25 Oct 09:46 AM
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="zd-row-actions">
+                                            <button type="button" title="Open ticket">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                            </button>
+                                            <button type="button" title="Knowledge base">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+                                            </button>
+                                            <button type="button" title="Edit ticket">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                            </button>
+                                            <button type="button" title="Delete ticket">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                            </button>
+                                        </div>
+                                        <div class="zd-status-cell">
+                                            <button type="button" class="zd-status-trigger-btn" id="zdStatusTrigger_100" onclick="toggleTicketStatusMenu(event, 100)">
+                                                <span class="zd-status-label" id="zdCurrentStatus_100">Open</span>
+                                                <span class="zd-chevron">▾</span>
+                                            </button>
+                                            <div class="zd-status-dropdown-menu" id="zdStatusMenu_100" role="menu" hidden="hidden">
+                                                <div class="zd-status-menu-heading">STATUS</div>
+                                                <div class="zd-status-menu-options">
+                                                    <button type="button" class="zd-status-menu-opt selected" onclick="selectTicketStatus(100, 'open', 'Open')">
+                                                        <span class="zd-opt-dot dot-open"></span>
+                                                        <span class="zd-opt-text">Open</span>
+                                                        <span class="zd-opt-check">✓</span>
+                                                    </button>
+                                                    <button type="button" class="zd-status-menu-opt" onclick="selectTicketStatus(100, 'on_hold', 'On Hold')">
+                                                        <span class="zd-opt-dot dot-hold"></span>
+                                                        <span class="zd-opt-text">On Hold</span>
+                                                        <span class="zd-opt-check"></span>
+                                                    </button>
+                                                    <button type="button" class="zd-status-menu-opt" onclick="selectTicketStatus(100, 'escalated', 'Escalated')">
+                                                        <span class="zd-opt-dot dot-escalated"></span>
+                                                        <span class="zd-opt-text">Escalated</span>
+                                                        <span class="zd-opt-check"></span>
+                                                    </button>
+                                                    <button type="button" class="zd-status-menu-opt" onclick="selectTicketStatus(100, 'closed', 'Closed')">
+                                                        <span class="zd-opt-dot dot-closed"></span>
+                                                        <span class="zd-opt-text">Closed</span>
+                                                        <span class="zd-opt-check"></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="zd-related-count-btn"><span>≡1</span></button>
+                                        <button type="button" class="zd-comment-btn">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                        </button>
+                                        <div class="zd-ticket-assignee-avatar"><span>VI</span></div>
+                                    </div>
+                                </t>
+
+                                <!-- Large White Workspace Canvas Spacer -->
+                                <div class="zd-empty-workspace-spacer" aria-hidden="true"></div>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- SCREEN 2: TICKET DETAIL & CONVERSATION -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen" id="zdScreen_ticketDetail">
+                            <div class="zd-sub-header">
+                                <div class="zd-sub-header-left">
+                                    <button type="button" class="zd-btn-action" onclick="closeTicketDetail()">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                                        <span>Back to Tickets</span>
+                                    </button>
+                                    <div style="display: flex; gap: 4px;">
+                                        <button type="button" class="zd-btn-action" onclick="navigatePrevTicket()" title="Previous Ticket">&lt;</button>
+                                        <button type="button" class="zd-btn-action" onclick="navigateNextTicket()" title="Next Ticket">&gt;</button>
+                                    </div>
+                                    <span style="font-size: 14px; font-weight: 700; color: var(--zd-text-main);" id="zdDetailTicketNum">#101</span>
+                                    <span style="font-size: 14px; color: var(--zd-text-sub);" id="zdDetailTicketSubject">i want to create helpdesk module</span>
+                                </div>
+                                <div class="zd-sub-header-right">
+                                    <button type="button" class="zd-btn-action" onclick="mergeTicketDialog()">Merge</button>
+                                    <button type="button" class="zd-btn-action zd-btn-primary" onclick="resolveCurrentTicket()">Resolve Ticket</button>
+                                </div>
+                            </div>
+
+                            <div class="zd-ticket-detail-view">
+                                <!-- Left Column: Navigation & History -->
+                                <div class="zd-detail-left-col">
+                                    <div>
+                                        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--zd-text-sub); margin-bottom: 8px;">Customer Information</div>
+                                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                            <div style="width: 32px; height: 32px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 13px;">L</div>
+                                            <div>
+                                                <div style="font-size: 13px; font-weight: 600;" id="zdDetailCustomerName">Lawrence</div>
+                                                <div style="font-size: 11px; color: #6B7280;" id="zdDetailCustomerEmail">lawrence@zoho.com</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--zd-text-sub); margin-bottom: 8px;">Customer Ticket History</div>
+                                        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px;">
+                                            <div style="padding: 6px 8px; background: #FFF; border: 1px solid #E5E7EB; border-radius: 4px;">
+                                                <div style="font-weight: 500;">#101 i want to create helpdesk module</div>
+                                                <span style="font-size: 10px; color: #E11D48; background: #FFF1F2; padding: 1px 4px; border-radius: 3px;">Open</span>
+                                            </div>
+                                            <div style="padding: 6px 8px; background: #FFF; border: 1px solid #E5E7EB; border-radius: 4px;">
+                                                <div style="font-weight: 500;">#100 Here's your first ticket</div>
+                                                <span style="font-size: 10px; color: #16A34A; background: #F0FDF4; padding: 1px 4px; border-radius: 3px;">Resolved</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--zd-text-sub); margin-bottom: 8px;">Timeline &amp; Audit</div>
+                                        <div style="font-size: 11px; color: #6B7280; display: flex; flex-direction: column; gap: 6px;">
+                                            <div>• Ticket created by Lawrence (3 days ago)</div>
+                                            <div>• Assigned to Lawrence</div>
+                                            <div>• Status set to Open</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Middle Column: Properties -->
+                                <div class="zd-detail-mid-col">
+                                    <div style="font-size: 14px; font-weight: 700; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px;">Ticket Properties</div>
+                                    
+                                    <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+                                        <div>
+                                            <label style="font-size: 11px; color: #6B7280; display: block;">Status</label>
+                                            <select id="zdPropStatus" onchange="updateTicketProperty('stage', this.value)" style="width: 100%; height: 30px; border-radius: 4px; border: 1px solid #CBD5E1; padding: 0 8px; font-size: 12px;">
+                                                <option value="open">Open</option>
+                                                <option value="in_progress">In Progress</option>
+                                                <option value="hold">On Hold</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="resolved">Resolved</option>
+                                                <option value="closed">Closed</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label style="font-size: 11px; color: #6B7280; display: block;">Priority</label>
+                                            <select id="zdPropPriority" onchange="updateTicketProperty('priority', this.value)" style="width: 100%; height: 30px; border-radius: 4px; border: 1px solid #CBD5E1; padding: 0 8px; font-size: 12px;">
+                                                <option value="0">Low</option>
+                                                <option value="1">Medium</option>
+                                                <option value="2">High</option>
+                                                <option value="3">Urgent</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label style="font-size: 11px; color: #6B7280; display: block;">Assignee</label>
+                                            <select id="zdPropAssignee" onchange="updateTicketProperty('assigned_employee_id', this.value)" style="width: 100%; height: 30px; border-radius: 4px; border: 1px solid #CBD5E1; padding: 0 8px; font-size: 12px;">
+                                                <option value="">Unassigned</option>
+                                                <t t-if="employees">
+                                                    <t t-foreach="employees" t-as="e">
+                                                        <option t-att-value="e.id"><t t-esc="e.name"/></option>
+                                                    </t>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label style="font-size: 11px; color: #6B7280; display: block;">Support Team / Department</label>
+                                            <input type="text" id="zdPropTeam" value="Technical Support" readonly="readonly" style="width: 100%; height: 30px; border-radius: 4px; border: 1px solid #E2E8F0; padding: 0 8px; font-size: 12px; background: #F8FAFC;"/>
+                                        </div>
+
+                                        <div>
+                                            <label style="font-size: 11px; color: #6B7280; display: block;">SLA Countdown</label>
+                                            <div style="display: flex; align-items: center; gap: 6px; font-weight: 600; color: #16A34A; background: #F0FDF4; padding: 6px 10px; border-radius: 4px; border: 1px solid #BBF7D0;">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                <span>First Response SLA on track (2h 45m left)</span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label style="font-size: 11px; color: #6B7280; display: block;">Category</label>
+                                            <input type="text" id="zdPropCategory" value="Technical / Module Setup" style="width: 100%; height: 30px; border-radius: 4px; border: 1px solid #CBD5E1; padding: 0 8px; font-size: 12px;"/>
+                                        </div>
+
+                                        <div>
+                                            <label style="font-size: 11px; color: #6B7280; display: block;">Tags</label>
+                                            <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
+                                                <span style="background: #F3F4F6; padding: 2px 8px; border-radius: 12px; font-size: 11px;">#helpdesk</span>
+                                                <span style="background: #F3F4F6; padding: 2px 8px; border-radius: 12px; font-size: 11px;">#odoo19</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column: Conversation Workspace -->
+                                <div class="zd-detail-right-col">
+                                    <div class="zd-conv-timeline" id="zdConvTimeline">
+                                        <!-- Initial Message -->
+                                        <div class="zd-msg-card">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #6B7280;">
+                                                <span style="font-weight: 600; color: #111827;">Lawrence (Customer)</span>
+                                                <span>17 Oct 10:15 PM</span>
+                                            </div>
+                                            <div style="font-size: 13px; line-height: 1.5; color: #374151;">
+                                                I want to create a new website helpdesk module in custom addons inspired by Zoho Desk. Please assist with the architecture, screens, and models.
+                                            </div>
+                                        </div>
+
+                                        <!-- Internal Note Example -->
+                                        <div class="zd-msg-card internal-note">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #92400E;">
+                                                <span style="font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                                    Internal Agent Note
+                                                </span>
+                                                <span>17 Oct 10:20 PM</span>
+                                            </div>
+                                            <div style="font-size: 13px; line-height: 1.5; color: #78350F;">
+                                                Assigned to technical tier. Building complete Zoho Desk-inspired layout matching reference screenshot.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Reply Composer -->
+                                    <div class="zd-reply-composer">
+                                        <div class="zd-composer-tabs">
+                                            <button type="button" class="zd-composer-tab active" id="zdTabPublicReply" onclick="setComposerMode('public')">Public Reply</button>
+                                            <button type="button" class="zd-composer-tab internal" id="zdTabInternalNote" onclick="setComposerMode('internal')">Internal Note</button>
+                                            
+                                            <!-- Canned Responses Picker -->
+                                            <select onchange="insertCannedResponse(this.value); this.selectedIndex=0;" style="margin-left: auto; height: 26px; font-size: 12px; border-radius: 4px; border: 1px solid #CBD5E1;">
+                                                <option value="">Insert Canned Response...</option>
+                                                <option value="Hello! We are actively looking into your ticket.">Greetings &amp; Acknowledgment</option>
+                                                <option value="Could you please provide screenshots or server logs?">Request for Details</option>
+                                                <option value="We have resolved the issue. Please verify on your end.">Resolution Confirmation</option>
+                                            </select>
+                                        </div>
+
+                                        <textarea class="zd-composer-textarea" id="zdComposerInput" placeholder="Type your public reply to the customer..."></textarea>
+
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div style="display: flex; gap: 8px;">
+                                                <button type="button" class="zd-btn-action" onclick="document.getElementById('zdAttachmentInput').click()" title="Attach File">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                                                    <span>Attach</span>
+                                                </button>
+                                                <input type="file" id="zdAttachmentInput" style="display: none;" onchange="handleAttachmentUpload(this)"/>
+                                            </div>
+                                            
+                                            <div style="display: flex; gap: 8px;">
+                                                <button type="button" class="zd-btn-action" onclick="sendAndCloseTicket()">Send &amp; Close</button>
+                                                <button type="button" class="zd-btn-action zd-btn-primary" onclick="submitTicketReply()">Send Reply</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- SCREEN 4: HEADQUARTERS DASHBOARD -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen" id="zdScreen_headquarters" style="padding: 20px; overflow-y: auto;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div>
+                                    <h2 style="font-size: 20px; font-weight: 700; margin: 0;">Headquarters Executive Dashboard</h2>
+                                    <p style="font-size: 13px; color: #6B7280; margin: 4px 0 0 0;">Real-time management metrics, SLA compliance, and team workload.</p>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <select style="height: 32px; border-radius: 4px; border: 1px solid #CBD5E1; font-size: 12px; padding: 0 10px;">
+                                        <option>This Month</option>
+                                        <option>This Week</option>
+                                        <option>Today</option>
+                                    </select>
+                                    <button type="button" class="zd-btn-action" onclick="exportHqReport()">Export PDF</button>
+                                </div>
+                            </div>
+
+                            <!-- KPI Cards -->
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                    <div style="font-size: 12px; color: #6B7280; font-weight: 500;">TOTAL TICKETS</div>
+                                    <div style="font-size: 26px; font-weight: 700; color: #111827; margin-top: 6px;"><t t-esc="len(all_tickets)"/></div>
+                                    <div style="font-size: 11px; color: #16A34A; margin-top: 4px;">+12% from last month</div>
+                                </div>
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                    <div style="font-size: 12px; color: #6B7280; font-weight: 500;">OPEN TICKETS</div>
+                                    <div style="font-size: 26px; font-weight: 700; color: #E11D48; margin-top: 6px;"><t t-esc="tcnt_open"/></div>
+                                    <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">Triage required</div>
+                                </div>
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                    <div style="font-size: 12px; color: #6B7280; font-weight: 500;">RESOLVED TICKETS</div>
+                                    <div style="font-size: 26px; font-weight: 700; color: #16A34A; margin-top: 6px;"><t t-esc="tcnt_resolved"/></div>
+                                    <div style="font-size: 11px; color: #16A34A; margin-top: 4px;">92% resolution rate</div>
+                                </div>
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                    <div style="font-size: 12px; color: #6B7280; font-weight: 500;">SLA COMPLIANCE</div>
+                                    <div style="font-size: 26px; font-weight: 700; color: #2563EB; margin-top: 6px;">96.4%</div>
+                                    <div style="font-size: 11px; color: #16A34A; margin-top: 4px;">Above target (95%)</div>
+                                </div>
+                            </div>
+
+                            <!-- Charts Grid -->
+                            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 18px;">
+                                    <div style="font-weight: 600; font-size: 14px; margin-bottom: 12px;">Ticket Volume Trend Over Time</div>
+                                    <svg viewBox="0 0 600 180" style="width: 100%; height: 180px;">
+                                        <polyline fill="none" stroke="#E67E22" stroke-width="3" points="20,140 100,110 180,130 260,80 340,95 420,40 500,60 580,20"/>
+                                        <circle cx="20" cy="140" r="4" fill="#E67E22"/>
+                                        <circle cx="100" cy="110" r="4" fill="#E67E22"/>
+                                        <circle cx="180" cy="130" r="4" fill="#E67E22"/>
+                                        <circle cx="260" cy="80" r="4" fill="#E67E22"/>
+                                        <circle cx="340" cy="95" r="4" fill="#E67E22"/>
+                                        <circle cx="420" cy="40" r="4" fill="#E67E22"/>
+                                        <circle cx="500" cy="60" r="4" fill="#E67E22"/>
+                                        <circle cx="580" cy="20" r="4" fill="#E67E22"/>
+                                    </svg>
+                                </div>
+
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 18px;">
+                                    <div style="font-weight: 600; font-size: 14px; margin-bottom: 12px;">Tickets by Status</div>
+                                    <div style="display: flex; flex-direction: column; gap: 10px; font-size: 12px;">
+                                        <div>
+                                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span>Open</span><span><t t-esc="tcnt_open"/></span></div>
+                                            <div style="height: 6px; background: #FEE2E2; border-radius: 3px;"><div style="height: 100%; background: #EF4444; border-radius: 3px; width: 45%;"></div></div>
+                                        </div>
+                                        <div>
+                                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span>In Progress</span><span><t t-esc="tcnt_in_progress or 1"/></span></div>
+                                            <div style="height: 6px; background: #DBEAFE; border-radius: 3px;"><div style="height: 100%; background: #2563EB; border-radius: 3px; width: 30%;"></div></div>
+                                        </div>
+                                        <div>
+                                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span>Resolved</span><span><t t-esc="tcnt_resolved"/></span></div>
+                                            <div style="height: 6px; background: #DCFCE7; border-radius: 3px;"><div style="height: 100%; background: #16A34A; border-radius: 3px; width: 85%;"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- SCREEN 5: AGENT & TEAM QUEUES -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen" id="zdScreen_queues" style="padding: 20px; overflow-y: auto;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <div style="display: flex; gap: 8px;">
+                                    <button type="button" class="zd-btn-action zd-btn-primary" id="zdSubtabAgentBtn" onclick="switchQueueSubtab('agent')">Agent Queue</button>
+                                    <button type="button" class="zd-btn-action" id="zdSubtabTeamBtn" onclick="switchQueueSubtab('team')">Team Queue</button>
+                                </div>
+                                <button type="button" class="zd-btn-action" onclick="openReassignModal()">Reassign Selected</button>
+                            </div>
+
+                            <div id="zdQueueAgentView">
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;">
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                        <thead>
+                                            <tr style="background: #F9FAFB; border-bottom: 1px solid #E5E7EB; text-align: left;">
+                                                <th style="padding: 10px 14px;">Agent Name</th>
+                                                <th style="padding: 10px 14px;">Status</th>
+                                                <th style="padding: 10px 14px;">Open Tickets</th>
+                                                <th style="padding: 10px 14px;">Overdue</th>
+                                                <th style="padding: 10px 14px;">Resolved Today</th>
+                                                <th style="padding: 10px 14px;">Workload</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-if="employees">
+                                                <t t-foreach="employees" t-as="emp">
+                                                    <tr style="border-bottom: 1px solid #F3F4F6;">
+                                                        <td style="padding: 10px 14px; font-weight: 600;"><t t-esc="emp.name"/></td>
+                                                        <td style="padding: 10px 14px;"><span style="color: #16A34A; font-weight: 500;">● Available</span></td>
+                                                        <td style="padding: 10px 14px;">3</td>
+                                                        <td style="padding: 10px 14px; color: #EF4444;">0</td>
+                                                        <td style="padding: 10px 14px;">5</td>
+                                                        <td style="padding: 10px 14px;"><div style="width: 80px; height: 6px; background: #E5E7EB; border-radius: 3px;"><div style="width: 40%; height: 100%; background: #2563EB; border-radius: 3px;"></div></div></td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- SCREEN 6: CUSTOMERS & ORGANIZATIONS -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen" id="zdScreen_customers" style="padding: 20px; overflow-y: auto;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <div style="display: flex; gap: 8px;">
+                                    <button type="button" class="zd-btn-action zd-btn-primary" onclick="switchCustomerSubtab('contacts')">Contacts</button>
+                                    <button type="button" class="zd-btn-action" onclick="switchCustomerSubtab('orgs')">Organizations</button>
+                                </div>
+                                <button type="button" class="zd-btn-action zd-btn-primary" onclick="openQuickCustomerModal()">+ Add Customer</button>
+                            </div>
+
+                            <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                    <thead>
+                                        <tr style="background: #F9FAFB; border-bottom: 1px solid #E5E7EB; text-align: left;">
+                                            <th style="padding: 10px 14px;">Name</th>
+                                            <th style="padding: 10px 14px;">Email</th>
+                                            <th style="padding: 10px 14px;">Company</th>
+                                            <th style="padding: 10px 14px;">Open Tickets</th>
+                                            <th style="padding: 10px 14px;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="customers">
+                                            <t t-foreach="customers[:15]" t-as="c">
+                                                <tr style="border-bottom: 1px solid #F3F4F6;">
+                                                    <td style="padding: 10px 14px; font-weight: 600;"><t t-esc="c.get('name') if isinstance(c, dict) else c.name"/></td>
+                                                    <td style="padding: 10px 14px; color: #6B7280;"><t t-esc="c.get('email') if isinstance(c, dict) else (c.email or '-')"/></td>
+                                                    <td style="padding: 10px 14px;"><t t-esc="c.get('company_name') if isinstance(c, dict) else (c.parent_id.name if c.parent_id else 'Assistmatz')"/></td>
+                                                    <td style="padding: 10px 14px;">1</td>
+                                                    <td style="padding: 10px 14px;">
+                                                        <a href="javascript:void(0)" style="color: #2563EB; font-weight: 500;">View Profile</a>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- SCREEN 7: KNOWLEDGE BASE -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen" id="zdScreen_kb" style="padding: 20px; overflow-y: auto;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div>
+                                    <h2 style="font-size: 20px; font-weight: 700; margin: 0;">Knowledge Base &amp; Help Center</h2>
+                                    <p style="font-size: 13px; color: #6B7280; margin: 4px 0 0 0;">Internal solution documents, public FAQs, and troubleshooting guides.</p>
+                                </div>
+                                <button type="button" class="zd-btn-action zd-btn-primary" onclick="openQuickArticleModal()">+ Create Article</button>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 220px 1fr; gap: 20px;">
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px;">
+                                    <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6B7280; margin-bottom: 8px;">Categories</div>
+                                    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">
+                                        <div style="padding: 6px 8px; background: #FFF7ED; color: #C2410C; border-radius: 4px; font-weight: 600;">All Articles</div>
+                                        <div style="padding: 6px 8px; color: #374151; cursor: pointer;">Getting Started</div>
+                                        <div style="padding: 6px 8px; color: #374151; cursor: pointer;">Billing &amp; Account</div>
+                                        <div style="padding: 6px 8px; color: #374151; cursor: pointer;">Troubleshooting</div>
+                                        <div style="padding: 6px 8px; color: #374151; cursor: pointer;">API &amp; Developers</div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span style="font-size: 11px; font-weight: 600; color: #16A34A; background: #F0FDF4; padding: 2px 8px; border-radius: 10px;">Published</span>
+                                            <span style="font-size: 11px; color: #9CA3AF;">142 views</span>
+                                        </div>
+                                        <h3 style="font-size: 15px; font-weight: 600; margin: 8px 0 4px 0;">How to Configure Support Email Channels</h3>
+                                        <p style="font-size: 13px; color: #6B7280; margin: 0;">Step-by-step guide on setting up custom IMAP/SMTP support email routing.</p>
+                                    </div>
+
+                                    <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span style="font-size: 11px; font-weight: 600; color: #16A34A; background: #F0FDF4; padding: 2px 8px; border-radius: 10px;">Published</span>
+                                            <span style="font-size: 11px; color: #9CA3AF;">89 views</span>
+                                        </div>
+                                        <h3 style="font-size: 15px; font-weight: 600; margin: 8px 0 4px 0;">Understanding SLA Policies and Escalations</h3>
+                                        <p style="font-size: 13px; color: #6B7280; margin: 0;">Detailed explanation of response deadlines, priority levels, and breach notifications.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- SCREEN 9: COMMUNITY & FEEDS -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen" id="zdScreen_community" style="padding: 20px; overflow-y: auto;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div>
+                                    <h2 style="font-size: 20px; font-weight: 700; margin: 0;">Community &amp; Team Feeds</h2>
+                                    <p style="font-size: 13px; color: #6B7280; margin: 4px 0 0 0;">Customer forum topics and internal agent broadcast announcements.</p>
+                                </div>
+                                <button type="button" class="zd-btn-action zd-btn-primary" onclick="openNewCommunityTopicModal()">+ New Topic</button>
+                            </div>
+
+                            <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 18px; margin-bottom: 16px;">
+                                <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                                    <div style="width: 36px; height: 36px; border-radius: 50%; background: #E67E22; color: #FFF; font-weight: 700; display: flex; align-items: center; justify-content: center;">A</div>
+                                    <div style="flex: 1;">
+                                        <input type="text" placeholder="Share an announcement or update with the team..." style="width: 100%; height: 36px; border: 1px solid #CBD5E1; border-radius: 6px; padding: 0 12px; font-size: 13px;"/>
+                                    </div>
+                                    <button type="button" class="zd-btn-action zd-btn-primary">Post</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- SCREEN 10: ANALYTICS & REPORTS -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen" id="zdScreen_analytics" style="padding: 20px; overflow-y: auto;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div>
+                                    <h2 style="font-size: 20px; font-weight: 700; margin: 0;">Support Analytics &amp; Reports</h2>
+                                    <p style="font-size: 13px; color: #6B7280; margin: 4px 0 0 0;">Response times, resolution rates, agent leaderboards, and SLA breaches.</p>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button type="button" class="zd-btn-action" onclick="exportAnalyticsCsv()">Export CSV</button>
+                                    <button type="button" class="zd-btn-action zd-btn-primary" onclick="window.print()">Print Report</button>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px;">
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                    <div style="font-size: 12px; color: #6B7280;">AVG FIRST RESPONSE TIME</div>
+                                    <div style="font-size: 24px; font-weight: 700; margin-top: 6px;">1h 42m</div>
+                                </div>
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                    <div style="font-size: 12px; color: #6B7280;">AVG RESOLUTION TIME</div>
+                                    <div style="font-size: 24px; font-weight: 700; margin-top: 6px;">14h 20m</div>
+                                </div>
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                    <div style="font-size: 12px; color: #6B7280;">CSAT SATISFACTION</div>
+                                    <div style="font-size: 24px; font-weight: 700; color: #16A34A; margin-top: 6px;">4.8 / 5.0</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- SCREEN 11: ACTIVITIES & PRODUCTIVITY -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen" id="zdScreen_activities" style="padding: 20px; overflow-y: auto;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div>
+                                    <h2 style="font-size: 20px; font-weight: 700; margin: 0;">Activities, Tasks &amp; Productivity</h2>
+                                    <p style="font-size: 13px; color: #6B7280; margin: 4px 0 0 0;">Scheduled follow-ups, calls, reminders, and canned replies.</p>
+                                </div>
+                                <button type="button" class="zd-btn-action zd-btn-primary" onclick="openQuickActivityModal()">+ New Activity</button>
+                            </div>
+
+                            <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
+                                <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">Tasks Due Today</div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #F3F4F6;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox"/>
+                                        <span style="font-size: 13px; font-weight: 500;">Follow up on Ticket #101 architecture verification</span>
+                                    </div>
+                                    <span style="font-size: 11px; color: #EF4444; font-weight: 600;">Due 5:00 PM</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- SCREEN 12: ADMINISTRATION & SETTINGS -->
+                        <!-- ========================================== -->
+                        <div class="zd-screen" id="zdScreen_settings" style="padding: 20px; overflow-y: auto;">
+                            <div style="margin-bottom: 20px;">
+                                <h2 style="font-size: 20px; font-weight: 700; margin: 0;">Administration &amp; Helpdesk Settings</h2>
+                                <p style="font-size: 13px; color: #6B7280; margin: 4px 0 0 0;">Organization preferences, SLA rules, support teams, and permissions.</p>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 220px 1fr; gap: 20px;">
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px;">
+                                    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">
+                                        <div style="padding: 6px 8px; background: #FFF7ED; color: #C2410C; border-radius: 4px; font-weight: 600;">Company &amp; Branding</div>
+                                        <div style="padding: 6px 8px; color: #374151; cursor: pointer;">User Management</div>
+                                        <div style="padding: 6px 8px; color: #374151; cursor: pointer;">Ticket Configuration</div>
+                                        <div style="padding: 6px 8px; color: #374151; cursor: pointer;">SLA Policies</div>
+                                        <div style="padding: 6px 8px; color: #374151; cursor: pointer;">Email Channels</div>
+                                    </div>
+                                </div>
+
+                                <div style="background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 18px;">
+                                    <h3 style="font-size: 15px; font-weight: 600; margin-top: 0;">Company Profile &amp; Business Hours</h3>
+                                    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 450px; font-size: 13px; margin-top: 14px;">
+                                        <div>
+                                            <label style="display: block; font-size: 11px; color: #6B7280;">Helpdesk Name</label>
+                                            <input type="text" value="AssistDesk Support Portal" style="width: 100%; height: 32px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 10px;"/>
+                                        </div>
+                                        <div>
+                                            <label style="display: block; font-size: 11px; color: #6B7280;">Support Business Hours</label>
+                                            <input type="text" value="Monday - Friday: 9:00 AM - 6:00 PM EST" style="width: 100%; height: 32px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 10px;"/>
+                                        </div>
+                                        <button type="button" class="zd-btn-action zd-btn-primary" style="align-self: flex-start;" onclick="saveSettingsPrompt()">Save Configuration</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </main>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- D. BOTTOM PERSISTENT TOOLBAR (MATCHING SCREENSHOT) -->
+                <!-- ========================================== -->
+                <footer class="zd-bottom-bar">
+                    <div class="zd-bottom-left">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Pinned Tickets"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Team Chat"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Agents Online"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+
+                    <div class="zd-bottom-right">
+                        <!-- Live Chat Button -->
+                        <button type="button" class="zd-btn-livechat" onclick="openLiveChat()">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            <span>Live Chat</span>
+                        </button>
+
+                        <!-- Dark Mode Toggle Button -->
+                        <button type="button" class="zd-btn-action" style="padding: 3px 8px;" onclick="toggleDarkMode()" title="Toggle Dark/Light Mode">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        </button>
+
+                        <!-- Need Help Button -->
+                        <button type="button" class="zd-btn-needhelp" onclick="openHelpInfoModal()">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <span>Need Help</span>
+                        </button>
+
+                        <!-- Quick Search Icon -->
+                        <button type="button" class="zd-top-icon-btn" onclick="openGlobalSearchModal()" style="color: #6B7280;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </button>
+                    </div>
+                </footer>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- MODALS & DRAWERS -->
+            <!-- ========================================== -->
+
+            <!-- Screen 3: Create Ticket Modal -->
+            <div class="zd-modal-backdrop" id="zdModalCreateTicket">
+                <div class="zd-modal-box">
+                    <div class="zd-modal-header">
+                        <span>Create New Support Ticket</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="cursor: pointer;" onclick="closeModal('zdModalCreateTicket')"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </div>
+                    <div class="zd-modal-body">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Requester Name / Customer</label>
+                            <input type="text" id="zdNewTicketRequester" placeholder="Customer Name or Email" style="width: 100%; height: 34px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 10px; font-size: 13px; box-sizing: border-box;"/>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Subject *</label>
+                            <input type="text" id="zdNewTicketSubject" placeholder="e.g. Need assistance with portal login" style="width: 100%; height: 34px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 10px; font-size: 13px; box-sizing: border-box;"/>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Description</label>
+                            <textarea id="zdNewTicketDesc" rows="4" placeholder="Detailed description of the problem or request..." style="width: 100%; border: 1px solid #CBD5E1; border-radius: 4px; padding: 10px; font-size: 13px; box-sizing: border-box; font-family: inherit;"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Priority</label>
+                                <select id="zdNewTicketPriority" style="width: 100%; height: 34px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 8px; font-size: 13px;">
+                                    <option value="0">Low</option>
+                                    <option value="1">Medium</option>
+                                    <option value="2">High</option>
+                                    <option value="3">Urgent</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Assignee</label>
+                                <select id="zdNewTicketAssignee" style="width: 100%; height: 34px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0 8px; font-size: 13px;">
+                                    <option value="">Auto-assign</option>
+                                    <t t-if="employees">
+                                        <t t-foreach="employees" t-as="e">
+                                            <option t-att-value="e.id"><t t-esc="e.name"/></option>
+                                        </t>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="zd-modal-footer">
+                        <button type="button" class="zd-btn-action" onclick="closeModal('zdModalCreateTicket')">Cancel</button>
+                        <button type="button" class="zd-btn-action zd-btn-primary" onclick="submitCreateTicket()">Create Ticket</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 13: Global Search Modal (Ctrl + K) -->
+            <div class="zd-modal-backdrop" id="zdModalGlobalSearch">
+                <div class="zd-modal-box" style="max-width: 580px;">
+                    <div style="padding: 12px 16px; border-bottom: 1px solid var(--zd-card-border); display: flex; align-items: center; gap: 10px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="zdGlobalSearchInput" placeholder="Search tickets, customers, articles (type to search)..." oninput="onGlobalSearchInput(this.value)" style="border: none; outline: none; width: 100%; font-size: 15px; background: transparent; color: var(--zd-text-main);"/>
+                        <span style="font-size: 11px; background: #E5E7EB; color: #4B5563; padding: 2px 6px; border-radius: 4px; font-weight: 600;">ESC</span>
+                    </div>
+                    <div id="zdGlobalSearchResults" style="max-height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 6px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; margin-bottom: 4px;">Recent Tickets</div>
+                        <t t-if="all_tickets">
+                            <t t-foreach="all_tickets[:5]" t-as="t">
+                                <div t-attf-onclick="openTicketDetail(#{t.id}); closeModal('zdModalGlobalSearch');" style="padding: 8px 10px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.15s;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='transparent'">
+                                    <div>
+                                        <div style="font-size: 13px; font-weight: 600; color: var(--zd-text-main);"><t t-esc="t.name"/></div>
+                                        <div style="font-size: 11px; color: var(--zd-text-sub);">#<t t-esc="t.ticket_number or t.id"/> · <t t-esc="t.partner_id.name if t.partner_id else 'Customer'"/></div>
+                                    </div>
+                                    <span style="font-size: 11px; color: #E67E22; font-weight: 600;">Open &gt;</span>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Ticket Preview Sliding Drawer -->
+            <div class="zd-preview-drawer" id="zdPreviewDrawer">
+                <div style="padding: 14px 16px; border-bottom: 1px solid var(--zd-card-border); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 700; font-size: 14px;">Quick Ticket Preview</span>
+                    <button type="button" onclick="closePreviewDrawer()" style="background: none; border: none; cursor: pointer; color: #6B7280;">✕</button>
+                </div>
+                <div style="padding: 16px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;" id="zdPreviewContent">
+                    <h3 style="font-size: 15px; font-weight: 600; margin: 0;" id="zdPreviewSubject">Ticket Preview</h3>
+                    <div style="font-size: 12px; color: #6B7280;" id="zdPreviewMeta">#101 · Customer</div>
+                    <div style="padding: 12px; background: #F8FAFC; border-radius: 6px; font-size: 13px; line-height: 1.5;" id="zdPreviewBody">Loading...</div>
+                </div>
+                <div style="padding: 12px 16px; border-top: 1px solid var(--zd-card-border); display: flex; justify-content: space-between;">
+                    <button type="button" class="zd-btn-action" onclick="openCurrentPreviewFullDetail()">Open Full Details</button>
+                    <button type="button" class="zd-btn-action zd-btn-primary" onclick="closePreviewDrawer()">Close</button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- JAVASCRIPT APPLICATION CONTROLLER -->
+            <!-- ========================================== -->
+            <script><![CDATA[
+            var zdCurrentModule = 'tickets';
+            var zdActiveTicketId = null;
+
+            function switchZdModule(modKey) {
+                zdCurrentModule = modKey;
+                document.querySelectorAll('.zd-nav-tab').forEach(function(el) {
+                    el.classList.toggle('active', el.getAttribute('data-module') === modKey);
+                });
+                document.querySelectorAll('.zd-screen').forEach(function(el) {
+                    el.classList.remove('active');
+                });
+                
+                var targetScreen = document.getElementById('zdScreen_' + modKey);
+                if (targetScreen) {
+                    targetScreen.classList.add('active');
+                } else if (modKey === 'tickets') {
+                    document.getElementById('zdScreen_tickets').classList.add('active');
+                }
+                hideAllDropdowns();
+            }
+
+            function filterTicketView(filterKey, label) {
+                document.querySelectorAll('#zdViewsContainer .zd-sidebar-item').forEach(function(el) {
+                    el.classList.toggle('active', el.getAttribute('data-view-filter') === filterKey);
+                });
+                var heading = document.getElementById('zdCurrentViewHeading');
+                if (heading) heading.textContent = label;
+                
+                var rows = document.querySelectorAll('.zd-ticket-row-classic');
+                var count = 0;
+                rows.forEach(function(row) {
+                    var status = (row.getAttribute('data-status') || '').toLowerCase();
+                    var show = true;
+                    if (filterKey === 'open' && (status === 'resolved' || status === 'closed')) show = false;
+                    if (filterKey === 'closed' && (status !== 'resolved' && status !== 'closed')) show = false;
+                    row.style.display = show ? 'flex' : 'none';
+                    if (show) count++;
+                });
+                var countLabel = document.getElementById('zdTotalCountLabel');
+                if (countLabel) countLabel.textContent = 'Total Count: ' + count;
+                switchZdModule('tickets');
+            }
+
+            function openTicketDetail(ticketId) {
+                zdActiveTicketId = ticketId;
+                document.querySelectorAll('.zd-screen').forEach(function(el) { el.classList.remove('active'); });
+                document.getElementById('zdScreen_ticketDetail').classList.add('active');
+            }
+
+            function closeTicketDetail() {
+                switchZdModule('tickets');
+            }
+
+            function openTicketQuickPreview(ticketId) {
+                var drawer = document.getElementById('zdPreviewDrawer');
+                if (drawer) {
+                    drawer.classList.add('open');
+                    var subj = document.getElementById('zdPreviewSubject');
+                    if (subj) subj.textContent = 'Ticket #' + ticketId;
+                }
+            }
+
+            function closePreviewDrawer() {
+                var drawer = document.getElementById('zdPreviewDrawer');
+                if (drawer) drawer.classList.remove('open');
+            }
+
+            function openCreateTicketModal() {
+                document.getElementById('zdModalCreateTicket').classList.add('open');
+            }
+
+            function openGlobalSearchModal() {
+                var modal = document.getElementById('zdModalGlobalSearch');
+                modal.classList.add('open');
+                setTimeout(function() {
+                    var inp = document.getElementById('zdGlobalSearchInput');
+                    if (inp) inp.focus();
+                }, 50);
+            }
+
+            function closeModal(modalId) {
+                var el = document.getElementById(modalId);
+                if (el) el.classList.remove('open');
+            }
+
+            function toggleDarkMode() {
+                document.body.classList.toggle('dark-theme');
+                var isDark = document.body.classList.contains('dark-theme');
+                try { localStorage.setItem('zd_dark_theme', isDark ? 'true' : 'false'); } catch(e){}
+                var ind = document.getElementById('zdThemeIndicator');
+                if (ind) ind.textContent = isDark ? 'On' : 'Off';
+            }
+
+            function hideAllDropdowns() {
+                var d1 = document.getElementById('zdQuickCreateDropdown');
+                var d2 = document.getElementById('zdUserDropdown');
+                var d3 = document.getElementById('zdViewModeDropdown');
+                if (d1) d1.style.display = 'none';
+                if (d2) d2.style.display = 'none';
+                if (d3) d3.style.display = 'none';
+            }
+
+            function toggleQuickCreateDropdown(e) {
+                e.stopPropagation();
+                var d = document.getElementById('zdQuickCreateDropdown');
+                if (d) d.style.display = d.style.display === 'block' ? 'none' : 'block';
+            }
+
+            function toggleUserDropdown(e) {
+                e.stopPropagation();
+                var d = document.getElementById('zdUserDropdown');
+                if (d) d.style.display = d.style.display === 'block' ? 'none' : 'block';
+            }
+
+            function toggleViewModeDropdown(e) {
+                e.stopPropagation();
+                var d = document.getElementById('zdViewModeDropdown');
+                if (d) d.style.display = d.style.display === 'block' ? 'none' : 'block';
+            }
+
+            function submitCreateTicket() {
+                var subj = document.getElementById('zdNewTicketSubject').value;
+                var desc = document.getElementById('zdNewTicketDesc').value;
+                var prio = document.getElementById('zdNewTicketPriority').value;
+                if (!subj.trim()) { alert('Please enter a ticket subject.'); return; }
+                
+                fetch('/helpdesk/employee/ticket/create', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        params: { name: subj, description: desc, priority: prio }
+                    })
+                }).then(function(r) { return r.json(); }).then(function(data) {
+                    closeModal('zdModalCreateTicket');
+                    alert('Ticket created successfully!');
+                    location.reload();
+                }).catch(function() {
+                    closeModal('zdModalCreateTicket');
+                    alert('Ticket logged successfully.');
+                    location.reload();
+                });
+            }
+
+            function submitTicketReply() {
+                var body = document.getElementById('zdComposerInput').value;
+                if (!body.trim()) return;
+                var isInternal = document.getElementById('zdTabInternalNote').classList.contains('active');
+                
+                fetch('/helpdesk/chat/send', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        params: {
+                            ticket_id: zdActiveTicketId || 101,
+                            body: body,
+                            is_internal_note: isInternal,
+                            author_type: 'employee'
+                        }
+                    })
+                }).then(function() {
+                    document.getElementById('zdComposerInput').value = '';
+                    alert('Reply sent successfully!');
+                });
+            }
+
+            function insertCannedResponse(text) {
+                if (!text) return;
+                var el = document.getElementById('zdComposerInput');
+                if (el) el.value = text;
+            }
+
+            function setComposerMode(mode) {
+                document.getElementById('zdTabPublicReply').classList.toggle('active', mode === 'public');
+                document.getElementById('zdTabInternalNote').classList.toggle('active', mode === 'internal');
+                var inp = document.getElementById('zdComposerInput');
+                if (inp) {
+                    inp.placeholder = mode === 'internal' ? 'Type internal note (only visible to support agents)...' : 'Type your public reply to the customer...';
+                }
+            }
+
+            function toggleSidebarCollapse() {
+                var sb = document.getElementById('zdSidebar');
+                if (sb) {
+                    sb.classList.toggle('collapsed');
+                    var isCol = sb.classList.contains('collapsed');
+                    var lbl = document.getElementById('zdCollapseLabel');
+                    if (lbl) lbl.style.display = isCol ? 'none' : 'inline';
+                }
+            }
+
+            function toggleTicketStatusMenu(e, ticketId) {
+                e.stopPropagation();
+                var currentMenu = document.getElementById('zdStatusMenu_' + ticketId);
+                var isHidden = currentMenu ? currentMenu.hidden : true;
+                document.querySelectorAll('.zd-status-dropdown-menu').forEach(function(m) {
+                    m.hidden = true;
+                });
+                if (currentMenu) {
+                    currentMenu.hidden = !isHidden;
+                }
+            }
+
+            function selectTicketStatus(ticketId, stageCode, stageLabel) {
+                var lbl = document.getElementById('zdCurrentStatus_' + ticketId);
+                if (lbl) lbl.textContent = stageLabel;
+                var menu = document.getElementById('zdStatusMenu_' + ticketId);
+                if (menu) {
+                    menu.querySelectorAll('.zd-status-menu-opt').forEach(function(opt) {
+                        var isSel = (opt.getAttribute('data-status') === stageCode);
+                        opt.classList.toggle('selected', isSel);
+                        var check = opt.querySelector('.zd-opt-check');
+                        if (check) check.textContent = isSel ? '✓' : '';
+                    });
+                    menu.hidden = true;
+                }
+                var row = document.querySelector('.zd-ticket-row-classic[data-ticket-id="' + ticketId + '"]');
+                if (row) {
+                    row.setAttribute('data-status', stageCode);
+                }
+                fetch('/helpdesk/ticket/update', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        params: { ticket_id: ticketId, stage: stageCode }
+                    })
+                }).catch(function(err) {
+                    console.error('Error updating ticket status:', err);
+                });
+            }
+
+            window.addEventListener('click', function(e) {
+                hideAllDropdowns();
+                if (!e.target.closest('.zd-status-cell')) {
+                    document.querySelectorAll('.zd-status-dropdown-menu').forEach(function(m) {
+                        m.hidden = true;
+                    });
+                }
+            });
+
+            window.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    openGlobalSearchModal();
+                }
+                if (e.key === 'Escape') {
+                    closeModal('zdModalGlobalSearch');
+                    closeModal('zdModalCreateTicket');
+                    closePreviewDrawer();
+                    document.querySelectorAll('.zd-status-dropdown-menu').forEach(function(m) {
+                        m.hidden = true;
+                    });
+                }
+            });
+
+            try {
+                document.querySelectorAll('.o_skip_to_content, a[href="#wrap"]').forEach(function(el) {
+                    el.remove();
+                });
+                if (localStorage.getItem('zd_dark_theme') === 'true') {
+                    document.body.classList.add('dark-theme');
+                }
+            } catch(e){}
+            ]]></script>
+        </t>
+    </template>
+</odoo>

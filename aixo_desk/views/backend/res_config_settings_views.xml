@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_aixo" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.aixo</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="85"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Aixo Desk" string="Aixo Desk" name="aixo_desk" groups="aixo_desk.group_desk_admin">
+                    <block title="Organization" name="aixo_org">
+                        <setting string="Company" help="Shown on emails and the help center.">
+                            <div class="content-group">
+                                <div class="row mt8"><label for="aixo_company_name" class="col-lg-4 o_light_label"/><field name="aixo_company_name"/></div>
+                                <div class="row"><label for="aixo_support_email" class="col-lg-4 o_light_label"/><field name="aixo_support_email"/></div>
+                                <div class="row"><label for="aixo_support_phone" class="col-lg-4 o_light_label"/><field name="aixo_support_phone"/></div>
+                                <div class="row"><label for="aixo_country" class="col-lg-4 o_light_label"/><field name="aixo_country"/></div>
+                                <div class="row"><label for="aixo_timezone" class="col-lg-4 o_light_label"/><field name="aixo_timezone"/></div>
+                                <div class="row"><label for="aixo_currency" class="col-lg-4 o_light_label"/><field name="aixo_currency"/></div>
+                                <div class="row"><label for="aixo_date_format" class="col-lg-4 o_light_label"/><field name="aixo_date_format"/></div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Access" name="aixo_access">
+                        <setting string="Customer portal" help="Allow customers to log in and raise tickets.">
+                            <field name="aixo_portal_enabled"/>
+                        </setting>
+                        <setting string="Public sign-up" help="Let visitors create their own customer account.">
+                            <field name="aixo_signup_enabled"/>
+                        </setting>
+                        <setting string="Share tickets within company" help="Customers also see tickets of colleagues in the same company.">
+                            <field name="aixo_share_company_tickets"/>
+                        </setting>
+                        <setting string="Team queue" help="Agents also see unassigned tickets of their teams.">
+                            <field name="aixo_agents_see_team_queue"/>
+                        </setting>
+                    </block>
+                    <block title="Tickets" name="aixo_tickets">
+                        <setting string="Attachments" help="Maximum size in MB and blocked file extensions (comma separated).">
+                            <div class="content-group">
+                                <div class="row mt8"><label for="aixo_attachment_max_mb" class="col-lg-4 o_light_label"/><field name="aixo_attachment_max_mb"/></div>
+                                <div class="row"><label for="aixo_attachment_blocked" class="col-lg-4 o_light_label"/><field name="aixo_attachment_blocked"/></div>
+                            </div>
+                        </setting>
+                        <setting string="Customer satisfaction" help="Email a one-click rating when a ticket is closed.">
+                            <field name="aixo_csat_enabled"/>
+                        </setting>
+                        <setting string="Reopen window" help="Customer replies to a closed ticket reopen it within this many days.">
+                            <field name="aixo_reopen_days"/>
+                        </setting>
+                        <setting string="Knowledge base URL">
+                            <field name="aixo_kb_url"/>
+                        </setting>
+                    </block>
+                    <block title="AI and profile" name="aixo_ai">
+                        <setting string="AI provider" help="The local provider works offline. The API key is stored as a system parameter.">
+                            <div class="content-group">
+                                <div class="row mt8"><label for="aixo_ai_provider" class="col-lg-4 o_light_label"/><field name="aixo_ai_provider"/></div>
+                                <div class="row"><label for="aixo_ai_api_key" class="col-lg-4 o_light_label"/><field name="aixo_ai_api_key" password="True"/></div>
+                            </div>
+                        </setting>
+                        <setting string="Show edition block in profile drawer">
+                            <field name="aixo_show_edition"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="aixo_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'aixo_desk', 'bin_size': False}</field>
+    </record>
+</odoo>

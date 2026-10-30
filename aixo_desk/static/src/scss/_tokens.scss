@@ -1,0 +1,41 @@
+// Aixo Desk design tokens (from the design files).
+:root {
+    --ax-forest: #0E3B2F;
+    --ax-deep: #0A2E24;
+    --ax-lime: #9BE650;
+    --ax-leaf: #C4EF7C;
+    --ax-mist: #F4FBE6;
+    --ax-ink: #0F2A20;
+    --ax-ink-soft: #2F4A3E;
+    --ax-muted: #4F6B5E;
+    --ax-accent-text: #3E8A16;
+    --ax-selected: #EAF6D8;
+    --ax-paper: #F7FCEB;
+    --ax-field-bg: #FBFDF7;
+    --ax-line: #D6E1D3;
+
+    --ax-st-open: #D6453D;
+    --ax-st-hold: #B26A00;
+    --ax-st-escalated: #7A3EC8;
+    --ax-st-closed: #1E7F45;
+    --ax-danger: #B42318;
+
+    --ax-font: Geist, Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@font-face {
+    font-family: Geist; font-weight: 300; font-style: normal; font-display: swap;
+    src: url('/aixo_desk/static/src/fonts/geist-latin-300-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: Geist; font-weight: 400; font-style: normal; font-display: swap;
+    src: url('/aixo_desk/static/src/fonts/geist-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: Geist; font-weight: 500; font-style: normal; font-display: swap;
+    src: url('/aixo_desk/static/src/fonts/geist-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: Geist; font-weight: 600; font-style: normal; font-display: swap;
+    src: url('/aixo_desk/static/src/fonts/geist-latin-600-normal.woff2') format('woff2');
+}

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ======================== -->
+    <!-- Project Team Views       -->
+    <!-- ======================== -->
+
+    <!-- Tree View -->
+    <record id="view_project_team_tree" model="ir.ui.view">
+        <field name="name">project.team.tree</field>
+        <field name="model">project.team</field>
+        <field name="arch" type="xml">
+            <list string="Project Teams">
+                <field name="name"/>
+                <field name="team_lead_id" widget="many2one_avatar_user"/>
+                <field name="member_count" string="Members"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_project_team_form" model="ir.ui.view">
+        <field name="name">project.team.form</field>
+        <field name="model">project.team</field>
+        <field name="arch" type="xml">
+            <form string="Project Team">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Development Team"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="team_lead_id" widget="many2one_avatar_user"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1" placeholder="Team description..."/>
+                    </group>
+                    <notebook>
+                        <page string="Team Members" name="members">
+                            <field name="member_ids">
+                                <list editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="role"/>
+                                    <field name="department_id" readonly="1"/>
+                                    <field name="job_title"/>
+                                    <field name="join_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Projects" name="projects">
+                            <field name="project_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="employee_id" string="Project Manager"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_project_team" model="ir.actions.act_window">
+        <field name="name">Project Teams</field>
+        <field name="res_model">project.team</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first project team
+            </p>
+            <p>Organize your employees into teams for better project management.</p>
+        </field>
+    </record>
+
+    <!-- ======================== -->
+    <!-- Project Member Views     -->
+    <!-- ======================== -->
+
+    <!-- Tree View (Read-Only) -->
+    <record id="view_project_member_tree" model="ir.ui.view">
+        <field name="name">project.member.tree</field>
+        <field name="model">project.member</field>
+        <field name="arch" type="xml">
+            <list string="Project Members" create="false" edit="false" delete="false">
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="team_id" string="Project Team"/>
+                <field name="role"/>
+                <field name="department_id"/>
+                <field name="job_title"/>
+                <field name="join_date"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View (Read-Only) -->
+    <record id="view_project_member_form" model="ir.ui.view">
+        <field name="name">project.member.form</field>
+        <field name="model">project.member</field>
+        <field name="arch" type="xml">
+            <form string="Project Member" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="team_id" string="Project Team" readonly="1"/>
+                            <field name="role" readonly="1"/>
+                            <field name="join_date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="department_id" readonly="1"/>
+                            <field name="job_title" readonly="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Assigned Projects" name="assigned_projects">
+                            <field name="project_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action (Only show members belonging to a Project Team) -->
+    <record id="action_project_member" model="ir.actions.act_window">
+        <field name="name">Project Members</field>
+        <field name="res_model">project.member</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('team_id', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No project members found
+            </p>
+            <p>Project members are automatically managed from Project Teams.</p>
+        </field>
+    </record>
+
+    <!-- ======================== -->
+    <!-- Menu Items               -->
+    <!-- ======================== -->
+
+    <menuitem
+        id="menu_project_team"
+        name="Project Teams"
+        parent="project.menu_project_config"
+        action="action_project_team"
+        sequence="50"
+    />
+
+    <menuitem
+        id="menu_project_member"
+        name="Project Members"
+        parent="project.menu_project_config"
+        action="action_project_member"
+        sequence="51"
+    />
+
+</odoo>

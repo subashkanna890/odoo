@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Default settings (editable in Settings and in the Setup pages) -->
+    <record id="param_company_name" model="ir.config_parameter"><field name="key">aixo_desk.company_name</field><field name="value">Aixo Desk</field></record>
+    <record id="param_country" model="ir.config_parameter"><field name="key">aixo_desk.country</field><field name="value">India</field></record>
+    <record id="param_timezone" model="ir.config_parameter"><field name="key">aixo_desk.timezone</field><field name="value">Asia/Kolkata</field></record>
+    <record id="param_currency" model="ir.config_parameter"><field name="key">aixo_desk.currency</field><field name="value">INR</field></record>
+    <record id="param_date_format" model="ir.config_parameter"><field name="key">aixo_desk.date_format</field><field name="value">DD MMM YYYY</field></record>
+    <record id="param_portal_enabled" model="ir.config_parameter"><field name="key">aixo_desk.portal_enabled</field><field name="value">True</field></record>
+    <record id="param_signup_enabled" model="ir.config_parameter"><field name="key">aixo_desk.signup_enabled</field><field name="value">True</field></record>
+    <record id="param_share_company" model="ir.config_parameter"><field name="key">aixo_desk.share_company_tickets</field><field name="value">False</field></record>
+    <record id="param_team_queue" model="ir.config_parameter"><field name="key">aixo_desk.agents_see_team_queue</field><field name="value">False</field></record>
+    <record id="param_attachment_max" model="ir.config_parameter"><field name="key">aixo_desk.attachment_max_mb</field><field name="value">40</field></record>
+    <record id="param_attachment_blocked" model="ir.config_parameter"><field name="key">aixo_desk.attachment_blocked</field><field name="value">exe,bat,cmd,com,scr,msi,js,vbs</field></record>
+    <record id="param_csat" model="ir.config_parameter"><field name="key">aixo_desk.csat_enabled</field><field name="value">True</field></record>
+    <record id="param_reopen_days" model="ir.config_parameter"><field name="key">aixo_desk.reopen_days</field><field name="value">7</field></record>
+    <record id="param_ai_provider" model="ir.config_parameter"><field name="key">aixo_desk.ai_provider</field><field name="value">local</field></record>
+
+    <!-- Default business hours: Mon-Fri 9-18, Sat 9-13 (IST) -->
+    <record id="business_hours_default" model="aixo.business.hours">
+        <field name="name">Standard hours</field>
+        <field name="tz">Asia/Kolkata</field>
+        <field name="is_default" eval="True"/>
+    </record>
+    <record id="bh_mon" model="aixo.business.hours.line"><field name="hours_id" ref="business_hours_default"/><field name="weekday">0</field><field name="hour_from">9</field><field name="hour_to">18</field></record>
+    <record id="bh_tue" model="aixo.business.hours.line"><field name="hours_id" ref="business_hours_default"/><field name="weekday">1</field><field name="hour_from">9</field><field name="hour_to">18</field></record>
+    <record id="bh_wed" model="aixo.business.hours.line"><field name="hours_id" ref="business_hours_default"/><field name="weekday">2</field><field name="hour_from">9</field><field name="hour_to">18</field></record>
+    <record id="bh_thu" model="aixo.business.hours.line"><field name="hours_id" ref="business_hours_default"/><field name="weekday">3</field><field name="hour_from">9</field><field name="hour_to">18</field></record>
+    <record id="bh_fri" model="aixo.business.hours.line"><field name="hours_id" ref="business_hours_default"/><field name="weekday">4</field><field name="hour_from">9</field><field name="hour_to">18</field></record>
+    <record id="bh_sat" model="aixo.business.hours.line"><field name="hours_id" ref="business_hours_default"/><field name="weekday">5</field><field name="hour_from">9</field><field name="hour_to">13</field></record>
+
+    <!-- Default SLA policy (priority -> first response / resolution hours) -->
+    <record id="sla_standard" model="aixo.sla.policy">
+        <field name="name">Standard</field>
+        <field name="business_hours_id" ref="business_hours_default"/>
+    </record>
+    <record id="sla_standard_urgent" model="aixo.sla.policy.line"><field name="policy_id" ref="sla_standard"/><field name="priority">urgent</field><field name="first_response_hours">1</field><field name="resolution_hours">8</field></record>
+    <record id="sla_standard_high" model="aixo.sla.policy.line"><field name="policy_id" ref="sla_standard"/><field name="priority">high</field><field name="first_response_hours">2</field><field name="resolution_hours">16</field></record>
+    <record id="sla_standard_medium" model="aixo.sla.policy.line"><field name="policy_id" ref="sla_standard"/><field name="priority">medium</field><field name="first_response_hours">4</field><field name="resolution_hours">24</field></record>
+    <record id="sla_standard_low" model="aixo.sla.policy.line"><field name="policy_id" ref="sla_standard"/><field name="priority">low</field><field name="first_response_hours">8</field><field name="resolution_hours">48</field></record>
+
+    <!-- SLA status cron: every 5 minutes -->
+    <record id="cron_update_sla" model="ir.cron">
+        <field name="name">Aixo Desk: update SLA status</field>
+        <field name="model_id" ref="model_aixo_ticket"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_update_sla()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

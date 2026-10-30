@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_aixo" model="ir.ui.view">
+        <field name="name">res.partner.form.aixo</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Aixo Desk" name="aixo_desk" groups="aixo_desk.group_desk_agent">
+                    <group>
+                        <group>
+                            <field name="desk_plan"/>
+                            <field name="desk_owner_id"/>
+                            <field name="desk_email2"/>
+                            <field name="desk_mobile"/>
+                            <field name="desk_linkedin"/>
+                            <field name="desk_facebook"/>
+                        </group>
+                        <group>
+                            <field name="desk_ticket_count"/>
+                            <field name="desk_open_ticket_count"/>
+                            <field name="desk_overdue_ticket_count"/>
+                            <field name="desk_happiness"/>
+                            <field name="desk_health"/>
+                            <field name="desk_last_contact"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="aixo_customer_action" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('desk_ticket_ids', '!=', False)]</field>
+    </record>
+
+    <record id="res_users_view_form_aixo" model="ir.ui.view">
+        <field name="name">res.users.form.aixo</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Aixo Desk" name="aixo_desk" groups="aixo_desk.group_desk_admin">
+                    <group>
+                        <group string="Profile">
+                            <field name="desk_role"/>
+                            <field name="desk_job_title"/>
+                            <field name="desk_office_phone"/>
+                            <field name="desk_extension"/>
+                            <field name="desk_availability"/>
+                            <field name="desk_hours_id"/>
+                            <field name="desk_force_password_change"/>
+                        </group>
+                        <group string="Expertise">
+                            <field name="desk_team_ids" widget="many2many_tags"/>
+                            <field name="desk_channel_ids" widget="many2many_tags"/>
+                            <field name="desk_skill_ids" widget="many2many_tags"/>
+                            <field name="desk_lang_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

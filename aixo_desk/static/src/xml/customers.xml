@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="aixo_desk.CustomerList">
+    <div class="ax-layout">
+        <aside class="ax-sidebar" aria-label="Customer views">
+            <div class="ax-side-views-head"><Icon name="'users'" size="20"/><span>Customers</span></div>
+            <div class="ax-side-section">
+                <p class="ax-side-label">STARRED VIEWS</p>
+                <button type="button" t-foreach="starredViews" t-as="v" t-key="v.key" class="ax-view-item" t-att-class="{'is-on': state.view === v.key}" t-on-click="() => this.setView(v.key)">
+                    <span t-out="v.label"/><span class="ax-view-count" t-out="v.count"/>
+                </button>
+                <button type="button" class="ax-side-toggle" t-att-aria-expanded="state.allOpen" t-on-click="() => state.allOpen = !state.allOpen">
+                    <span>ALL VIEWS</span><Icon name="state.allOpen ? 'chevronDown' : 'chevronRight'" size="14"/>
+                </button>
+                <t t-if="state.allOpen">
+                    <button type="button" t-foreach="otherViews" t-as="v" t-key="v.key" class="ax-view-item" t-att-class="{'is-on': state.view === v.key}" t-on-click="() => this.setView(v.key)">
+                        <span t-out="v.label"/><span class="ax-view-count" t-out="v.count"/>
+                    </button>
+                </t>
+            </div>
+        </aside>
+        <main class="ax-main">
+            <div class="ax-listbar">
+                <button type="button" class="ax-iconbtn" t-att-aria-label="isStarred(state.view) ? 'Unstar this view' : 'Star this view'" t-att-aria-pressed="isStarred(state.view)" t-on-click="() => this.toggleStar(state.view)">
+                    <Icon name="'star'" size="20" fill="isStarred(state.view) ? '#F5B301' : 'none'"/>
+                </button>
+                <h1 class="ax-listtitle"><t t-out="title"/> <small class="ax-hint">(<t t-out="state.data ? state.data.total : 0"/>)</small></h1>
+                <span class="ax-spacer"/>
+                <label class="ax-searchbox ax-searchbox-sm"><Icon name="'search'" size="16"/>
+                    <input type="search" placeholder="Search customers" aria-label="Search customers" t-att-value="state.search" t-on-input="onSearch"/></label>
+                <button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-att-aria-pressed="state.classic" t-on-click="toggleClassic"><t t-out="state.classic ? 'Card view' : 'Classic View'"/></button>
+            </div>
+            <div class="ax-letters" role="group" aria-label="Filter by first letter">
+                <button type="button" t-foreach="letters" t-as="l" t-key="l" t-att-class="{'is-on': state.letter === l}" t-att-disabled="l !== 'ALL' and state.data and !state.data.letters.includes(l) and state.letter !== l" t-on-click="() => this.setLetter(l)" t-out="l === 'ALL' ? 'All' : l"/>
+            </div>
+            <div class="ax-listwrap">
+                <div t-if="state.data and !state.data.customers.length and !state.loading" class="ax-empty ax-empty-lg">
+                    <strong>No contacts</strong>
+                    <span t-if="state.letter !== 'ALL'">No contacts start with “<t t-out="state.letter"/>” in this view.</span>
+                    <span t-else="">Nothing matches this view yet.</span>
+                </div>
+                <a t-foreach="state.data ? state.data.customers : []" t-as="c" t-key="c.id" t-att-href="'/desk/customer/' + c.id" class="ax-ticket-row ax-cust-row" t-att-class="{'is-classic': state.classic}">
+                    <span class="ax-avatar" t-out="c.initials"/>
+                    <div class="ax-ticket-main">
+                        <div class="ax-ticket-title"><strong t-out="c.name"/><span t-if="c.paid" class="ax-chip ax-chip-gold">Paid</span></div>
+                        <div class="ax-ticket-meta"><span t-out="c.account || '—'"/><span>·</span><span t-out="c.email or '—'"/><span>·</span><span t-out="c.phone or '—'"/></div>
+                    </div>
+                    <span t-attf-class="ax-chip {{ c.open ? 'is-open' : 'ax-chip-calm' }}"><t t-out="c.open ? c.open + ' open ticket' + (c.open > 1 ? 's' : '') : 'No open tickets'"/></span>
+                    <span class="ax-happy" t-att-class="{'is-low': c.happy !== null and c.happy &lt; 80}" title="Happiness"><t t-out="c.happy === null ? '—' : c.happy + '%'"/></span>
+                    <span class="ax-owner-cell"><span t-if="c.owner" class="ax-avatar" t-att-style="'background:' + c.owner.bg + ';color:' + c.owner.fg" t-att-title="'Owner: ' + c.owner.name" t-out="c.owner.initials"/></span>
+                </a>
+            </div>
+        </main>
+    </div>
+</t>
+
+<t t-name="aixo_desk.CustomerDetail">
+    <div t-if="!state.data" class="ax-empty ax-empty-lg">Loading…</div>
+    <div t-else="" class="ax-detail ax-cust-detail">
+        <aside class="ax-switcher" aria-label="Contacts">
+            <div class="ax-switcher-head">
+                <a href="/desk/customers" class="ax-linkbtn">All contacts</a>
+                <label class="ax-searchbox ax-searchbox-sm"><Icon name="'search'" size="14"/><input type="search" placeholder="Search" aria-label="Search contacts" t-att-value="state.search" t-on-input="onSearch"/></label>
+                <div class="ax-letters ax-letters-sm"><button type="button" t-foreach="letters" t-as="l" t-key="l" t-att-class="{'is-on': state.letter === l}" t-on-click="() => this.setLetter(l)" t-out="l === 'ALL' ? 'All' : l"/></div>
+            </div>
+            <button type="button" t-foreach="state.list ? state.list.customers : []" t-as="c" t-key="c.id" class="ax-switch-item" t-att-class="{'is-on': c.id === state.id}" t-on-click="() => this.select(c)">
+                <span class="ax-switch-top"><strong t-out="c.name"/></span>
+                <span class="ax-switch-meta" t-out="c.email or c.account"/>
+                <span class="ax-switch-bottom"><span t-out="c.phone"/><span t-if="c.paid" class="ax-chip ax-chip-gold">Paid</span></span>
+            </button>
+        </aside>
+
+        <main class="ax-detail-main">
+            <div class="ax-detail-head">
+                <div class="ax-contact-title">
+                    <span class="ax-avatar ax-avatar-lg" t-out="state.data.initials"/>
+                    <div><h1 t-out="state.data.name"/><p><span class="ax-chip" t-att-class="state.data.paid ? 'ax-chip-gold' : 'ax-chip-calm'" t-out="state.data.paid ? 'Paid' : 'Free'"/> <t t-out="state.data.props.account"/></p></div>
+                </div>
+                <a t-if="state.data.can_create_ticket" t-att-href="'/desk/ticket/new?partner=' + state.data.id" class="ax-btn ax-btn-dark"><Icon name="'plus'" size="14"/> Add Ticket</a>
+            </div>
+            <div class="ax-tabs" role="tablist">
+                <button type="button" role="tab" t-foreach="tabs" t-as="tab" t-key="tab[0]" t-att-aria-selected="state.tab === tab[0]" t-att-class="{'is-on': state.tab === tab[0]}" t-on-click="() => state.tab = tab[0]" t-out="tab[1]"/>
+            </div>
+
+            <section t-if="state.tab === 'overview'" class="ax-panel-body">
+                <div class="ax-tiles">
+                    <div><span>All tickets</span><strong t-out="state.data.stats.all"/></div>
+                    <div><span>Open</span><strong t-out="state.data.stats.open + state.data.stats.on_hold"/></div>
+                    <div><span>Overdue</span><strong t-att-class="{'ax-overdue': state.data.stats.overdue}" t-out="state.data.stats.overdue"/></div>
+                    <div><span>Happiness</span><strong t-out="state.data.stats.happy === null ? '—' : state.data.stats.happy + '%'"/></div>
+                    <div class="ax-health">
+                        <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="#E3EBDF" stroke-width="7"/><circle cx="32" cy="32" r="26" fill="none" stroke="#2FB463" stroke-width="7" stroke-linecap="round" t-att-stroke-dasharray="circle" transform="rotate(-90 32 32)"/></svg>
+                        <span><strong t-out="healthLabel"/><small>Health <t t-out="state.data.stats.health_score"/> · Last contact <t t-out="state.data.stats.last"/></small></span>
+                    </div>
+                </div>
+
+                <h2>Contact Properties</h2>
+                <dl class="ax-props">
+                    <t t-foreach="fields" t-as="f" t-key="f[0]">
+                        <dt t-out="f[1]"/>
+                        <dd>
+                            <input t-if="state.editing === f[0]" class="ax-input ax-inline-input" t-att-type="f[2]" t-model="state.draft" t-on-keydown="(ev) => this.onKey(ev, f[0])" t-on-blur="() => this.commit(f[0])"/>
+                            <button t-else="" type="button" class="ax-inline" t-on-click="() => this.edit(f[0])" t-att-aria-label="'Edit ' + f[1]"><t t-out="state.data.props[f[0]] or '—'"/> <Icon name="'edit'" size="12"/></button>
+                        </dd>
+                    </t>
+                    <dt>Language</dt>
+                    <dd><select class="ax-input ax-inline-input" aria-label="Language" t-on-change="(ev) => this.commit('lang', ev.target.value)">
+                        <option value="">—</option><option t-foreach="state.data.languages" t-as="l" t-key="l.code" t-att-value="l.code" t-att-selected="state.data.props.lang === l.code" t-out="l.name"/></select></dd>
+                    <dt>Account</dt>
+                    <dd>
+                        <t t-if="props.is_admin">
+                            <input t-if="state.editing === 'account'" class="ax-input ax-inline-input" t-model="state.draft" t-on-keydown="(ev) => this.onKey(ev, 'account')" t-on-blur="() => this.commit('account')"/>
+                            <button t-else="" type="button" class="ax-inline" t-on-click="() => this.edit('account')"><t t-out="state.data.props.account or '—'"/> <Icon name="'edit'" size="12"/></button>
+                        </t>
+                        <t t-else=""><t t-out="state.data.props.account or '—'"/></t>
+                    </dd>
+                    <t t-if="props.is_admin">
+                        <dt>Plan</dt>
+                        <dd><select class="ax-input ax-inline-input" aria-label="Plan" t-on-change="(ev) => this.commit('desk_plan', ev.target.value)"><option value="free" t-att-selected="state.data.props.desk_plan === 'free'">Free</option><option value="paid" t-att-selected="state.data.props.desk_plan === 'paid'">Paid</option></select></dd>
+                        <dt>Contact owner</dt>
+                        <dd><select class="ax-input ax-inline-input" aria-label="Contact owner" t-on-change="(ev) => this.commit('desk_owner_id', Number(ev.target.value))"><option value="0">—</option><option t-foreach="state.data.owners" t-as="o" t-key="o.id" t-att-value="o.id" t-att-selected="state.data.props.desk_owner_id === o.id" t-out="o.name"/></select></dd>
+                    </t>
+                    <dt>Tags</dt>
+                    <dd class="ax-taglist">
+                        <span t-foreach="state.data.tags" t-as="tag" t-key="tag.id" class="ax-tag"><t t-out="tag.name"/><button type="button" t-att-aria-label="'Remove tag ' + tag.name" t-on-click="() => this.removeTag(tag)"><Icon name="'close'" size="10"/></button></span>
+                        <button t-if="!state.tagBox" type="button" class="ax-linkbtn" t-on-click="() => state.tagBox = true">+ Add tag</button>
+                        <span t-else="" class="ax-tagadd"><input class="ax-input ax-inline-input" aria-label="New tag" t-model="state.newTag" t-on-keydown="(ev) => ev.key === 'Enter' and this.addTag()"/><button type="button" class="ax-btn ax-btn-dark ax-btn-sm" t-on-click="addTag">Add</button></span>
+                    </dd>
+                </dl>
+
+                <h2>Tickets</h2>
+                <div class="ax-tabs ax-tabs-sm" role="tablist"><button type="button" role="tab" t-foreach="ticketTabs" t-as="t" t-key="t[0]" t-att-class="{'is-on': state.ticketTab === t[0]}" t-on-click="() => state.ticketTab = t[0]" t-out="t[1]"/></div>
+                <div t-if="!shownTickets.length" class="ax-empty">No tickets in this tab.</div>
+                <ul class="ax-filelist">
+                    <li t-foreach="shownTickets" t-as="t" t-key="t.id"><a t-att-href="'/desk/ticket/' + t.id" class="ax-grow"><strong t-out="t.subject"/><small>#<t t-out="t.number"/> · <t t-out="t.created_long"/></small></a><span t-attf-class="ax-chip {{ statusClass[t.state] }}" t-out="t.state_label"/></li>
+                </ul>
+            </section>
+
+            <section t-if="state.tab === 'history'" class="ax-panel-body">
+                <div t-if="!state.data.history.length" class="ax-empty">No property changes yet.</div>
+                <ul class="ax-timeline"><li t-foreach="state.data.history" t-as="h" t-key="h.id"><span t-out="h.text"/><small><t t-out="h.who"/> · <t t-out="h.when"/></small></li></ul>
+            </section>
+            <section t-if="state.tab === 'activities'" class="ax-panel-body">
+                <div t-if="!state.data.activity.length" class="ax-empty">No activity yet.</div>
+                <ul class="ax-timeline"><li t-foreach="state.data.activity" t-as="a" t-key="a_index"><a t-att-href="'/desk/ticket/' + a.ticket" t-out="a.text"/><small t-out="a.when"/></li></ul>
+            </section>
+            <section t-if="state.tab === 'interaction'" class="ax-panel-body">
+                <div t-if="!state.data.interactions.length" class="ax-empty">No replies exchanged yet.</div>
+                <ul class="ax-timeline"><li t-foreach="state.data.interactions" t-as="m" t-key="m.id"><span t-out="m.text"/><small><t t-out="m.who"/> · <t t-out="m.when"/> · <a t-att-href="'/desk/ticket/' + m.ticket">open ticket</a></small></li></ul>
+            </section>
+        </main>
+    </div>
+</t>
+
+</templates>

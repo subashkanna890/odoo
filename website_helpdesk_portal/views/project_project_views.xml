@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Project Form View: Replace user_id with employee_id -->
+    <record id="view_project_form_employee_fields" model="ir.ui.view">
+        <field name="name">project.project.form.employee.fields</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_start']" position="before">
+                <field name="employee_id" string="Project Manager" widget="many2one_avatar_employee"/>
+                <field name="team_id" string="Team"/>
+                <field name="employee_ids" string="Team Member" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project Kanban View: Replace user_id with employee_id -->
+    <record id="view_project_kanban_employee_fields" model="ir.ui.view">
+        <field name="name">project.project.kanban.employee.fields</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id'][@widget='many2one_avatar_user']" position="replace">
+                <field name="employee_id" widget="many2one_avatar_employee" class="me-1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project Mobile Kanban View: Replace user_id with employee_id -->
+    <record id="project_view_kanban_mobile_employee_fields" model="ir.ui.view">
+        <field name="name">project.project.kanban.mobile.employee.fields</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_view_kanban"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="replace">
+                <field name="employee_id" class="ms-auto" widget="many2one_avatar_employee"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project List (Tree) View: Replace user_id with employee_id -->
+    <record id="view_project_list_employee_fields" model="ir.ui.view">
+        <field name="name">project.project.list.employee.fields</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="replace">
+                <field name="employee_id" optional="show" string="Project Manager" widget="many2one_avatar_employee" options="{'no_open': True, 'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project Search Filter: Support employee_id grouping and search -->
+    <record id="view_project_project_filter_employee" model="ir.ui.view">
+        <field name="name">project.project.select.employee</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="employee_id" string="Project Manager"/>
+            </xpath>
+            <xpath expr="//filter[@name='Manager']" position="attributes">
+                <attribute name="context">{'group_by': 'employee_id'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

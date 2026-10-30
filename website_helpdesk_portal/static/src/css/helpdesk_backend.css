@@ -1,0 +1,270 @@
+/* =========================================================
+   Modern Password Reveal/Hide Eye Icon for Odoo Backend
+   ========================================================= */
+.o_field_password button.btn.fa-eye,
+.o_field_password button.btn.fa-eye-slash,
+.o_field_widget[name="helpdesk_password"] button.btn,
+.o_field_widget[name="helpdesk_gemini_api_key"] button.btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 4px 8px !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
+    transition: opacity 0.2s ease, transform 0.1s ease !important;
+}
+
+.o_field_password button.btn.fa-eye:hover,
+.o_field_password button.btn.fa-eye-slash:hover,
+.o_field_widget[name="helpdesk_password"] button.btn:hover,
+.o_field_widget[name="helpdesk_gemini_api_key"] button.btn:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-radius: 6px !important;
+}
+
+.o_field_password button.btn.fa-eye::before,
+.o_field_widget[name="helpdesk_password"] button.btn.fa-eye::before,
+.o_field_widget[name="helpdesk_gemini_api_key"] button.btn.fa-eye::before {
+    content: '' !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background-color: #64748b !important;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") no-repeat center !important;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") no-repeat center !important;
+    -webkit-mask-size: contain !important;
+    mask-size: contain !important;
+    vertical-align: middle !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.o_field_password button.btn.fa-eye-slash::before,
+.o_field_widget[name="helpdesk_password"] button.btn.fa-eye-slash::before,
+.o_field_widget[name="helpdesk_gemini_api_key"] button.btn.fa-eye-slash::before {
+    content: '' !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background-color: #64748b !important;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.88 9.88a3 3 0 1 0 4.24 4.24'/%3E%3Cpath d='M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68'/%3E%3Cpath d='M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61'/%3E%3Cline x1='2' x2='22' y1='2' y2='22'/%3E%3C/svg%3E") no-repeat center !important;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.88 9.88a3 3 0 1 0 4.24 4.24'/%3E%3Cpath d='M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68'/%3E%3Cpath d='M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61'/%3E%3Cline x1='2' x2='22' y1='2' y2='22'/%3E%3C/svg%3E") no-repeat center !important;
+    -webkit-mask-size: contain !important;
+    mask-size: contain !important;
+    vertical-align: middle !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.o_field_password button.btn:hover::before,
+.o_field_widget[name="helpdesk_password"] button.btn:hover::before,
+.o_field_widget[name="helpdesk_gemini_api_key"] button.btn:hover::before {
+    background-color: #1e293b !important;
+}
+
+/* =========================================================
+   Helpdesk Ticket Form: Team & Team Members Text Opacity 1.00
+   ========================================================= */
+.o_field_widget[name="ticket_project_team_id"],
+.o_field_widget[name="ticket_project_team_id"] input,
+.o_field_widget[name="ticket_project_team_id"] span,
+.o_field_widget[name="ticket_project_team_id"] .o_form_uri,
+.o_field_widget[name="ticket_employee_ids"],
+.o_field_widget[name="ticket_employee_ids"] span,
+.o_field_widget[name="ticket_employee_ids"] .badge,
+.o_field_widget[name="ticket_employee_ids"] .o_tag_badge_text {
+    opacity: 1 !important;
+    color: #0f172a !important;
+}
+
+/* =========================================================
+   DaFont Typography Styles & Six Color Themes for Settings
+   ========================================================= */
+@font-face {
+    font-family: 'Dantene';
+    src: url('/website_helpdesk_portal/static/src/fonts/dantene.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Childer';
+    src: url('/website_helpdesk_portal/static/src/fonts/childer.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Hello Baby';
+    src: url('/website_helpdesk_portal/static/src/fonts/hello_baby.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Papernotes';
+    src: url('/website_helpdesk_portal/static/src/fonts/papernotes.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'The Wildeast';
+    src: url('/website_helpdesk_portal/static/src/fonts/the_wildeast.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'New Romantics';
+    src: url('/website_helpdesk_portal/static/src/fonts/new_romantics.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Vogue';
+    src: url('/website_helpdesk_portal/static/src/fonts/vogue.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Dropdown styling */
+.o_field_widget[name="helpdesk_brand_font"] select,
+.o_field_widget[name="helpdesk_brand_gradient"] select {
+    border-radius: 8px !important;
+    padding: 7px 12px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Font dropdown options rendered in their own unique typeface */
+.o_field_widget[name="helpdesk_brand_font"] select option[value="dantene"],
+.o_field_widget[name="helpdesk_brand_font"] option[value="dantene"] {
+    font-family: 'Dantene', 'Brush Script MT', cursive, sans-serif !important;
+    font-size: 19px !important;
+    padding: 6px 10px !important;
+}
+
+.o_field_widget[name="helpdesk_brand_font"] select option[value="childer"],
+.o_field_widget[name="helpdesk_brand_font"] option[value="childer"] {
+    font-family: 'Childer', 'Comic Sans MS', cursive, sans-serif !important;
+    font-size: 17px !important;
+    padding: 6px 10px !important;
+}
+
+.o_field_widget[name="helpdesk_brand_font"] select option[value="hello_baby"],
+.o_field_widget[name="helpdesk_brand_font"] option[value="hello_baby"] {
+    font-family: 'Hello Baby', cursive, sans-serif !important;
+    font-size: 19px !important;
+    padding: 6px 10px !important;
+}
+
+.o_field_widget[name="helpdesk_brand_font"] select option[value="papernotes"],
+.o_field_widget[name="helpdesk_brand_font"] option[value="papernotes"] {
+    font-family: 'Papernotes', cursive, sans-serif !important;
+    font-size: 18px !important;
+    padding: 6px 10px !important;
+}
+
+.o_field_widget[name="helpdesk_brand_font"] select option[value="the_wildeast"],
+.o_field_widget[name="helpdesk_brand_font"] option[value="the_wildeast"] {
+    font-family: 'The Wildeast', 'Impact', fantasy, sans-serif !important;
+    font-size: 19px !important;
+    padding: 6px 10px !important;
+}
+
+.o_field_widget[name="helpdesk_brand_font"] select option[value="vogue"],
+.o_field_widget[name="helpdesk_brand_font"] option[value="vogue"] {
+    font-family: 'Vogue', 'Playfair Display', Georgia, serif !important;
+    font-size: 17px !important;
+    letter-spacing: 1px !important;
+    padding: 6px 10px !important;
+}
+
+.o_field_widget[name="helpdesk_brand_font"] select option[value="plus_jakarta"],
+.o_field_widget[name="helpdesk_brand_font"] option[value="plus_jakarta"] {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    padding: 6px 10px !important;
+}
+
+.o_field_widget[name="helpdesk_brand_font"] select option[value="new_romantics"],
+.o_field_widget[name="helpdesk_brand_font"] option[value="new_romantics"] {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    padding: 6px 10px !important;
+}
+
+/* Color theme options with swatches & subtle tints */
+.o_field_widget[name="helpdesk_brand_gradient"] select option[value="theme_blue_gradient"],
+.o_field_widget[name="helpdesk_brand_gradient"] select option[value="theme_new_romantics"] {
+    background: #F0F9FF !important;
+    color: #1D4ED8 !important;
+    font-weight: 700 !important;
+}
+
+.o_field_widget[name="helpdesk_brand_gradient"] select option[value="theme_dantene_purple"] {
+    background: #FDF2F8 !important;
+    color: #8B5CF6 !important;
+    font-weight: 700 !important;
+}
+
+.o_field_widget[name="helpdesk_brand_gradient"] select option[value="theme_childer_mint"] {
+    background: #F0FDF4 !important;
+    color: #059669 !important;
+    font-weight: 700 !important;
+}
+
+.o_field_widget[name="helpdesk_brand_gradient"] select option[value="theme_hellobaby_sunset"] {
+    background: #FFF7ED !important;
+    color: #EA580C !important;
+    font-weight: 700 !important;
+}
+
+.o_field_widget[name="helpdesk_brand_gradient"] select option[value="theme_papernotes_ocean"] {
+    background: #F0F9FF !important;
+    color: #2563EB !important;
+    font-weight: 700 !important;
+}
+
+.o_field_widget[name="helpdesk_brand_gradient"] select option[value="theme_wildeast_amber"] {
+    background: #FFFBEB !important;
+    color: #D97706 !important;
+    font-weight: 700 !important;
+}
+
+.o_field_widget[name="helpdesk_brand_gradient"] select option[value="theme_vogue_royal"] {
+    background: #F8FAFC !important;
+    color: #7C3AED !important;
+    font-weight: 700 !important;
+}
+
+/* =========================================================
+   Settings Sidebar: Helpdesk App Icon
+   ========================================================= */
+.settings_tab .tab[data-key="website_helpdesk_portal"] .icon,
+.settings_tab a[data-key="website_helpdesk_portal"] .icon,
+.settings_tab .tab[data-key="website_helpdesk_portal"] span.icon {
+    display: inline-block !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    margin-right: 10px !important;
+    background: url('/website_helpdesk_portal/static/description/icon.png') no-repeat center !important;
+    background-size: contain !important;
+    vertical-align: middle !important;
+}
+
+
+

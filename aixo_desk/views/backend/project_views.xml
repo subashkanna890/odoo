@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="aixo_project_view_list" model="ir.ui.view">
+        <field name="name">aixo.project.list</field>
+        <field name="model">aixo.project</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="is_overdue">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_due"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="state" widget="badge"/>
+                <field name="open_ticket_count"/>
+                <field name="is_overdue" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="aixo_project_view_form" model="ir.ui.view">
+        <field name="name">aixo.project.form</field>
+        <field name="model">aixo.project</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="planning,in_progress,on_hold,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="code" class="me-2"/><field name="name" placeholder="Project name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="date_start"/>
+                            <field name="date_due"/>
+                        </group>
+                        <group>
+                            <field name="member_ids" widget="many2many_avatar_user"/>
+                            <field name="progress" widget="progressbar"/>
+                            <field name="hours_logged" widget="float_time"/>
+                            <field name="open_ticket_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tasks" name="tasks">
+                            <field name="task_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="user_id"/>
+                                    <field name="date_due"/>
+                                    <field name="done"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Milestones" name="milestones">
+                            <field name="milestone_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="reached"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Tickets" name="tickets">
+                            <field name="ticket_ids" readonly="1">
+                                <list>
+                                    <field name="number"/>
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="aixo_project_view_kanban" model="ir.ui.view">
+        <field name="name">aixo.project.kanban</field>
+        <field name="model">aixo.project</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" records_draggable="1">
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold"/>
+                        <div class="text-muted"><field name="code"/> · <field name="partner_id"/></div>
+                        <field name="progress" widget="progressbar" class="mt-2"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="aixo_project_action" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">aixo.project</field>
+        <field name="view_mode">list,kanban,form</field>
+    </record>
+</odoo>

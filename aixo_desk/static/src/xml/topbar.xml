@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="aixo_desk.Topbar">
+    <header class="ax-topbar">
+        <a href="/aixo-desk" class="ax-topbar-brand" aria-label="Aixo Desk home"><span class="ax-brandmark">a</span><span>aixo desk</span></a>
+        <nav class="ax-topnav" aria-label="Main">
+            <t t-foreach="nav" t-as="item" t-key="item.key">
+                <a t-att-href="item.href" t-att-class="{'is-active': props.active === item.key}" t-att-aria-current="props.active === item.key ? 'page' : undefined" t-out="item.label"/>
+            </t>
+        </nav>
+        <span class="ax-spacer"/>
+        <span class="ax-role-badge" t-out="props.user.role"/>
+        <button t-if="!isCustomer" type="button" class="ax-iconbtn ax-bell" aria-label="Notifications" t-on-click="() => this.open('notifications')">
+            <Icon name="'bell'" size="20"/>
+            <span t-if="state.unread" class="ax-badge" t-out="state.unread > 99 ? '99+' : state.unread"/>
+        </button>
+        <button type="button" class="ax-avatar-btn" aria-label="Open profile" t-on-click="() => this.open('profile')">
+            <span class="ax-avatar" t-att-style="'background:' + props.user.bg + ';color:' + props.user.fg" t-out="props.user.initials"/>
+            <span class="ax-presence" t-att-style="'background:' + presenceDot"/>
+        </button>
+    </header>
+
+    <div t-if="state.drawer" class="ax-drawer-overlay" t-on-click="close"/>
+    <aside t-if="state.drawer" class="ax-drawer" role="dialog" aria-modal="true" t-ref="drawer" t-on-keydown="onKeydown"
+           t-att-aria-label="state.drawer === 'notifications' ? 'Notifications' : state.drawer === 'profile' ? 'Profile' : 'Preferences'">
+
+        <!-- ================================================== Notifications -->
+        <t t-if="state.drawer === 'notifications'">
+            <div class="ax-drawer-head">
+                <h2>Notifications</h2>
+                <button type="button" class="ax-iconbtn" aria-label="Close" t-on-click="close"><Icon name="'close'" size="18"/></button>
+            </div>
+            <div class="ax-drawer-tabs" role="tablist">
+                <button type="button" role="tab" t-att-aria-selected="state.tab === 'all'" t-att-class="{'is-on': state.tab === 'all'}" t-on-click="() => state.tab = 'all'">
+                    All <span t-if="state.unread" class="ax-count" t-out="state.unread"/>
+                </button>
+                <button type="button" role="tab" t-att-aria-selected="state.tab === 'fail'" t-att-class="{'is-on': state.tab === 'fail'}" t-on-click="() => state.tab = 'fail'">
+                    Email failures <span t-if="state.failures.length" class="ax-count ax-count-red" t-out="state.failures.length"/>
+                </button>
+            </div>
+            <t t-if="state.tab === 'all'">
+                <div class="ax-drawer-tools">
+                    <div class="ax-menu-wrap">
+                        <button type="button" class="ax-linkbtn" aria-haspopup="true" t-att-aria-expanded="state.menu" t-on-click="() => state.menu = !state.menu">
+                            <t t-out="state.filter.toUpperCase()"/> <Icon name="'chevronDown'" size="12"/>
+                        </button>
+                        <div t-if="state.menu" class="ax-menu" role="menu">
+                            <button type="button" role="menuitem" t-foreach="filters" t-as="f" t-key="f[0]" t-att-class="{'is-on': state.filter === f[0]}" t-on-click="() => this.setFilter(f[0])" t-out="f[1]"/>
+                        </div>
+                    </div>
+                    <span class="ax-spacer"/>
+                    <button type="button" class="ax-linkbtn" t-on-click="markAllRead">Mark all as read</button>
+                </div>
+                <div class="ax-drawer-body">
+                    <div t-if="!state.notifications.length" class="ax-empty">You're all caught up.</div>
+                    <div t-foreach="state.notifications" t-as="n" t-key="n.id" class="ax-notif" t-att-class="{'is-unread': !n.is_read}">
+                        <span t-attf-class="ax-notif-icon {{ kindClass[n.type] }}"><Icon name="kindIcon[n.type] || 'bell'" size="16"/></span>
+                        <div class="ax-notif-main">
+                            <p t-out="n.text"/>
+                            <small><t t-out="n.when"/></small>
+                            <a t-if="n.ticket_id" t-att-href="'/desk/ticket/' + n.ticket_id" class="ax-link-small" t-on-click="() => this.openTicket(n)">Open ticket</a>
+                            <button t-if="!n.is_read" type="button" class="ax-linkbtn ax-small" t-on-click="() => this.openTicket(n)">Mark as read</button>
+                        </div>
+                        <button type="button" class="ax-iconbtn" t-att-aria-label="n.flagged ? 'Remove flag' : 'Flag notification'" t-att-aria-pressed="n.flagged" t-on-click="() => this.toggleFlag(n)">
+                            <Icon name="'flag'" size="16" fill="n.flagged ? '#E08A00' : 'none'"/>
+                        </button>
+                    </div>
+                </div>
+            </t>
+            <div t-else="" class="ax-drawer-body">
+                <div t-if="!state.failures.length" class="ax-empty">No email problems. Everything was delivered.</div>
+                <div t-foreach="state.failures" t-as="n" t-key="n.id" class="ax-fail">
+                    <p t-out="n.text"/>
+                    <small><t t-out="n.when"/></small>
+                    <input type="email" class="ax-input" t-att-placeholder="n.failure_recipient or 'Correct the recipient email'" t-model="state.recipient[n.id]" aria-label="Recipient email"/>
+                    <div class="ax-fail-actions">
+                        <button type="button" class="ax-btn ax-btn-dark ax-btn-sm" t-on-click="() => this.retry(n, true)">Edit recipient</button>
+                        <button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-on-click="() => this.retry(n, false)">Retry send</button>
+                        <a href="/odoo/action-aixo_desk.aixo_settings_action" class="ax-link-small">Open email settings</a>
+                    </div>
+                </div>
+            </div>
+        </t>
+
+        <!-- ======================================================== Profile -->
+        <t t-if="state.drawer === 'profile' and state.profile">
+            <div class="ax-drawer-head">
+                <h2>Profile</h2>
+                <button type="button" class="ax-iconbtn" aria-label="Close" t-on-click="close"><Icon name="'close'" size="18"/></button>
+            </div>
+            <div class="ax-drawer-body">
+                <div class="ax-profile-card">
+                    <span class="ax-avatar ax-avatar-lg" t-att-style="'background:' + state.profile.bg + ';color:' + state.profile.fg" t-out="state.profile.initials"/>
+                    <div>
+                        <strong t-out="state.profile.name"/>
+                        <p t-out="state.profile.email"/>
+                        <p t-if="state.profile.title" t-out="state.profile.title"/>
+                        <small>User ID: <t t-out="state.profile.id"/></small>
+                    </div>
+                </div>
+                <a t-if="!isCustomer" href="/desk/profile" class="ax-btn ax-btn-ghost ax-btn-block">My Profile</a>
+
+                <div t-if="isCustomer" class="ax-section ax-menu-list">
+                    <button type="button" t-on-click="() => this.open('prefs')">Preferences <Icon name="'chevronRight'" size="14"/></button>
+                    <a href="/desk/logout" class="ax-signout">Sign Out</a>
+                </div>
+                <t t-if="!isCustomer">
+                <div class="ax-section">
+                    <label for="ax-avail">Availability</label>
+                    <select id="ax-avail" class="ax-input" t-on-change="(ev) => this.setAvailability(ev.target.value)">
+                        <option value="online" t-att-selected="state.profile.availability === 'online'">Online</option>
+                        <option value="away" t-att-selected="state.profile.availability === 'away'">Away</option>
+                        <option value="offline" t-att-selected="state.profile.availability === 'offline'">Offline</option>
+                    </select>
+                    <p t-if="state.profile.availability === 'offline'" class="ax-hint">Paused — no new tickets are assigned to you.</p>
+                </div>
+                <div class="ax-section">
+                    <h3>Channels</h3>
+                    <button type="button" t-foreach="['email', 'chat', 'phone']" t-as="c" t-key="c" class="ax-channel-row" t-on-click="() => this.cycleChannel(c)"
+                            t-att-aria-label="c + ' status: ' + state.profile.channels[c] + '. Click to change.'">
+                        <Icon name="c" size="16"/><span class="ax-cap" t-out="c"/>
+                        <span class="ax-spacer"/>
+                        <span class="ax-dot-status" t-att-style="'background:' + statusDot[state.profile.availability === 'offline' ? 'offline' : state.profile.channels[c]]"/>
+                        <span class="ax-cap" t-out="state.profile.availability === 'offline' ? 'offline' : state.profile.channels[c]"/>
+                    </button>
+                </div>
+                <div t-if="state.profile.hours" class="ax-section"><h3>Working hours</h3><p t-out="state.profile.hours"/></div>
+                <div t-if="props.show_edition" class="ax-section"><h3>Edition</h3><p>Aixo Desk Professional</p></div>
+
+                <div class="ax-section ax-menu-list">
+                    <button type="button" t-on-click="() => this.open('prefs')">Preferences <Icon name="'chevronRight'" size="14"/></button>
+                    <a t-if="props.user.role === 'admin'" href="/desk/admin">Admin portal <Icon name="'chevronRight'" size="14"/></a>
+                    <a href="/desk">Employee portal <Icon name="'chevronRight'" size="14"/></a>
+                    <a href="/desk/setup" t-if="props.user.role === 'admin'">Setup <Icon name="'chevronRight'" size="14"/></a>
+                    <a href="/desk/logout" class="ax-signout">Sign Out</a>
+                </div>
+                </t>
+            </div>
+        </t>
+
+        <!-- ================================================== Preferences -->
+        <t t-if="state.drawer === 'prefs' and state.prefs">
+            <div class="ax-drawer-head">
+                <h2>Preferences</h2>
+                <button type="button" class="ax-iconbtn" aria-label="Close" t-on-click="close"><Icon name="'close'" size="18"/></button>
+            </div>
+            <div class="ax-drawer-body">
+                <div class="ax-searchbox"><Icon name="'search'" size="16"/><input type="search" placeholder="Search settings" aria-label="Search settings" t-model="state.query"/></div>
+                <div t-if="nothingFound" class="ax-empty">No settings match “<t t-out="state.query"/>”.</div>
+
+                <section t-if="showAppearance" class="ax-section">
+                    <h3>Appearance</h3>
+                    <div class="ax-options" role="radiogroup" aria-label="Appearance">
+                        <button type="button" role="radio" t-foreach="[['light', 'Light Mode'], ['night', 'Night Mode'], ['auto', 'Auto']]" t-as="m" t-key="m[0]"
+                                t-att-aria-checked="state.prefs.appearance === m[0]" t-att-class="{'is-on': state.prefs.appearance === m[0]}"
+                                t-on-click="() => this.savePref({appearance: m[0]})" t-out="m[1]"/>
+                    </div>
+                    <label class="ax-switch-row">
+                        <span>Make left panel light</span>
+                        <input type="checkbox" role="switch" t-att-checked="state.prefs.light_panel" t-on-change="(ev) => this.savePref({light_panel: ev.target.checked})"/>
+                    </label>
+                </section>
+                <section t-if="showTheme" class="ax-section">
+                    <h3>Theme color</h3>
+                    <div class="ax-options" role="radiogroup" aria-label="Theme color">
+                        <button type="button" role="radio" t-foreach="themes" t-as="th" t-key="th[0]" t-att-aria-checked="state.prefs.theme === th[0]"
+                                t-att-class="{'is-on': state.prefs.theme === th[0]}" t-on-click="() => this.savePref({theme: th[0]})">
+                            <span class="ax-swatch" t-att-style="'background:' + th[1]"/><span class="ax-cap" t-out="th[0]"/>
+                        </button>
+                    </div>
+                </section>
+                <section t-if="showFont" class="ax-section">
+                    <h3>Display font</h3>
+                    <select class="ax-input" aria-label="Display font" t-on-change="(ev) => this.savePref({font: ev.target.value})">
+                        <option t-foreach="fonts" t-as="f" t-key="f[0]" t-att-value="f[0]" t-att-selected="state.prefs.font === f[0]" t-out="f[1]"/>
+                    </select>
+                    <h3>Display font size</h3>
+                    <div class="ax-options" role="radiogroup" aria-label="Font size">
+                        <button type="button" role="radio" t-foreach="sizes" t-as="s" t-key="s[0]" t-att-aria-checked="state.prefs.size === s[0]"
+                                t-att-class="{'is-on': state.prefs.size === s[0]}" t-on-click="() => this.savePref({size: s[0]})" t-out="s[1]"/>
+                    </div>
+                </section>
+                <section t-foreach="visibleCards" t-as="card" t-key="card[0]" class="ax-pref-card">
+                    <button type="button" class="ax-pref-head" t-att-aria-expanded="!!state.expanded[card[0]]" t-on-click="() => this.toggleCard(card[0])">
+                        <span><strong t-out="card[1]"/><small t-out="card[2]"/></span>
+                        <Icon name="state.expanded[card[0]] ? 'chevronDown' : 'chevronRight'" size="16"/>
+                    </button>
+                    <div t-if="state.expanded[card[0]]" class="ax-pref-body">
+                        <label t-foreach="card[3]" t-as="label" t-key="label_index" class="ax-switch-row">
+                            <span t-out="label"/>
+                            <input type="checkbox" role="switch" t-att-checked="state.prefs.toggles[card[0] + label_index]"
+                                   t-on-change="(ev) => this.savePref({toggles: {[card[0] + label_index]: ev.target.checked}})"/>
+                        </label>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </aside>
+</t>
+
+</templates>

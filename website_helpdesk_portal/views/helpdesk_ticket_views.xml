@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         WEBSITE HELPDESK TICKET - TREE VIEW
+         ============================================================ -->
+
+    <record id="view_helpdesk_ticket_tree" model="ir.ui.view">
+        <field name="name">website.helpdesk.ticket.tree</field>
+        <field name="model">website.helpdesk.ticket</field>
+
+        <field name="arch" type="xml">
+            <list string="Helpdesk Tickets"
+                  decoration-danger="stage == 'rotting'"
+                  decoration-warning="stage == 'progress'"
+                  decoration-success="stage == 'resolved'">
+
+                <field name="ticket_number"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="category"/>
+                <field name="priority" widget="priority"/>
+
+                <field name="stage"
+                       widget="badge"
+                       decoration-danger="stage == 'rotting'"
+                       decoration-warning="stage == 'progress'"
+                       decoration-success="stage == 'resolved'"/>
+
+                <field name="sla_status_text"/>
+                <field name="assigned_date" optional="show"/>
+                <field name="history_trail"/>
+
+            </list>
+        </field>
+    </record>
+
+
+    <!-- ============================================================
+         WEBSITE HELPDESK TICKET - FORM VIEW
+         ============================================================ -->
+
+    <record id="view_helpdesk_ticket_form" model="ir.ui.view">
+        <field name="name">website.helpdesk.ticket.form</field>
+        <field name="model">website.helpdesk.ticket</field>
+
+        <field name="arch" type="xml">
+            <form string="Helpdesk Ticket">
+
+                <header>
+
+                    <button name="action_set_progress"
+                            string="In Progress"
+                            type="object"
+                            invisible="stage == 'progress'"
+                            class="btn-primary"/>
+
+                    <button name="action_set_resolved"
+                            string="Mark Resolved"
+                            type="object"
+                            invisible="stage == 'resolved'"
+                            class="btn-success"/>
+
+                    <button name="action_set_rotting"
+                            string="Flag Rotting SLA"
+                            type="object"
+                            invisible="stage == 'rotting'"
+                            class="btn-warning"/>
+
+                    <field name="stage"
+                           widget="statusbar"
+                           statusbar_visible="new,progress,resolved"/>
+
+                </header>
+
+                <sheet>
+
+                    <div class="oe_title">
+
+                        <label for="name"
+                               string="Subject"/>
+
+                        <h1>
+                            <field name="name"
+                                   placeholder="Issue Title..."/>
+                        </h1>
+
+                        <h3>
+                            <field name="ticket_number"
+                                   readonly="1"/>
+                        </h3>
+
+                    </div>
+
+                    <group>
+
+                        <group>
+
+                            <field name="partner_id"/>
+                            <field name="partner_email"/>
+                            <field name="category"/>
+                            <field name="priority"
+                                   widget="priority"/>
+
+                        </group>
+
+                        <group>
+
+                            <field name="user_id"/>
+                            <field name="assigned_employee_id"/>
+                            <field name="assigned_date" readonly="1" invisible="not assigned_date"/>
+                            <field name="sla_duration"/>
+                            <field name="sla_status_text"/>
+
+                        </group>
+
+                    </group>
+
+                    <notebook>
+
+                        <page string="Live History Flow">
+
+                            <field name="history_trail"
+                                   placeholder="Opened by customer → assigned to Priya → awaiting response"/>
+
+                        </page>
+
+                        <page string="Description">
+
+                            <field name="description"/>
+
+                        </page>
+
+                        <page string="Portal Chat Messages">
+
+                            <field name="message_line_ids">
+
+                                <list editable="bottom">
+
+                                    <field name="author_type"/>
+                                    <field name="sender_name"/>
+                                    <field name="body"/>
+                                    <field name="is_internal_note"/>
+                                    <field name="create_date"
+                                           string="Sent At"/>
+
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+                <chatter/>
+
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ============================================================
+         WEBSITE HELPDESK TICKET - KANBAN
+         ============================================================ -->
+
+    <record id="view_helpdesk_ticket_kanban" model="ir.ui.view">
+
+        <field name="name">website.helpdesk.ticket.kanban</field>
+        <field name="model">website.helpdesk.ticket</field>
+
+        <field name="arch" type="xml">
+
+            <kanban default_group_by="stage"
+                    quick_create="true">
+
+                <field name="id"/>
+                <field name="name"/>
+                <field name="ticket_number"/>
+                <field name="stage"/>
+                <field name="user_id"/>
+                <field name="sla_status_text"/>
+                <field name="history_trail"/>
+
+                <templates>
+
+                    <t t-name="card">
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                            <strong class="text-truncate">
+                                <field name="name"/>
+                            </strong>
+
+                            <field name="stage"
+                                   widget="label_selection"
+                                   options="{'classes': {'rotting': 'danger', 'progress': 'warning', 'resolved': 'success'}}"/>
+
+                        </div>
+
+                        <div class="text-muted small">
+                            Ticket #
+                            <field name="ticket_number"/>
+                        </div>
+
+                        <div class="small mt-2 p-1 bg-light rounded text-muted">
+                            <field name="history_trail"/>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+
+                            <field name="user_id"
+                                   widget="many2one_avatar_user"/>
+
+                            <span class="badge rounded-pill bg-light text-dark">
+                                <field name="sla_status_text"/>
+                            </span>
+
+                        </div>
+
+                    </t>
+
+                </templates>
+
+            </kanban>
+
+        </field>
+    </record>
+
+
+    <!-- ============================================================
+         ACTION
+         ============================================================ -->
+
+    <record id="action_website_helpdesk_tickets"
+            model="ir.actions.act_window">
+
+        <field name="name">Helpdesk Tickets</field>
+        <field name="res_model">website.helpdesk.ticket</field>
+        <field name="view_mode">list,kanban,form</field>
+
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new customer ticket
+            </p>
+        </field>
+
+    </record>
+
+
+    <!-- ============================================================
+         MENUS
+         ============================================================ -->
+
+    <menuitem id="menu_helpdesk_root"
+              name="Helpdesk Portal"
+              web_icon="website_helpdesk_portal,static/description/icon.png"
+              sequence="25"/>
+
+    <menuitem id="menu_helpdesk_tickets"
+              name="All Tickets"
+              parent="menu_helpdesk_root"
+              action="helpdesk.helpdesk_ticket_action_main_tree"
+              sequence="1"/>
+
+
+</odoo>

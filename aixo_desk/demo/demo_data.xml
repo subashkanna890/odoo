@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Teams -->
+    <record id="team_tier1" model="aixo.team">
+        <field name="name">Tier 1 Support</field>
+        <field name="department">Support</field>
+        <field name="lead_id" ref="user_priya"/>
+        <field name="member_ids" eval="[(6, 0, [ref('user_priya'), ref('user_arun')])]"/>
+        <field name="email">support@example.com</field>
+    </record>
+    <record id="team_odoo" model="aixo.team">
+        <field name="name">Odoo Experts</field>
+        <field name="department">Implementation</field>
+        <field name="lead_id" ref="user_bk"/>
+        <field name="member_ids" eval="[(6, 0, [ref('user_bk'), ref('user_rahul')])]"/>
+    </record>
+    <record id="team_billing" model="aixo.team">
+        <field name="name">Billing Desk</field>
+        <field name="department">Billing</field>
+        <field name="lead_id" ref="user_arun"/>
+        <field name="member_ids" eval="[(6, 0, [ref('user_arun')])]"/>
+        <field name="email">billing@example.com</field>
+    </record>
+
+    <record id="holiday_diwali" model="aixo.holiday"><field name="name">Diwali</field><field name="date" eval="(DateTime.today() + relativedelta(months=2)).strftime('%Y-%m-%d')"/></record>
+
+    <!-- Products and tags -->
+    <record id="product_helpdesk" model="aixo.product"><field name="name">Helpdesk Module</field><field name="team_id" ref="team_tier1"/></record>
+    <record id="product_implementation" model="aixo.product"><field name="name">Odoo Implementation</field><field name="team_id" ref="team_odoo"/></record>
+    <record id="product_portal" model="aixo.product"><field name="name">Customer Portal</field><field name="team_id" ref="team_tier1"/></record>
+    <record id="tag_billing" model="aixo.ticket.tag"><field name="name">billing</field></record>
+    <record id="tag_odoo" model="aixo.ticket.tag"><field name="name">odoo</field></record>
+    <record id="tag_urgent_customer" model="aixo.ticket.tag"><field name="name">vip</field></record>
+
+    <!-- Projects -->
+    <record id="project_014" model="aixo.project">
+        <field name="name">Helpdesk Module Build</field>
+        <field name="partner_id" ref="partner_zoho"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d')"/>
+        <field name="date_due" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d')"/>
+        <field name="state">in_progress</field>
+        <field name="member_ids" eval="[(6, 0, [ref('user_bk'), ref('user_priya')])]"/>
+    </record>
+    <record id="project_013" model="aixo.project">
+        <field name="name">Odoo 18 Migration</field>
+        <field name="partner_id" ref="partner_acme"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(days=28)).strftime('%Y-%m-%d')"/>
+        <field name="date_due" eval="(DateTime.today() + relativedelta(days=17)).strftime('%Y-%m-%d')"/>
+        <field name="state">in_progress</field>
+        <field name="member_ids" eval="[(6, 0, [ref('user_bk'), ref('user_arun'), ref('user_rahul')])]"/>
+    </record>
+    <record id="project_012" model="aixo.project">
+        <field name="name">Customer Portal Revamp</field>
+        <field name="partner_id" ref="partner_brightline"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(days=8)).strftime('%Y-%m-%d')"/>
+        <field name="date_due" eval="(DateTime.today() + relativedelta(days=52)).strftime('%Y-%m-%d')"/>
+        <field name="state">planning</field>
+        <field name="member_ids" eval="[(6, 0, [ref('user_priya'), ref('user_rahul')])]"/>
+    </record>
+    <record id="project_010" model="aixo.project">
+        <field name="name">Warehouse Substitution Logic</field>
+        <field name="partner_id" ref="partner_pillai"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(days=50)).strftime('%Y-%m-%d')"/>
+        <field name="date_due" eval="(DateTime.today() - relativedelta(days=19)).strftime('%Y-%m-%d')"/>
+        <field name="state">completed</field>
+        <field name="member_ids" eval="[(6, 0, [ref('user_arun'), ref('user_bk')])]"/>
+    </record>
+    <record id="project_009" model="aixo.project">
+        <field name="name">Staffing Implementation</field>
+        <field name="partner_id" ref="partner_noor"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(days=90)).strftime('%Y-%m-%d')"/>
+        <field name="date_due" eval="(DateTime.today() + relativedelta(days=30)).strftime('%Y-%m-%d')"/>
+        <field name="state">on_hold</field>
+        <field name="member_ids" eval="[(6, 0, [ref('user_rahul'), ref('user_priya'), ref('user_bk')])]"/>
+    </record>
+
+    <record id="task_014_1" model="aixo.project.task"><field name="project_id" ref="project_014"/><field name="name">UI screens</field><field name="done" eval="True"/><field name="user_id" ref="user_bk"/></record>
+    <record id="task_014_2" model="aixo.project.task"><field name="project_id" ref="project_014"/><field name="name">Ticket and customer features</field><field name="done" eval="True"/><field name="user_id" ref="user_priya"/></record>
+    <record id="task_014_3" model="aixo.project.task"><field name="project_id" ref="project_014"/><field name="name">Analytics</field><field name="user_id" ref="user_bk"/></record>
+    <record id="task_014_4" model="aixo.project.task"><field name="project_id" ref="project_014"/><field name="name">Testing</field><field name="user_id" ref="user_priya"/></record>
+    <record id="task_013_1" model="aixo.project.task"><field name="project_id" ref="project_013"/><field name="name">Data audit</field><field name="done" eval="True"/></record>
+    <record id="task_013_2" model="aixo.project.task"><field name="project_id" ref="project_013"/><field name="name">Module upgrade</field></record>
+    <record id="task_010_1" model="aixo.project.task"><field name="project_id" ref="project_010"/><field name="name">Substitution rules</field><field name="done" eval="True"/></record>
+    <record id="milestone_014_1" model="aixo.project.milestone"><field name="project_id" ref="project_014"/><field name="name">First screens</field><field name="date" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d')"/><field name="reached" eval="True"/></record>
+    <record id="milestone_014_2" model="aixo.project.milestone"><field name="project_id" ref="project_014"/><field name="name">Go live</field><field name="date" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d')"/></record>
+
+    <!-- Tickets: numbering starts at 101 -->
+    <record id="ticket_101" model="aixo.ticket">
+        <field name="name">I want to create helpdesk module</field>
+        <field name="partner_id" ref="partner_lawrence"/>
+        <field name="channel">web</field>
+        <field name="priority">high</field>
+        <field name="classification">feature</field>
+        <field name="team_id" ref="team_odoo"/>
+        <field name="project_id" ref="project_014"/>
+        <field name="product_id" ref="product_helpdesk"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=-6)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="description"><![CDATA[<p>I want to create helpdesk module.</p>]]></field>
+    </record>
+    <record id="ticket_102" model="aixo.ticket">
+        <field name="name">Here’s your first ticket.</field>
+        <field name="partner_id" ref="partner_lawrence"/>
+        <field name="channel">web</field>
+        <field name="priority">medium</field>
+        <field name="classification">others</field>
+        <field name="team_id" ref="team_odoo"/>
+        <field name="owner_id" ref="user_bk"/>
+        <field name="project_id" ref="project_014"/>
+        <field name="product_id" ref="product_helpdesk"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=30)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="description"><![CDATA[<p>Here’s your first ticket..</p>]]></field>
+    </record>
+    <record id="ticket_103" model="aixo.ticket">
+        <field name="name">Invoice shows the wrong billing address</field>
+        <field name="partner_id" ref="partner_anita"/>
+        <field name="channel">email</field>
+        <field name="priority">high</field>
+        <field name="classification">problem</field>
+        <field name="team_id" ref="team_billing"/>
+        <field name="owner_id" ref="user_priya"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=-2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="state">escalated</field>
+        <field name="description"><![CDATA[<p>Invoice shows the wrong billing address.</p>]]></field>
+    </record>
+    <record id="ticket_104" model="aixo.ticket">
+        <field name="name">Unable to reset account password</field>
+        <field name="partner_id" ref="partner_mohan"/>
+        <field name="channel">chat</field>
+        <field name="priority">medium</field>
+        <field name="classification">problem</field>
+        <field name="team_id" ref="team_tier1"/>
+        <field name="owner_id" ref="user_arun"/>
+        <field name="product_id" ref="product_portal"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=20)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="description"><![CDATA[<p>Unable to reset account password.</p>]]></field>
+    </record>
+    <record id="ticket_105" model="aixo.ticket">
+        <field name="name">Request to upgrade to annual plan</field>
+        <field name="partner_id" ref="partner_sara"/>
+        <field name="channel">email</field>
+        <field name="priority">low</field>
+        <field name="classification">question</field>
+        <field name="team_id" ref="team_billing"/>
+        <field name="owner_id" ref="user_bk"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=50)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="state">on_hold</field>
+        <field name="description"><![CDATA[<p>Request to upgrade to annual plan.</p>]]></field>
+    </record>
+    <record id="ticket_106" model="aixo.ticket">
+        <field name="name">Order delivered with a missing item</field>
+        <field name="partner_id" ref="partner_deepak"/>
+        <field name="channel">phone</field>
+        <field name="priority">high</field>
+        <field name="classification">problem</field>
+        <field name="team_id" ref="team_tier1"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=-5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="description"><![CDATA[<p>Order delivered with a missing item.</p>]]></field>
+    </record>
+    <record id="ticket_107" model="aixo.ticket">
+        <field name="name">GST number missing on last invoice</field>
+        <field name="partner_id" ref="partner_fatima"/>
+        <field name="channel">email</field>
+        <field name="priority">low</field>
+        <field name="classification">question</field>
+        <field name="team_id" ref="team_billing"/>
+        <field name="owner_id" ref="user_priya"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="state">closed</field>
+        <field name="resolution_summary"><![CDATA[<p>GST number added to the invoice template.</p>]]></field>
+        <field name="rating">good</field>
+        <field name="description"><![CDATA[<p>GST number missing on last invoice.</p>]]></field>
+    </record>
+    <record id="ticket_108" model="aixo.ticket">
+        <field name="name">Export customer list to Excel</field>
+        <field name="partner_id" ref="partner_rahul_menon"/>
+        <field name="channel">chat</field>
+        <field name="priority">low</field>
+        <field name="classification">feature</field>
+        <field name="team_id" ref="team_tier1"/>
+        <field name="owner_id" ref="user_arun"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=-90)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="state">closed</field>
+        <field name="resolution_summary"><![CDATA[<p>Export action enabled on the customer list.</p>]]></field>
+        <field name="rating">okay</field>
+        <field name="description"><![CDATA[<p>Export customer list to Excel.</p>]]></field>
+    </record>
+    <record id="ticket_109" model="aixo.ticket">
+        <field name="name">Need GST report in invoices</field>
+        <field name="partner_id" ref="partner_sunil"/>
+        <field name="channel">web</field>
+        <field name="priority">medium</field>
+        <field name="classification">feature</field>
+        <field name="team_id" ref="team_odoo"/>
+        <field name="owner_id" ref="user_rahul"/>
+        <field name="project_id" ref="project_013"/>
+        <field name="product_id" ref="product_implementation"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="description"><![CDATA[<p>Need GST report in invoices.</p>]]></field>
+    </record>
+    <record id="ticket_110" model="aixo.ticket">
+        <field name="name">Portal access for new staff</field>
+        <field name="partner_id" ref="partner_vishnu"/>
+        <field name="channel">email</field>
+        <field name="priority">low</field>
+        <field name="classification">question</field>
+        <field name="team_id" ref="team_tier1"/>
+        <field name="product_id" ref="product_portal"/>
+        <field name="due_date" eval="(DateTime.now() + relativedelta(hours=72)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="description"><![CDATA[<p>Portal access for new staff.</p>]]></field>
+    </record>
+
+    <!-- Time entries and notifications -->
+    <record id="time_101" model="aixo.time.entry">
+        <field name="ticket_id" ref="ticket_102"/>
+        <field name="user_id" ref="user_bk"/>
+        <field name="name">Scoping call</field>
+        <field name="duration">1.5</field>
+    </record>
+    <record id="time_103" model="aixo.time.entry">
+        <field name="ticket_id" ref="ticket_103"/>
+        <field name="user_id" ref="user_priya"/>
+        <field name="name">Invoice template review</field>
+        <field name="duration">0.75</field>
+    </record>
+    <record id="notif_1" model="aixo.notification">
+        <field name="user_id" ref="user_bk"/>
+        <field name="type">assign</field>
+        <field name="text">Ticket from Lawrence | Zoho was assigned to BK in Aixo Desk</field>
+        <field name="ticket_id" ref="ticket_102"/>
+    </record>
+    <record id="notif_2" model="aixo.notification">
+        <field name="user_id" ref="user_bk"/>
+        <field name="type">sla</field>
+        <field name="text">SLA warning: ticket #103 “Invoice shows the wrong billing address” breaches in 30 min</field>
+        <field name="ticket_id" ref="ticket_103"/>
+    </record>
+    <record id="notif_3" model="aixo.notification">
+        <field name="user_id" ref="user_bk"/>
+        <field name="type">mention</field>
+        <field name="text">Priya S mentioned you in a comment on #104 “Unable to reset account password”</field>
+        <field name="ticket_id" ref="ticket_104"/>
+        <field name="is_read" eval="True"/>
+    </record>
+</odoo>

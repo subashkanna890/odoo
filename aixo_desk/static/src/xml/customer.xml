@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="aixo_desk.CustomerHome">
+    <div t-if="!state.data" class="ax-empty ax-empty-lg">Loading…</div>
+    <div t-else="" class="ax-layout">
+        <aside class="ax-sidebar" aria-label="My requests">
+            <div class="ax-side-views-head"><Icon name="'props'" size="20"/><span>My requests</span></div>
+            <div class="ax-side-section">
+                <button type="button" t-foreach="state.data.views" t-as="v" t-key="v.key" class="ax-view-item" t-att-class="{'is-on': state.view === v.key}" t-on-click="() => this.setView(v.key)">
+                    <span t-out="v.label"/><span class="ax-view-count" t-out="v.count"/>
+                </button>
+            </div>
+            <div class="ax-side-links">
+                <a href="/desk/my/projects" t-if="state.data.projects" class="ax-side-link"><Icon name="'folder'" size="20"/><span>Projects</span><span class="ax-view-count" t-out="state.data.projects"/></a>
+            </div>
+            <div class="ax-note">
+                <strong>Need help?</strong>
+                <a t-if="state.data.help.kb" t-att-href="state.data.help.kb" target="_blank" rel="noopener" class="ax-link-small">Knowledge base</a>
+                <a t-if="state.data.help.chat" t-att-href="state.data.help.chat" class="ax-link-small"><t t-out="state.data.help.chat_is_email ? 'Email support' : 'Chat with support'"/></a>
+                <span t-if="!state.data.help.kb and !state.data.help.chat">Raise a ticket and we'll get back to you.</span>
+            </div>
+        </aside>
+        <main class="ax-main">
+            <div class="ax-cust-hero">
+                <div><h1>Hi <t t-out="state.data.name.split(' ')[0]"/></h1><p><t t-if="state.data.company"><t t-out="state.data.company"/> · </t><span class="ax-chip" t-att-class="state.data.plan === 'paid' ? 'ax-chip-gold' : 'ax-chip-calm'" t-out="state.data.plan_label + ' plan'"/></p></div>
+                <a href="/desk/ticket/new" class="ax-btn ax-btn-dark ax-btn-lg"><Icon name="'plus'" size="16"/> Raise a ticket</a>
+            </div>
+            <div class="ax-kpis ax-kpis-flat" aria-label="Summary">
+                <div><span>Open requests</span><strong t-out="state.data.counts.open"/></div>
+                <div><span>Waiting for my reply</span><strong t-out="state.data.counts.waiting"/></div>
+                <div><span>Resolved</span><strong t-out="state.data.counts.resolved"/></div>
+            </div>
+            <div class="ax-listbar">
+                <h2 class="ax-listtitle"><t t-out="title"/> <small class="ax-hint">(<t t-out="state.data.tickets.length"/>)</small></h2>
+                <span class="ax-spacer"/>
+                <label class="ax-searchbox ax-searchbox-sm"><Icon name="'search'" size="16"/><input type="search" placeholder="Search my tickets" aria-label="Search my tickets" t-att-value="state.search" t-on-input="onSearch"/></label>
+            </div>
+            <div class="ax-listwrap ax-cards">
+                <div t-if="!state.data.tickets.length" class="ax-empty ax-empty-lg">
+                    <strong>No requests here</strong>
+                    <span t-if="state.search">Nothing matches “<t t-out="state.search"/>”.</span>
+                    <span t-else="">When you raise a ticket it will show up here.</span>
+                    <a href="/desk/ticket/new" class="ax-btn ax-btn-dark">Raise a ticket</a>
+                </div>
+                <a t-foreach="state.data.tickets" t-as="t" t-key="t.id" t-att-href="'/desk/my/ticket/' + t.id" class="ax-req-card">
+                    <span class="ax-channel"><Icon name="t.channel" size="18"/></span>
+                    <div class="ax-ticket-main">
+                        <strong t-out="t.subject"/>
+                        <div class="ax-ticket-meta"><span>#<t t-out="t.number"/></span><span>·</span><span>Created <t t-out="t.created"/></span><span>·</span><span>Updated <t t-out="t.updated"/></span></div>
+                    </div>
+                    <span class="ax-agent"><span t-if="t.agent_avatar" class="ax-avatar ax-avatar-sm" t-att-style="'background:' + t.agent_avatar.bg + ';color:' + t.agent_avatar.fg" t-out="t.agent_avatar.initials"/><span t-else="" class="ax-avatar ax-avatar-sm ax-avatar-empty">…</span><small t-out="t.agent"/></span>
+                    <span t-attf-class="ax-chip {{ t.status_class }}" t-out="t.status"/>
+                </a>
+            </div>
+        </main>
+    </div>
+</t>
+
+<t t-name="aixo_desk.CustomerTicket">
+    <div t-if="!state.data" class="ax-empty ax-empty-lg">Loading…</div>
+    <div t-else="" class="ax-cust-ticket">
+        <a href="/desk/my" class="ax-linkbtn">← My requests</a>
+        <div class="ax-detail-head">
+            <div class="ax-detail-title"><h1 t-out="state.data.ticket.subject"/><p>#<t t-out="state.data.ticket.number"/> · Created <t t-out="state.data.ticket.created"/> · Agent: <t t-out="state.data.ticket.agent"/></p></div>
+            <div class="ax-detail-actions">
+                <span t-attf-class="ax-chip {{ state.data.ticket.status_class }}" t-out="state.data.ticket.status"/>
+                <button t-if="state.data.can_close" type="button" class="ax-btn ax-btn-ghost" t-on-click="close">Mark as resolved</button>
+                <button t-if="state.data.can_reopen" type="button" class="ax-btn ax-btn-dark" t-on-click="reopen">Reopen</button>
+            </div>
+        </div>
+
+        <div t-if="state.data.ticket.waiting" class="ax-banner">We are waiting for your reply on this request.</div>
+
+        <section t-if="closed" class="ax-resolution" aria-label="Resolution">
+            <h2>Resolved</h2>
+            <div t-out="markup(state.data.ticket.resolution)"/>
+            <div t-if="state.data.csat" class="ax-rate">
+                <strong>How did we do?</strong>
+                <div class="ax-seg-sm" role="radiogroup" aria-label="Rating">
+                    <button type="button" role="radio" t-foreach="[['good', 'Good'], ['okay', 'Okay'], ['bad', 'Bad']]" t-as="r" t-key="r[0]" t-att-aria-checked="state.data.ticket.rating === r[0]" t-att-class="{'is-on': state.data.ticket.rating === r[0]}" t-on-click="() => this.rate(r[0])" t-out="r[1]"/>
+                </div>
+                <textarea class="ax-input ax-textarea" rows="2" aria-label="Comment" placeholder="Anything to add? (optional)" t-model="state.comment"/>
+                <p t-if="state.data.ticket.rating" class="ax-hint">Thanks — you rated this <strong t-out="state.data.ticket.rating"/>. Pick another to change it.</p>
+            </div>
+            <p t-if="!state.data.can_reopen" class="ax-hint">This request can no longer be reopened. Please raise a new one if you still need help.</p>
+        </section>
+
+        <section class="ax-composer" aria-label="Reply" t-if="!closed or state.data.can_reopen">
+            <textarea class="ax-input ax-textarea" rows="4" aria-label="Your reply" t-att-placeholder="closed ? 'Replying reopens this request…' : 'Write your reply…'" t-model="state.draft"/>
+            <div t-if="state.pending.length" class="ax-pending"><span t-foreach="state.pending" t-as="f" t-key="f.id" class="ax-file-chip"><Icon name="'attach'" size="12"/><t t-out="f.name"/><button type="button" aria-label="Remove attachment" t-on-click="() => this.removePending(f)"><Icon name="'close'" size="12"/></button></span></div>
+            <div class="ax-composer-foot">
+                <input type="file" multiple="multiple" t-ref="file" hidden="hidden" t-on-change="upload"/>
+                <button type="button" class="ax-btn ax-btn-ghost" t-att-disabled="state.uploading" t-on-click="pickFiles"><Icon name="'attach'" size="14"/> <t t-out="state.uploading ? 'Uploading…' : 'Attach'"/></button>
+                <span class="ax-spacer"/>
+                <button type="button" class="ax-btn ax-btn-dark" t-att-disabled="state.sending" t-on-click="send">Send</button>
+            </div>
+        </section>
+
+        <section class="ax-thread" aria-label="Conversation">
+            <article t-foreach="[...state.data.messages].reverse()" t-as="m" t-key="m.id" class="ax-msg" t-att-class="{'is-mine': m.mine}">
+                <span class="ax-avatar" t-att-style="'background:' + m.author.bg + ';color:' + m.author.fg" t-out="m.author.initials"/>
+                <div class="ax-msg-main">
+                    <header><strong t-out="m.mine ? 'You' : m.author.name"/><small t-out="m.date"/></header>
+                    <div class="ax-msg-body" t-out="markup(m.body)"/>
+                    <div t-if="m.attachments.length" class="ax-pending"><a t-foreach="m.attachments" t-as="a" t-key="a.id" t-att-href="a.url" class="ax-file-chip"><Icon name="'attach'" size="12"/><t t-out="a.name"/></a></div>
+                </div>
+            </article>
+            <article class="ax-msg is-mine">
+                <span class="ax-avatar" t-att-style="'background:' + state.data.requester.bg + ';color:' + state.data.requester.fg" t-out="state.data.requester.initials"/>
+                <div class="ax-msg-main"><header><strong>You</strong><small>Original request</small></header><div class="ax-msg-body" t-out="markup(state.data.ticket.description)"/></div>
+            </article>
+        </section>
+    </div>
+</t>
+
+<t t-name="aixo_desk.CustomerProjects">
+    <div class="ax-cust-ticket">
+        <a href="/desk/my" class="ax-linkbtn">← My requests</a>
+        <h1 class="ax-listtitle">Projects</h1>
+        <div t-if="!state.data" class="ax-empty">Loading…</div>
+        <div t-elif="!state.data.projects.length" class="ax-empty ax-empty-lg"><strong>No projects yet</strong></div>
+        <article t-foreach="state.data ? state.data.projects : []" t-as="p" t-key="p.id" class="ax-fieldset ax-proj-card">
+            <button type="button" class="ax-acc-toggle" t-att-aria-expanded="state.open === p.id" t-on-click="() => state.open = state.open === p.id ? 0 : p.id">
+                <span class="ax-grow"><strong t-out="p.name"/><small class="ax-hint"><t t-out="p.code"/> · <t t-out="p.state_label"/><t t-if="p.due"> · due <t t-out="p.due"/></t></small></span>
+                <div class="ax-progress"><span t-att-style="'width:' + p.progress + '%'"/><small t-out="p.tasks_done + '/' + p.tasks_total"/></div>
+                <Icon name="state.open === p.id ? 'chevronUp' : 'chevronDown'" size="14"/>
+            </button>
+            <div t-if="state.open === p.id" class="ax-proj-grid">
+                <section><h2>Tasks</h2><div t-if="!p.tasks.length" class="ax-hint">No tasks.</div><ul class="ax-filelist"><li t-foreach="p.tasks" t-as="t" t-key="t.id"><Icon name="t.done ? 'check' : 'clock'" size="14"/><span t-att-class="{'ax-done-text': t.done}" t-out="t.name"/></li></ul></section>
+                <section><h2>Milestones</h2><div t-if="!p.milestones.length" class="ax-hint">No milestones.</div><ul class="ax-filelist"><li t-foreach="p.milestones" t-as="m" t-key="m.id"><Icon name="m.reached ? 'check' : 'flag'" size="14"/><span class="ax-grow" t-att-class="{'ax-done-text': m.reached}" t-out="m.name"/><small t-out="m.date"/></li></ul></section>
+            </div>
+        </article>
+    </div>
+</t>
+
+</templates>

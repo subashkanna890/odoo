@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Brand mark + wordmark, inline so colours follow the theme -->
+    <template id="logo" name="Aixo Desk logo">
+        <span class="ax-logo">
+            <svg class="ax-logo-mark" width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+                <defs>
+                    <linearGradient id="axg" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#D4F77A"/><stop offset=".55" stop-color="#8FDB4B"/><stop offset="1" stop-color="#2E9E57"/>
+                    </linearGradient>
+                    <linearGradient id="axs" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#FFFFFF" stop-opacity=".6"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <path d="M9 2.5h14A6.5 6.5 0 0 1 29.5 9v10A6.5 6.5 0 0 1 23 25.5h-9.5L7 30.5v-5.3A6.5 6.5 0 0 1 2.5 19V9A6.5 6.5 0 0 1 9 2.5z" fill="url(#axg)"/>
+                <path d="M9 3.5h14A5.5 5.5 0 0 1 28.5 9v2.5C21 9 11 9 3.5 12.5V9A5.5 5.5 0 0 1 9 3.5z" fill="url(#axs)"/>
+                <circle cx="14.5" cy="14.5" r="4.7" fill="none" stroke="#0B3326" stroke-width="2.8"/>
+                <path d="M19.2 9.8v9.4" stroke="#0B3326" stroke-width="2.8" stroke-linecap="round"/>
+                <path d="M24.2 5.2l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z" fill="#FFFFFF"/>
+            </svg>
+            <span class="ax-logo-word">
+                <svg width="51" height="26" viewBox="0 0 78 40" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="24" r="8.5"/><path d="M20.5 15.5V32.5"/><path d="M31 17V32.5"/>
+                    <path d="M31 2.8l1.3 3.4 3.4 1.3-3.4 1.3-1.3 3.4-1.3-3.4-3.4-1.3 3.4-1.3z" fill="#5FAE22" stroke="none"/>
+                    <path d="M40 16.5L52 32.5"/><path d="M40 32.5L50 19C52.5 15.6 56 15 59.5 16.6"/><circle cx="66" cy="24.5" r="8.5"/>
+                </svg>
+                <span class="ax-logo-desk">desk</span>
+            </span>
+        </span>
+    </template>
+
+    <!-- Shell for login / sign-up / reset: animated glow + pill nav + two columns -->
+    <template id="auth_layout" name="Aixo Desk auth shell">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="additional_title">Aixo Desk</t>
+            <div id="wrap" class="ax-auth ax-follow" data-ax-glow="">
+                <div class="ax-glow ax-glow-a" aria-hidden="true"/>
+                <div class="ax-glow ax-glow-b" aria-hidden="true"/>
+                <div class="ax-glow-mouse" aria-hidden="true"/>
+                <header class="ax-auth-header">
+                    <nav class="ax-pillnav" aria-label="Main">
+                        <a href="/aixo-desk" class="ax-brand" aria-label="Aixo Desk home"><t t-call="aixo_desk.logo"/></a>
+                        <span class="ax-spacer"/>
+                        <a href="/aixo-desk" class="ax-navlink">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+                            Back to website
+                        </a>
+                        <a href="/aixo-desk#demo" class="ax-btn ax-btn-dark ax-pill">Get a demo<span class="ax-dot"/></a>
+                    </nav>
+                </header>
+                <main class="ax-auth-main">
+                    <t t-out="0"/>
+                </main>
+            </div>
+        </t>
+    </template>
+
+    <!-- Shell for every signed-in desk page: preferences drive CSS variables on this root -->
+    <template id="desk_page" name="Aixo Desk page">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="additional_title" t-value="page_title"/>
+            <div id="wrap" class="ax-desk"
+                 t-att-data-theme="prefs['theme']" t-att-data-appearance="prefs['appearance']"
+                 t-att-data-font="prefs['font']" t-att-data-size="prefs['size']"
+                 t-att-data-light-panel="prefs['light_panel']">
+                <owl-component name="aixo_desk.Topbar" t-att-props="shell"/>
+                <owl-component t-att-name="component" t-att-props="props"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- Temporary landing page until each portal screen is built -->
+    <template id="placeholder_page" name="Aixo Desk placeholder">
+        <t t-call="aixo_desk.auth_layout">
+            <section class="ax-hero">
+                <h1 class="ax-h1"><t t-out="title"/></h1>
+                <p class="ax-lead">Signed in as <strong t-out="request.env.user.name"/> (<t t-out="role"/>).</p>
+                <a href="/desk/logout" class="ax-btn ax-btn-dark ax-pill">Sign out</a>
+            </section>
+        </t>
+    </template>
+</odoo>

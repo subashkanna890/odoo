@@ -1,0 +1,600 @@
+/* ==========================================================================
+   AixoDesk Login Portal - Exact Reference-Matched UI Stylesheet
+   Brand: aixodesk | Target: Reference Screenshot 1 (Acctual Layout)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --aixo-bg: #FFFFFF;
+    --aixo-text-primary: #202124;
+    --aixo-text-secondary: #74777D;
+    --aixo-text-muted: #888888;
+    --aixo-border: #E5E5E5;
+    --aixo-btn-primary: #242424;
+    --aixo-btn-hover: #111111;
+    --aixo-radius: 9px;
+    --aixo-form-width: 356px;
+}
+
+/* Ensure completely isolated portal viewport */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100% !important;
+}
+
+body.aixodesk-portal-body,
+body:has(.aixodesk-portal-viewport) {
+    background-color: var(--aixo-bg) !important;
+    color: var(--aixo-text-primary) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Suppress all standard Odoo website navigation headers, footers and skip links */
+body.aixodesk-portal-body #top,
+body.aixodesk-portal-body #bottom,
+body.aixodesk-portal-body header:not(.aixodesk-brand-header),
+body.aixodesk-portal-body footer,
+body.aixodesk-portal-body .o_skip_to_content,
+body.aixodesk-portal-body a.o_skip_link,
+body:has(.aixodesk-portal-viewport) #top,
+body:has(.aixodesk-portal-viewport) #bottom,
+body:has(.aixodesk-portal-viewport) header:not(.aixodesk-brand-header),
+body:has(.aixodesk-portal-viewport) footer,
+body:has(.aixodesk-portal-viewport) .o_skip_to_content,
+body:has(.aixodesk-portal-viewport) a.o_skip_link,
+.o_skip_to_content,
+a[href="#wrapwrap"] {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Viewport Shell: min-height 100vh with realistic background depth & soft lighting */
+.aixodesk-portal-viewport {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    width: 100%;
+    background-color: #FFFFFF;
+    background-image:
+        /* Top center soft ambient shading above heading (Annotated Circle 1) */
+        radial-gradient(ellipse 65% 26% at 50% 0%, rgba(0, 0, 0, 0.040) 0%, rgba(0, 0, 0, 0.015) 55%, transparent 80%),
+        /* Upper-left ambient shadow behind binder clip (Annotated Circle 2) */
+        radial-gradient(ellipse 34% 34% at 8% 24%, rgba(0, 0, 0, 0.048) 0%, rgba(0, 0, 0, 0.018) 50%, transparent 80%),
+        /* Upper-right ambient shadow behind banknote (Annotated Circle 3) */
+        radial-gradient(ellipse 40% 32% at 92% 12%, rgba(0, 0, 0, 0.052) 0%, rgba(0, 0, 0, 0.018) 50%, transparent 80%),
+        /* Lower-left broad diffuse ambient haze behind clipped doc (Annotated Circle 5) */
+        radial-gradient(ellipse 45% 42% at 12% 80%, rgba(0, 0, 0, 0.058) 0%, rgba(0, 0, 0, 0.020) 55%, transparent 88%),
+        /* Lower-right broad ambient shading behind floating cards (Annotated Circle 6) */
+        radial-gradient(ellipse 50% 46% at 90% 84%, rgba(0, 0, 0, 0.068) 0%, rgba(0, 0, 0, 0.024) 60%, transparent 92%);
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+/* Soft Ambient Natural Light Glow - keeps central login area pure and luminous */
+.aixodesk-ambient-light {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(ellipse 680px 540px at 50% 46%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.55) 55%, transparent 100%),
+        linear-gradient(125deg, transparent 38%, rgba(255, 255, 255, 0.45) 50%, transparent 62%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Top-Left Brand Logo: Pure logo, understated (~40px left, ~65px top) */
+.aixodesk-brand-header {
+    position: absolute;
+    top: 65px;
+    left: 40px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.aixodesk-brand-header .aixo-brand-logo {
+    height: 28px;
+    width: auto;
+    max-width: 130px;
+    display: block;
+}
+
+/* Suppress any obsolete or duplicate standalone decorations */
+.aixo-decor-diamond,
+.login-decoration--jewel,
+.aixo-decor-chart,
+.login-decoration--chart {
+    display: none !important;
+}
+
+/* Decorative Outer Graphics Layer */
+.aixodesk-decor-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+}
+
+/* Left: Orange binder clip with realistic physical appearance */
+.aixo-decor-clip,
+.login-decoration--binder {
+    position: absolute;
+    top: 180px;
+    left: 40px;
+    width: 120px;
+    height: auto;
+}
+
+/* Left: Partially clipped narrow document entering from left edge */
+.aixo-decor-ticket,
+.login-decoration--document {
+    position: absolute;
+    top: 310px;
+    left: 0;
+    width: 145px;
+    height: auto;
+}
+
+/* Right: Top-right $100 banknote illustration */
+.aixo-decor-bill,
+.login-decoration--banknote {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 225px;
+    height: auto;
+}
+
+/* Right: Group of floating business and finance cards extending from right edge */
+.aixo-decor-invoice,
+.login-decoration--card {
+    position: absolute;
+    top: 260px;
+    right: 0;
+    width: 275px;
+    height: auto;
+}
+
+/* Right of form: Silver paperclip beside Continue button */
+.aixo-decor-paperclip,
+.login-decoration--paperclip {
+    position: absolute;
+    top: 505px;
+    left: calc(50% + 192px);
+    width: 40px;
+    height: auto;
+}
+
+/* Main Content: Exact vertical positioning from reference table (top 222px to heading) */
+.aixodesk-main-content {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 222px;
+    padding-bottom: 70px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+}
+
+/* Form Column: 356px wide, centered */
+.aixodesk-form-column {
+    width: 100%;
+    max-width: var(--aixo-form-width);
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Welcome heading: Welcome back 👋 (top 222px, height 38px, spacing to Google btn 35px) */
+.aixodesk-heading {
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--aixo-text-primary);
+    text-align: center;
+    margin: 0 0 35px 0;
+    letter-spacing: -0.5px;
+    line-height: 1.25;
+}
+
+.aixodesk-wave-emoji {
+    display: inline-block;
+    transform-origin: 70% 70%;
+    animation: aixoWave 2.4s infinite ease-in-out;
+}
+
+@keyframes aixoWave {
+    0%, 100% { transform: rotate(0deg); }
+    20%, 60% { transform: rotate(14deg); }
+    40%, 80% { transform: rotate(-8deg); }
+}
+
+/* Google Sign-in Button: ~37px height, white, thin border */
+.aixodesk-google-btn {
+    width: 100%;
+    height: 37px;
+    background-color: #FFFFFF;
+    border: 1px solid var(--aixo-border);
+    border-radius: var(--aixo-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3C4043;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+    box-shadow: none;
+}
+
+.aixodesk-google-btn:hover {
+    background-color: #FAFAFA;
+    border-color: #D6D6D6;
+    color: #202124;
+}
+
+.aixodesk-google-btn .google-icon {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+}
+
+/* Thin horizontal divider (top 355px) */
+.aixodesk-divider {
+    height: 1px;
+    background-color: var(--aixo-border);
+    border: none;
+    margin: 23px 0 24px 0;
+    width: 100%;
+}
+
+/* Form & Inputs */
+.aixodesk-form {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.aixodesk-field-group {
+    position: relative;
+    margin-bottom: 17px;
+    width: 100%;
+}
+
+.aixodesk-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--aixo-text-primary);
+    margin-bottom: 6px;
+}
+
+/* Input: Pure white background, no blue tint, override autofill */
+.aixodesk-input {
+    width: 100%;
+    height: 40px;
+    background-color: #FFFFFF !important;
+    border: 1px solid var(--aixo-border) !important;
+    border-radius: var(--aixo-radius) !important;
+    padding: 0 12px !important;
+    font-size: 14px !important;
+    color: var(--aixo-text-primary) !important;
+    box-sizing: border-box !important;
+    outline: none !important;
+    font-family: inherit !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.aixodesk-input::placeholder {
+    color: var(--aixo-text-muted) !important;
+    font-size: 14px !important;
+}
+
+.aixodesk-input:focus {
+    border-color: #2563EB !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+}
+
+/* Strip Chrome & browser autofill blue/yellow background */
+.aixodesk-input:-webkit-autofill,
+.aixodesk-input:-webkit-autofill:hover,
+.aixodesk-input:-webkit-autofill:focus,
+.aixodesk-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+    -webkit-text-fill-color: var(--aixo-text-primary) !important;
+    background-color: #FFFFFF !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.aixodesk-input.is-invalid {
+    border-color: #EF4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+}
+
+/* Password wrapper & eye toggle */
+.aixodesk-password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.aixodesk-password-wrapper .aixodesk-input {
+    padding-right: 40px !important;
+}
+
+.aixodesk-pwd-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9CA3AF;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    border-radius: 4px;
+    transition: color 0.15s ease;
+}
+
+.aixodesk-pwd-toggle:hover {
+    color: var(--aixo-text-primary);
+}
+
+.aixodesk-pwd-toggle svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* Primary Continue Button: ~38px height, #242424 (top 501px) */
+.aixodesk-btn-continue {
+    width: 100%;
+    height: 38px;
+    background-color: var(--aixo-btn-primary);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--aixo-radius);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.15s ease;
+    box-shadow: none;
+}
+
+.aixodesk-btn-continue:hover {
+    background-color: var(--aixo-btn-hover);
+}
+
+.aixodesk-btn-continue:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Spinner during submission */
+.aixodesk-spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: aixoSpin 0.75s linear infinite;
+    display: none;
+}
+
+.aixodesk-btn-continue.is-loading .aixodesk-spinner {
+    display: inline-block;
+}
+
+@keyframes aixoSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* Forgot Password link: muted grey, centered (top 560px) */
+.aixodesk-forgot-link {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--aixo-text-secondary);
+    text-decoration: none;
+    margin-top: 21px;
+    transition: color 0.15s ease;
+}
+
+.aixodesk-forgot-link:hover {
+    color: var(--aixo-text-primary);
+}
+
+/* Don't have an account? Sign up (top 616px) */
+.aixodesk-signup-line {
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--aixo-text-secondary);
+    margin-top: 38px;
+}
+
+.aixodesk-signup-line .aixodesk-signup-link {
+    color: var(--aixo-text-primary);
+    font-weight: 500;
+    text-decoration: underline;
+    margin-left: 4px;
+    transition: color 0.15s ease;
+}
+
+.aixodesk-signup-line .aixodesk-signup-link:hover {
+    color: #000000;
+}
+
+/* Feedback Alerts */
+.aixodesk-alert {
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.aixodesk-alert-danger {
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+}
+
+.aixodesk-alert-success {
+    background-color: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    color: #166534;
+}
+
+/* Notice Modal */
+.aixodesk-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.aixodesk-modal-overlay.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.aixodesk-modal-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    max-width: 380px;
+    width: 90%;
+    padding: 22px;
+    box-shadow: 0 16px 24px -6px rgba(0, 0, 0, 0.1);
+    transform: translateY(10px);
+    transition: transform 0.2s ease;
+}
+
+.aixodesk-modal-overlay.is-active .aixodesk-modal-card {
+    transform: translateY(0);
+}
+
+.aixodesk-modal-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1E293B;
+}
+
+.aixodesk-modal-card p {
+    margin: 0 0 18px 0;
+    font-size: 13px;
+    color: #64748B;
+    line-height: 1.5;
+}
+
+.aixodesk-modal-btn {
+    background: #242424;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 7px;
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    float: right;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablet & Smaller Desktop (< 1200px) */
+@media (max-width: 1200px) {
+    .aixo-decor-paperclip, .login-decoration--paperclip { display: none; }
+    .aixo-decor-diamond, .login-decoration--jewel { display: none; }
+    .aixo-decor-clip, .login-decoration--binder { left: 10px; width: 100px; }
+    .aixo-decor-invoice, .login-decoration--card { right: -30px; width: 190px; }
+    .aixo-decor-ticket, .login-decoration--document { width: 110px; }
+    .aixodesk-main-content { padding-top: 170px; }
+}
+
+/* Tablet Portrait (< 992px) */
+@media (max-width: 991px) {
+    .aixo-decor-bill, .login-decoration--banknote {
+        display: none !important;
+    }
+    .aixo-decor-clip, .login-decoration--binder {
+        opacity: 0.5;
+        left: -30px;
+    }
+    .aixo-decor-invoice, .login-decoration--card {
+        opacity: 0.5;
+        right: -30px;
+    }
+    .aixodesk-main-content {
+        padding-top: 130px;
+    }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 767px) {
+    .aixodesk-decor-layer {
+        display: none !important;
+    }
+
+    .aixodesk-brand-header {
+        position: static;
+        margin-top: 24px;
+        margin-bottom: 20px;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .aixodesk-main-content {
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
+
+    .aixodesk-heading {
+        font-size: 26px;
+        margin-bottom: 20px;
+    }
+}

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="aixo_desk.AdminHome">
+    <div class="ax-layout">
+        <aside class="ax-sidebar" aria-label="Ticket views">
+            <div class="ax-side-views-head"><Icon name="'props'" size="20"/><span>Views</span></div>
+            <div class="ax-side-section">
+                <button type="button" t-foreach="state.data ? state.data.views : []" t-as="v" t-key="v.key" class="ax-view-item" t-att-class="{'is-on': state.view === v.key}" t-on-click="() => this.setView(v.key)">
+                    <span t-out="v.label"/><span class="ax-view-count" t-att-class="{'ax-overdue': v.key === 'unassigned' and v.count}" t-out="v.count"/>
+                </button>
+            </div>
+            <div class="ax-side-links">
+                <a href="/desk/admin/people" class="ax-side-link"><Icon name="'users'" size="20"/><span>Manage people</span></a>
+                <a href="/desk/admin/reports" class="ax-side-link"><Icon name="'grid'" size="20"/><span>Reports</span></a>
+            </div>
+        </aside>
+
+        <main class="ax-main">
+            <div class="ax-listbar" t-att-class="{'is-selecting': selectedIds.length}">
+                <h1 class="ax-listtitle"><t t-out="state.data ? state.data.views.find((v) => v.key === state.view).label : 'Tickets'"/> <small class="ax-hint">(<t t-out="state.data ? state.data.total : 0"/>)</small></h1>
+                <span class="ax-spacer"/>
+                <t t-if="selectedIds.length">
+                    <strong><t t-out="selectedIds.length"/> selected</strong>
+                    <label class="ax-inline-label">Assign to
+                        <select class="ax-input ax-input-sm" aria-label="Assign selected tickets to" t-on-change="(ev) => state.bulk = Number(ev.target.value)">
+                            <option t-foreach="state.data.agents" t-as="a" t-key="a.id" t-att-value="a.id" t-att-selected="state.bulk === a.id" t-out="a.name"/>
+                        </select></label>
+                    <button type="button" class="ax-btn ax-btn-dark ax-btn-sm" t-on-click="assignBulk">Apply</button>
+                    <button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-on-click="clear">Clear</button>
+                </t>
+                <t t-else="">
+                    <label class="ax-searchbox ax-searchbox-sm"><Icon name="'search'" size="16"/><input type="search" placeholder="Search tickets" aria-label="Search tickets" t-att-value="state.search" t-on-input="onSearch"/></label>
+                    <div class="ax-menu-wrap">
+                        <button type="button" class="ax-btn ax-btn-dark" aria-haspopup="true" t-att-aria-expanded="state.createOpen" t-on-click="() => state.createOpen = !state.createOpen"><Icon name="'plus'" size="14"/> New <Icon name="'chevronDown'" size="12"/></button>
+                        <div t-if="state.createOpen" class="ax-menu ax-menu-right" role="menu">
+                            <a t-foreach="createItems" t-as="item" t-key="item[0]" role="menuitem" t-att-href="item[1]" class="ax-menu-link"><Icon name="item[2]" size="14"/> <t t-out="item[0]"/></a>
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <div class="ax-admin-grid">
+                <div class="ax-listwrap">
+                    <div t-if="state.data and !state.data.tickets.length and !state.loading" class="ax-empty ax-empty-lg"><strong>No tickets</strong><span>Nothing in this view.</span></div>
+                    <label t-if="state.data and state.data.tickets.length" class="ax-selectall"><input type="checkbox" t-att-checked="allSelected" t-on-change="toggleAll"/> Select all on this page</label>
+                    <div t-foreach="state.data ? state.data.tickets : []" t-as="t" t-key="t.id" class="ax-ticket-row" t-att-class="{'is-selected': state.selected[t.id]}">
+                        <input type="checkbox" t-att-checked="state.selected[t.id]" t-att-aria-label="'Select ticket ' + t.number" t-on-change="() => this.toggle(t)"/>
+                        <div class="ax-ticket-main">
+                            <div class="ax-ticket-title"><a t-att-href="'/desk/ticket/' + t.id" t-out="t.subject"/></div>
+                            <div class="ax-ticket-meta"><span>#<t t-out="t.number"/></span><span>·</span><span t-out="t.contact"/><t t-if="t.account"><span>·</span><span t-out="t.account"/></t><span>·</span><span t-att-class="{'ax-overdue': t.overdue}"><Icon name="'clock'" size="12"/> <t t-out="t.due"/></span></div>
+                        </div>
+                        <span t-attf-class="ax-chip {{ statusClass[t.state] }}" t-out="t.state_label"/>
+                        <span class="ax-prio" t-att-class="'is-' + t.priority" t-att-title="'Priority: ' + priorityLabel[t.priority]"><Icon name="'flag'" size="14"/></span>
+                        <select class="ax-input ax-assign" t-att-class="{'is-unassigned': !t.owner}" t-att-aria-label="'Assign ticket ' + t.number" t-on-change="(ev) => this.assignOne(t, ev)">
+                            <option value="0" t-att-selected="!t.owner">Unassigned</option>
+                            <option t-foreach="state.data.agents" t-as="a" t-key="a.id" t-att-value="a.id" t-att-selected="t.owner and t.owner.id === a.id" t-out="a.name"/>
+                        </select>
+                    </div>
+                    <div t-if="state.data and state.data.total > state.data.page_size" class="ax-pager">
+                        <button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-att-disabled="state.page &lt;= 1" t-on-click="() => this.go(-1)">Previous</button>
+                        <span>Page <t t-out="state.page"/> of <t t-out="lastPage"/></span>
+                        <button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-att-disabled="state.page &gt;= lastPage" t-on-click="() => this.go(1)">Next</button>
+                    </div>
+                </div>
+                <aside class="ax-workload" aria-label="Team workload">
+                    <div class="ax-workload-head"><h2>Team Workload</h2><a href="/desk/admin/people" class="ax-link-small">Manage</a></div>
+                    <div t-foreach="state.data ? state.data.workload : []" t-as="w" t-key="w.id" class="ax-load-row">
+                        <span class="ax-avatar ax-avatar-sm" t-att-style="'background:' + w.bg + ';color:' + w.fg" t-out="w.initials"/>
+                        <div class="ax-grow"><span t-out="w.name"/><div class="ax-bar"><span t-att-style="'width:' + (w.open / maxLoad * 100) + '%;background:' + (w.open >= 3 ? '#E08A00' : '#2FB463')"/></div></div>
+                        <strong t-out="w.open"/>
+                    </div>
+                    <p class="ax-hint">Open tickets per employee. Orange means 3 or more.</p>
+                </aside>
+            </div>
+        </main>
+    </div>
+</t>
+
+<t t-name="aixo_desk.AdminPeople">
+    <div class="ax-layout">
+        <aside class="ax-sidebar" aria-label="People">
+            <div class="ax-side-views-head"><Icon name="'users'" size="20"/><span>People</span></div>
+            <div class="ax-side-section">
+                <button type="button" t-foreach="tabs" t-as="t" t-key="t.key" class="ax-view-item" t-att-class="{'is-on': state.tab === t.key}" t-on-click="() => this.setTab(t.key)">
+                    <span class="ax-iconlabel"><Icon name="t.icon" size="16"/> <t t-out="t.label"/></span><span class="ax-view-count" t-out="t.count"/>
+                </button>
+            </div>
+            <div class="ax-note"><strong>Access rules</strong><span>Employees see only tickets assigned to them. Customers see only their own tickets. Reports are admin-only.</span></div>
+        </aside>
+        <main class="ax-main">
+            <div t-if="state.tab" class="ax-listbar">
+                <h1 class="ax-listtitle" t-out="tabs.find((t) => t.key === state.tab).label"/><small class="ax-hint">(<t t-out="rows.length"/>)</small>
+                <span class="ax-spacer"/>
+                <label class="ax-searchbox ax-searchbox-sm"><Icon name="'search'" size="16"/><input type="search" placeholder="Search" aria-label="Search people" t-att-value="state.search" t-on-input="onSearch"/></label>
+                <button type="button" class="ax-btn ax-btn-dark" t-on-click="() => this.openForm()"><Icon name="'plus'" size="14"/> <t t-out="forms[state.tab].add"/></button>
+            </div>
+            <div class="ax-listwrap">
+                <div t-if="state.data and !rows.length" class="ax-empty ax-empty-lg"><strong>Nobody here yet</strong><span t-if="state.search">Nothing matches “<t t-out="state.search"/>”.</span></div>
+
+                <table t-if="state.tab === 'employees' and rows.length" class="ax-table ax-people">
+                    <thead><tr><th>EMPLOYEE</th><th>TEAM</th><th>ROLE</th><th>ASSIGNED TICKETS</th><th>STATUS</th><th/></tr></thead>
+                    <tbody><tr t-foreach="rows" t-as="r" t-key="r.id" t-att-class="{'is-off': !r.active}">
+                        <td><div class="ax-person"><span class="ax-avatar" t-att-style="'background:' + r.avatar.bg + ';color:' + r.avatar.fg" t-out="r.avatar.initials"/><div><strong t-out="r.name"/><small t-out="r.email"/></div></div></td>
+                        <td t-out="r.team or '—'"/><td><span class="ax-chip ax-chip-calm" t-att-class="{'ax-chip-gold': r.role === 'admin', 'is-progress': r.role === 'lead'}" t-out="r.role_label"/></td>
+                        <td t-out="r.assigned"/><td><span t-att-class="'ax-status is-' + r.status.toLowerCase()" t-out="r.status"/></td>
+                        <td class="ax-actions"><button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-on-click="() => this.openForm(r)">Edit</button>
+                            <button t-if="r.status === 'Invited'" type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-on-click="() => this.invite(r)">Resend invite</button>
+                            <button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-att-disabled="r.id === state.data.me" t-on-click="() => this.toggleUser(r)"><t t-out="r.active ? 'Deactivate' : 'Reactivate'"/></button></td>
+                    </tr></tbody>
+                </table>
+
+                <table t-if="state.tab === 'customers' and rows.length" class="ax-table ax-people">
+                    <thead><tr><th>CUSTOMER</th><th>COMPANY</th><th>PLAN</th><th>PORTAL LOGIN</th><th>STATUS</th><th/></tr></thead>
+                    <tbody><tr t-foreach="rows" t-as="r" t-key="r.id" t-att-class="{'is-off': !r.active}">
+                        <td><div class="ax-person"><span class="ax-avatar" t-att-style="'background:' + r.avatar.bg + ';color:' + r.avatar.fg" t-out="r.avatar.initials"/><div><strong t-out="r.name"/><small t-out="r.email"/></div></div></td>
+                        <td t-out="r.company or '—'"/><td><span class="ax-chip" t-att-class="r.plan === 'paid' ? 'ax-chip-gold' : 'ax-chip-calm'" t-out="r.plan_label"/></td>
+                        <td t-out="r.portal"/><td><span t-att-class="'ax-status is-' + r.status.toLowerCase()" t-out="r.status"/></td>
+                        <td class="ax-actions"><button t-if="r.status === 'Invited'" type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-on-click="() => this.invite(r)">Resend invite</button>
+                            <button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-on-click="() => this.toggleUser(r)"><t t-out="r.active ? 'Deactivate' : 'Reactivate'"/></button></td>
+                    </tr></tbody>
+                </table>
+
+                <table t-if="state.tab === 'teams' and rows.length" class="ax-table ax-people">
+                    <thead><tr><th>TEAM</th><th>DEPARTMENT</th><th>LEAD</th><th>MEMBERS</th><th>OPEN TICKETS</th><th/></tr></thead>
+                    <tbody><tr t-foreach="rows" t-as="r" t-key="r.id">
+                        <td><div class="ax-person"><span class="ax-avatar ax-avatar-square" t-out="r.name.slice(0, 2).toUpperCase()"/><div><strong t-out="r.name"/><small t-out="r.members.map((m) => m.name).join(', ')"/></div></div></td>
+                        <td t-out="r.department or '—'"/><td t-out="r.lead or '—'"/><td><t t-out="r.members.length"/> members</td><td t-out="r.open"/>
+                        <td class="ax-actions"><button type="button" class="ax-btn ax-btn-ghost ax-btn-sm" t-on-click="() => this.openForm(r)">Edit</button></td>
+                    </tr></tbody>
+                </table>
+            </div>
+        </main>
+
+        <div t-if="state.form" class="ax-modal-overlay" t-on-click.self="closeForm" t-on-keydown="(ev) => ev.key === 'Escape' and this.closeForm()">
+            <form class="ax-dialog ax-dialog-wide" role="dialog" aria-modal="true" aria-labelledby="ax-pf-title" novalidate="novalidate" t-on-submit.prevent="save">
+                <h2 id="ax-pf-title"><t t-out="isEdit ? 'Edit ' + state.form.values.name : forms[state.tab].title"/></h2>
+
+                <t t-if="state.tab === 'employees'">
+                    <div class="ax-field" t-att-class="{'has-error': state.tried and formErrors.name}"><label class="ax-req">Full name</label><input class="ax-input" placeholder="e.g. Meera Nair" t-model="state.form.values.name"/><p t-if="state.tried and formErrors.name" class="ax-error">This field is required.</p></div>
+                    <div class="ax-grid2">
+                        <div class="ax-field"><label>Phone</label><input class="ax-input" type="tel" placeholder="+91" t-model="state.form.values.phone"/></div>
+                        <div class="ax-field"><label>Role</label><select class="ax-input" t-model="state.form.values.role"><option t-foreach="state.data.options.roles" t-as="r" t-key="r.value" t-att-value="r.value" t-out="r.label"/></select></div>
+                        <div class="ax-field"><label>Team</label><select class="ax-input" t-on-change="(ev) => state.form.values.team_id = Number(ev.target.value)"><option value="0">None</option><option t-foreach="state.data.options.teams" t-as="t" t-key="t.id" t-att-value="t.id" t-att-selected="state.form.values.team_id === t.id" t-out="t.name"/></select></div>
+                    </div>
+                </t>
+                <t t-if="state.tab === 'customers'">
+                    <div class="ax-field" t-att-class="{'has-error': state.tried and formErrors.name}"><label class="ax-req">Customer name</label><input class="ax-input" placeholder="e.g. Ravi Shankar" t-model="state.form.values.name"/><p t-if="state.tried and formErrors.name" class="ax-error">This field is required.</p></div>
+                    <div class="ax-grid2">
+                        <div class="ax-field"><label>Company</label><input class="ax-input" placeholder="Company name" t-model="state.form.values.company"/></div>
+                        <div class="ax-field"><label>Phone</label><input class="ax-input" type="tel" placeholder="+91" t-model="state.form.values.phone"/></div>
+                        <div class="ax-field"><label>Plan</label><select class="ax-input" t-model="state.form.values.plan"><option value="free">Free</option><option value="paid">Paid</option></select></div>
+                    </div>
+                </t>
+                <t t-if="state.tab === 'teams'">
+                    <div class="ax-field" t-att-class="{'has-error': state.tried and formErrors.name}"><label class="ax-req">Team name</label><input class="ax-input" placeholder="e.g. Weekend Support" t-model="state.form.values.name"/><p t-if="state.tried and formErrors.name" class="ax-error">This field is required.</p></div>
+                    <div class="ax-grid2">
+                        <div class="ax-field"><label>Team lead</label><select class="ax-input" t-on-change="(ev) => state.form.values.lead_id = Number(ev.target.value)"><option value="0">None</option><option t-foreach="state.data.options.employees" t-as="e" t-key="e.id" t-att-value="e.id" t-att-selected="state.form.values.lead_id === e.id" t-out="e.name"/></select></div>
+                        <div class="ax-field"><label>Department</label><select class="ax-input" t-model="state.form.values.department"><option t-foreach="state.data.options.departments" t-as="d" t-key="d" t-att-value="d" t-out="d"/></select></div>
+                    </div>
+                    <div class="ax-field"><label>Description</label><input class="ax-input" placeholder="What does this team handle?" t-model="state.form.values.description"/></div>
+                    <fieldset class="ax-members"><legend>Members</legend>
+                        <label t-foreach="state.data.options.employees" t-as="e" t-key="e.id" class="ax-check"><input type="checkbox" t-att-checked="state.form.values.member_ids.includes(e.id)" t-on-change="() => this.toggleMember(e.id)"/><t t-out="e.name"/></label></fieldset>
+                </t>
+
+                <t t-if="!isEdit and state.tab !== 'teams'">
+                    <fieldset class="ax-fieldset"><legend>Login details</legend>
+                        <div class="ax-field" t-att-class="{'has-error': state.tried and formErrors.email}"><label class="ax-req">Login email</label><input class="ax-input" type="email" autocomplete="off" t-model="state.form.values.email"/><p t-if="state.tried and formErrors.email" class="ax-error">Enter a valid email.</p></div>
+                        <div class="ax-field" t-att-class="{'has-error': state.tried and formErrors.password}"><label class="ax-req">Password</label>
+                            <div class="ax-pwrow"><input class="ax-input" autocomplete="new-password" t-att-type="state.showPw ? 'text' : 'password'" t-model="state.form.values.password"/>
+                                <button type="button" class="ax-btn ax-btn-ghost" t-on-click="() => state.showPw = !state.showPw" t-out="state.showPw ? 'Hide' : 'Show'"/>
+                                <button type="button" class="ax-btn ax-btn-ghost" t-on-click="generate">Generate</button></div>
+                            <p t-if="state.tried and formErrors.password" class="ax-error">At least 8 characters.</p></div>
+                        <label class="ax-check"><input type="checkbox" t-model="state.form.values.send_login"/>Email the login details to this person</label>
+                        <label t-if="state.tab === 'employees'" class="ax-check"><input type="checkbox" t-model="state.form.values.force_change"/>Ask them to change the password on first login</label>
+                    </fieldset>
+                </t>
+                <div class="ax-composer-foot"><span class="ax-spacer"/>
+                    <button type="button" class="ax-btn ax-btn-ghost" t-on-click="closeForm">Cancel</button>
+                    <button type="submit" class="ax-btn ax-btn-dark" t-att-disabled="state.saving"><t t-out="isEdit ? 'Save' : forms[state.tab].create"/></button></div>
+            </form>
+        </div>
+    </div>
+</t>
+
+<t t-name="aixo_desk.AdminReports">
+    <div class="ax-layout">
+        <aside class="ax-sidebar" aria-label="Reports">
+            <div class="ax-side-views-head"><Icon name="'grid'" size="20"/><span>Reports</span></div>
+            <div class="ax-side-section">
+                <button type="button" class="ax-view-item" t-att-class="{'is-on': state.tab === 'emp'}" t-on-click="() => this.setTab('emp')"><span class="ax-iconlabel"><Icon name="'userPlus'" size="16"/> Employee reports</span></button>
+                <button type="button" class="ax-view-item" t-att-class="{'is-on': state.tab === 'cust'}" t-on-click="() => this.setTab('cust')"><span class="ax-iconlabel"><Icon name="'user'" size="16"/> Customer reports</span></button>
+            </div>
+            <div class="ax-note"><strong>Admins only</strong><span>Reports are not visible to employees or customers.</span></div>
+        </aside>
+        <main class="ax-main">
+            <div class="ax-listbar">
+                <h1 class="ax-listtitle" t-out="state.tab === 'emp' ? 'Employee reports' : 'Customer reports'"/>
+                <span class="ax-spacer"/>
+                <div class="ax-seg-sm" role="group" aria-label="Period"><button type="button" t-foreach="periods" t-as="p" t-key="p[0]" t-att-class="{'is-on': state.days === p[0]}" t-on-click="() => this.setDays(p[0])" t-out="p[1]"/></div>
+                <a class="ax-btn ax-btn-ghost" t-att-href="exportUrl('xlsx')" download="download"><Icon name="'download'" size="14"/> Export XLSX</a>
+                <a class="ax-btn ax-btn-ghost" t-att-href="exportUrl('csv')" download="download"><Icon name="'download'" size="14"/> CSV</a>
+            </div>
+            <div t-if="!state.data" class="ax-empty ax-empty-lg">Loading report…</div>
+            <div t-else="" class="ax-panel-body">
+                <div class="ax-kpis ax-kpis-flat">
+                    <div t-foreach="state.data.cards" t-as="c" t-key="c.label"><span t-out="c.label"/><strong t-out="c.value"/>
+                        <small t-att-class="c.good === true ? 'is-good' : c.good === false ? 'is-bad' : ''" t-out="c.trend"/></div>
+                </div>
+                <div t-if="!state.data.rows.length" class="ax-empty">No activity in this period.</div>
+                <table t-elif="state.data.tab === 'emp'" class="ax-table">
+                    <thead><tr><th>EMPLOYEE</th><th>ASSIGNED</th><th>RESOLVED</th><th>FIRST REPLY</th><th>SLA MET</th><th>CSAT</th></tr></thead>
+                    <tbody><tr t-foreach="state.data.rows" t-as="r" t-key="r.agent.id">
+                        <td><div class="ax-person"><span class="ax-avatar ax-avatar-sm" t-att-style="'background:' + r.agent.bg + ';color:' + r.agent.fg" t-out="r.agent.initials"/><div><strong t-out="r.agent.name"/><small t-out="r.team"/></div></div></td>
+                        <td t-out="r.assigned"/><td t-out="r.resolved"/><td t-out="r.first_reply"/>
+                        <td><div class="ax-bar ax-bar-wide"><span t-att-style="'width:' + (r.sla || 0) + '%;background:' + slaColor(r.sla)"/></div> <t t-out="r.sla === null ? '—' : r.sla + '%'"/></td>
+                        <td t-att-class="csatClass(r.csat)" t-out="r.csat === null ? '—' : r.csat"/>
+                    </tr></tbody>
+                </table>
+                <p t-if="state.data.tab === 'emp' and state.data.rows.length" class="ax-hint">SLA target: <t t-out="state.data.target"/>%.</p>
+                <table t-elif="state.data.tab === 'cust'" class="ax-table">
+                    <thead><tr><th>CUSTOMER</th><th>TICKETS</th><th>OPEN</th><th>AVG. RESOLUTION</th><th>CSAT</th><th>PLAN</th></tr></thead>
+                    <tbody><tr t-foreach="state.data.rows" t-as="r" t-key="r_index">
+                        <td><strong t-out="r.name"/><small class="ax-block" t-out="r.company"/></td>
+                        <td><div class="ax-bar ax-bar-wide"><span t-att-style="'width:' + (r.tickets / maxTickets() * 100) + '%'"/></div> <t t-out="r.tickets"/></td>
+                        <td t-att-class="{'ax-overdue': r.open > 1}" t-out="r.open"/><td t-out="r.resolution"/><td t-att-class="csatClass(r.csat)" t-out="r.csat === null ? '—' : r.csat"/>
+                        <td><span class="ax-chip" t-att-class="r.plan === 'paid' ? 'ax-chip-gold' : 'ax-chip-calm'" t-out="r.plan_label"/></td>
+                    </tr></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</t>
+
+</templates>

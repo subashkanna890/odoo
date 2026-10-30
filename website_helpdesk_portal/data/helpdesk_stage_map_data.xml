@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="stage_map_my_own" model="helpdesk.stage.map">
+            <field name="sequence">1</field>
+            <field name="name">my open ticket</field>
+            <field name="code">my_own</field>
+            <field name="fold" eval="False"/>
+            <field name="color">1</field>
+        </record>
+
+        <record id="stage_map_not_started" model="helpdesk.stage.map">
+            <field name="sequence">2</field>
+            <field name="name">not started</field>
+            <field name="code">not_started</field>
+            <field name="fold" eval="False"/>
+            <field name="color">2</field>
+        </record>
+
+        <record id="stage_map_in_progress" model="helpdesk.stage.map">
+            <field name="sequence">3</field>
+            <field name="name">in progress</field>
+            <field name="code">in_progress</field>
+            <field name="fold" eval="False"/>
+            <field name="color">3</field>
+        </record>
+
+        <record id="stage_map_hold" model="helpdesk.stage.map">
+            <field name="sequence">4</field>
+            <field name="name">hold</field>
+            <field name="code">hold</field>
+            <field name="fold" eval="False"/>
+            <field name="color">4</field>
+        </record>
+
+        <record id="stage_map_resolved" model="helpdesk.stage.map">
+            <field name="sequence">5</field>
+            <field name="name">resolved</field>
+            <field name="code">resolved</field>
+            <field name="fold" eval="True"/>
+            <field name="color">10</field>
+        </record>
+
+        <record id="stage_map_canceled" model="helpdesk.stage.map">
+            <field name="sequence">6</field>
+            <field name="name">canceled</field>
+            <field name="code">canceled</field>
+            <field name="fold" eval="True"/>
+            <field name="color">9</field>
+        </record>
+
+        <record id="stage_map_waiting" model="helpdesk.stage.map">
+            <field name="sequence">7</field>
+            <field name="name">Waiting For Reply</field>
+            <field name="code">waiting_for_reply</field>
+            <field name="fold" eval="False"/>
+            <field name="color">7</field>
+        </record>
+    </data>
+</odoo>

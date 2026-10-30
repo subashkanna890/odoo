@@ -1,0 +1,33 @@
+<svg width="460" height="26" viewBox="0 0 460 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Partner 1: Apex -->
+  <g transform="translate(10, 4)" opacity="0.6">
+    <path d="M7 2L13 14H1L7 2Z" stroke="#71717A" stroke-width="1.8" stroke-linejoin="round"/>
+    <text x="18" y="13" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1.2px" fill="#71717A">APEX</text>
+  </g>
+
+  <!-- Partner 2: Velocity -->
+  <g transform="translate(105, 4)" opacity="0.6">
+    <circle cx="8" cy="8" r="6" stroke="#71717A" stroke-width="1.8"/>
+    <path d="M5 8H11M8 5L11 8L8 11" stroke="#71717A" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="19" y="13" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1px" fill="#71717A">VELOCITY</text>
+  </g>
+
+  <!-- Partner 3: NovaFlow -->
+  <g transform="translate(210, 4)" opacity="0.6">
+    <rect x="2" y="2" width="12" height="12" rx="3" stroke="#71717A" stroke-width="1.8"/>
+    <circle cx="8" cy="8" r="2.5" fill="#71717A"/>
+    <text x="20" y="13" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1.2px" fill="#71717A">NOVAFLOW</text>
+  </g>
+
+  <!-- Partner 4: CloudPulse -->
+  <g transform="translate(325, 4)" opacity="0.6">
+    <path d="M4 11C2.5 11 1.5 9.8 1.5 8.5C1.5 7.2 2.5 6.2 3.8 6.1C4.2 4.2 5.8 2.8 7.8 2.8C10.2 2.8 12.1 4.7 12.1 7.1C13.2 7.2 14.1 8.1 14.1 9.2C14.1 10.3 13.2 11 12.1 11H4Z" stroke="#71717A" stroke-width="1.6"/>
+    <text x="19" y="13" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1px" fill="#71717A">PULSE</text>
+  </g>
+
+  <!-- Partner 5: Nexus -->
+  <g transform="translate(405, 4)" opacity="0.6">
+    <path d="M2 14L8 2L14 14" stroke="#71717A" stroke-width="1.8" stroke-linecap="round"/>
+    <text x="19" y="13" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1.2px" fill="#71717A">NEXUS</text>
+  </g>
+</svg>

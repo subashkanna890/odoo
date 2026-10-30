@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo logins: <login> / password "demo" -->
+    <record id="user_bk" model="res.users">
+        <field name="name">BK</field>
+        <field name="login">bk@example.com</field>
+        <field name="email">bk@example.com</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[(6, 0, [ref('aixo_desk.group_desk_admin')])]"/>
+        <field name="desk_job_title">Founder</field>
+        <field name="desk_office_phone">+91 44 5555 0100</field>
+    </record>
+    <record id="user_priya" model="res.users">
+        <field name="name">Priya S</field>
+        <field name="login">priya@example.com</field>
+        <field name="email">priya@example.com</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[(6, 0, [ref('aixo_desk.group_desk_agent')])]"/>
+        <field name="desk_job_title">Support Lead</field>
+    </record>
+    <record id="user_arun" model="res.users">
+        <field name="name">Arun M</field>
+        <field name="login">arun@example.com</field>
+        <field name="email">arun@example.com</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[(6, 0, [ref('aixo_desk.group_desk_agent')])]"/>
+        <field name="desk_job_title">Billing Specialist</field>
+    </record>
+    <record id="user_rahul" model="res.users">
+        <field name="name">Rahul K</field>
+        <field name="login">rahul@example.com</field>
+        <field name="email">rahul@example.com</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[(6, 0, [ref('aixo_desk.group_desk_agent')])]"/>
+        <field name="desk_job_title">Odoo Consultant</field>
+    </record>
+
+    <!-- Customer companies -->
+    <record id="partner_acme" model="res.partner"><field name="name">Acme Retail</field><field name="is_company" eval="True"/><field name="desk_plan">paid</field></record>
+    <record id="partner_zoho" model="res.partner"><field name="name">Zoho</field><field name="is_company" eval="True"/><field name="desk_plan">free</field></record>
+    <record id="partner_kumar" model="res.partner"><field name="name">Kumar Traders</field><field name="is_company" eval="True"/></record>
+    <record id="partner_brightline" model="res.partner"><field name="name">Brightline Co.</field><field name="is_company" eval="True"/><field name="desk_plan">paid</field></record>
+    <record id="partner_pillai" model="res.partner"><field name="name">Pillai Foods</field><field name="is_company" eval="True"/></record>
+    <record id="partner_noor" model="res.partner"><field name="name">Noor Textiles</field><field name="is_company" eval="True"/><field name="desk_plan">paid</field></record>
+    <record id="partner_menon" model="res.partner"><field name="name">Menon &amp; Sons</field><field name="is_company" eval="True"/><field name="desk_plan">paid</field></record>
+
+    <!-- Customer contacts with portal logins (user attached to the partner) -->
+    <record id="partner_anita" model="res.partner">
+        <field name="name">Anita Rao</field>
+        <field name="email">anita@example.com</field>
+        <field name="phone">+91 98450 11223</field>
+        <field name="parent_id" ref="partner_acme"/>
+    </record>
+    <record id="user_anita" model="res.users">
+        <field name="partner_id" ref="partner_anita"/>
+        <field name="login">anita@example.com</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[(6, 0, [ref('aixo_desk.group_desk_customer')])]"/>
+    </record>
+    <record id="partner_lawrence" model="res.partner">
+        <field name="name">Lawrence</field>
+        <field name="email">lawrence@example.com</field>
+        <field name="phone"></field>
+        <field name="parent_id" ref="partner_zoho"/>
+    </record>
+    <record id="user_lawrence" model="res.users">
+        <field name="partner_id" ref="partner_lawrence"/>
+        <field name="login">lawrence@example.com</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[(6, 0, [ref('aixo_desk.group_desk_customer')])]"/>
+    </record>
+    <record id="partner_mohan" model="res.partner">
+        <field name="name">Mohan Kumar</field>
+        <field name="email">mohan@example.com</field>
+        <field name="phone">+91 90031 77645</field>
+        <field name="parent_id" ref="partner_kumar"/>
+    </record>
+    <record id="user_mohan" model="res.users">
+        <field name="partner_id" ref="partner_mohan"/>
+        <field name="login">mohan@example.com</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[(6, 0, [ref('aixo_desk.group_desk_customer')])]"/>
+    </record>
+    <record id="partner_sara" model="res.partner">
+        <field name="name">Sara James</field>
+        <field name="email">sara@example.com</field>
+        <field name="phone">+91 97890 66032</field>
+        <field name="parent_id" ref="partner_brightline"/>
+    </record>
+    <record id="user_sara" model="res.users">
+        <field name="partner_id" ref="partner_sara"/>
+        <field name="login">sara@example.com</field>
+        <field name="password">demo</field>
+        <field name="group_ids" eval="[(6, 0, [ref('aixo_desk.group_desk_customer')])]"/>
+    </record>
+
+    <!-- Customer contacts without a login yet -->
+    <record id="partner_deepak" model="res.partner"><field name="name">Deepak Pillai</field><field name="email">deepak@example.com</field><field name="phone">+91 94470 22314</field><field name="parent_id" ref="partner_pillai"/></record>
+    <record id="partner_fatima" model="res.partner"><field name="name">Fatima Noor</field><field name="email">fatima@example.com</field><field name="phone">+91 99620 55871</field><field name="parent_id" ref="partner_noor"/></record>
+    <record id="partner_rahul_menon" model="res.partner"><field name="name">Rahul Menon</field><field name="email">rahul.menon@example.com</field><field name="phone">+91 98950 34120</field><field name="parent_id" ref="partner_menon"/></record>
+    <record id="partner_sunil" model="res.partner"><field name="name">Sunil Kumar</field><field name="email">sunil@example.com</field><field name="phone">+91 83873 63565</field><field name="parent_id" ref="partner_zoho"/><field name="desk_email2">sunil.k@example.com</field></record>
+    <record id="partner_vishnu" model="res.partner"><field name="name">Vishnu Priya</field><field name="email">vishnu@example.com</field><field name="phone">+91 91735 45363</field><field name="parent_id" ref="partner_zoho"/></record>
+</odoo>

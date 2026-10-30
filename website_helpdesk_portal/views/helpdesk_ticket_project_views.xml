@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_ticket_view_form_project_inherit"
+            model="ir.ui.view">
+
+        <field name="name">helpdesk.ticket.form.project.inherit</field>
+
+        <field name="model">helpdesk.ticket</field>
+
+        <field name="inherit_id"
+               ref="helpdesk.helpdesk_ticket_view_form"/>
+
+        <field name="arch" type="xml">
+
+            <!-- =====================================================
+                 RIGHT SIDE ROWS:
+                 1. Customer (partner_id - already first in right group)
+                 2. Project (ticket_project_id)
+                 3. Team (ticket_project_team_id)
+                 4. Team Members (ticket_employee_ids)
+                 5. Assigned Employee (assigned_employee_id)
+                 ===================================================== -->
+            <xpath expr="//field[@name='partner_id']"
+                   position="after">
+
+                <field name="ticket_project_id"
+                       string="Project"
+                       invisible="not partner_id"
+                       domain="[('partner_id', '=', partner_id)]"/>
+
+                <field name="ticket_project_team_id"
+                       string="Team"
+                       readonly="1"
+                       force_save="1"
+                       invisible="not ticket_project_id"
+                       style="opacity: 1.0 !important;"/>
+
+                <field name="ticket_employee_ids"
+                       string="Team Members"
+                       widget="many2many_tags"
+                       readonly="1"
+                       force_save="1"
+                       invisible="not ticket_project_id"
+                       style="opacity: 1.0 !important;"/>
+
+                <field name="assigned_employee_id"
+                       string="Assigned Employee"
+                       widget="many2one_avatar_employee"
+                       invisible="not ticket_project_id"
+                       domain="[('id', 'in', ticket_employee_ids)]"
+                       placeholder="Select team member"/>
+
+                <field name="assigned_date"
+                       string="Assigned Date"
+                       readonly="1"
+                       force_save="1"
+                       invisible="not assigned_date"/>
+
+            </xpath>
+
+            <!-- =====================================================
+                 REMOVE FIELD:
+                 label: assigned to
+                 field: user_id
+                 ===================================================== -->
+            <xpath expr="//field[@name='user_id']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- =====================================================
+                 LEFT SIDE ROWS:
+                 1. Helpdesk Team (team_id - already first in left group)
+                 2. Phone (partner_phone)
+                 3. Email cc (email_cc)
+                 4. Priority (priority)
+                 5. Tags (tag_ids)
+                 ===================================================== -->
+            <xpath expr="//field[@name='priority']"
+                   position="before">
+                <field name="partner_phone"
+                       position="move"/>
+                <field name="email_cc"
+                       position="move"/>
+            </xpath>
+
+            <!-- Ensure Email cc is visible to all users -->
+            <xpath expr="//field[@name='email_cc']"
+                   position="attributes">
+                <attribute name="groups"></attribute>
+            </xpath>
+
+            <!-- =====================================================
+                 REMOVE DUPLICATE / EXTRA PHONE ON RIGHT SIDE:
+                 Remove leftover partner_phone label and readonly row
+                 ===================================================== -->
+            <xpath expr="//label[@for='partner_phone']"
+                   position="replace"/>
+
+            <xpath expr="//div[hasclass('o_row_readonly')]"
+                   position="replace"/>
+
+        </field>
+    </record>
+
+</odoo>

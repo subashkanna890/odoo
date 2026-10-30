@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         HELPDESK SUPPORT TEAM CONTACT - LIST VIEW
+         Header: Helpdesk Support Team, Name, Mobile, Email
+         ============================================================ -->
+    <record id="helpdesk_support_team_contact_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.support.team.contact.list</field>
+        <field name="model">helpdesk.support.team.contact</field>
+        <field name="arch" type="xml">
+            <list string="Contact" multi_edit="1" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="team_id" string="Helpdesk Support Team"/>
+                <field name="name" string="Name"/>
+                <field name="mobile" widget="phone" string="Mobile"/>
+                <field name="email" widget="email" string="Email"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         HELPDESK SUPPORT TEAM CONTACT - FORM VIEW (READ & WRITE METHOD)
+         Header / fields: Helpdesk Support Team, Name, Mobile, Email
+         ============================================================ -->
+    <record id="helpdesk_support_team_contact_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.support.team.contact.form</field>
+        <field name="model">helpdesk.support.team.contact</field>
+        <field name="arch" type="xml">
+            <form string="Contact">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. John Doe / Senior Support Engineer"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Support Team Details">
+                            <field name="team_id" string="Helpdesk Support Team" options="{'no_create_edit': True}" required="1"/>
+                            <field name="sequence"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Contact Details">
+                            <field name="mobile" widget="phone" string="Mobile" placeholder="e.g. +91 98765 43210"/>
+                            <field name="email" widget="email" string="Email" placeholder="e.g. support@helpdesk.com"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         HELPDESK SUPPORT TEAM CONTACT - SEARCH VIEW
+         ============================================================ -->
+    <record id="helpdesk_support_team_contact_view_search" model="ir.ui.view">
+        <field name="name">helpdesk.support.team.contact.search</field>
+        <field name="model">helpdesk.support.team.contact</field>
+        <field name="arch" type="xml">
+            <search string="Search Contacts">
+                <field name="name"/>
+                <field name="team_id"/>
+                <field name="mobile"/>
+                <field name="email"/>
+                <group>
+                    <filter string="Helpdesk Support Team" name="group_team" context="{'group_by': 'team_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         HELPDESK SUPPORT TEAM CONTACT - ACTION
+         ============================================================ -->
+    <record id="helpdesk_support_team_contact_action" model="ir.actions.act_window">
+        <field name="name">Contact</field>
+        <field name="res_model">helpdesk.support.team.contact</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="helpdesk_support_team_contact_view_tree"/>
+        <field name="search_view_id" ref="helpdesk_support_team_contact_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Helpdesk Support Team Contact
+            </p>
+            <p>
+                Configure contact details for Helpdesk Support Teams (Name, Mobile, Email). These contacts are displayed as read-only information in the portal Help &amp; Support wizard.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         HELPDESK CONFIGURATION SUBMENU - CONTACT
+         Positioned inside Helpdesk -> Configuration right after Canned Responses (sequence 17)
+         ============================================================ -->
+    <menuitem
+        id="helpdesk_support_team_contact_menu"
+        name="Contact"
+        action="helpdesk_support_team_contact_action"
+        parent="helpdesk.helpdesk_menu_config"
+        sequence="18"/>
+
+</odoo>
